@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTIONAL_DESIGNER
+  MAINTAINER
+  ADMINISTRATOR
+}
+
+model User {
+  id                 String         @id @default(cuid())
+  name               String
+  email              String         @unique
+  emailVerified      DateTime?
+  hashedPassword     String?
+  username           String         @unique
+  isActive           Boolean
+  organizations      Organization[] @relation("UserOrganization")
+  administratedSites Site[]         @relation("SiteAdmins")
+  siteRoles          SiteRole[]
+  image              String?
+  accounts           Account[]
+  sessions           Session[]
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@map("users")
+}
+
+model Organization {
+  id    String @id @default(cuid())
+  name  String @unique
+  users User[] @relation("UserOrganization")
+}
+
+model Site {
+  id             String     @id @default(cuid())
+  name           String
+  domainName     String     @unique
+  customDomain   String?    @unique
+  admins         User[]     @relation("SiteAdmins")
+  siteRoles      SiteRole[]
+  themeName      String
+  courses        Course[]
+  features       Feature[]  @relation("SiteFeatures")
+  isActive       Boolean
+  frontendConfig Json
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  @@map("sites")
+}
+
+model SiteRole {
+  id     String @id @default(cuid())
+  userId String
+  siteId String
+  role   Role
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site Site @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, siteId])
+  @@map("site_role")
+}
+
+model Course {
+  id     String @id @default(cuid())
+  title  String
+  site   Site   @relation(fields: [siteId], references: [id])
+  siteId String
+}
+
+model Feature {
+  id   String @id @default(cuid())
+  name String
+  site Site[] @relation("SiteFeatures")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verificationtokens")
+}
