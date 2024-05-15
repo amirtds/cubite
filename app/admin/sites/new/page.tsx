@@ -22,7 +22,7 @@ const SitesNew = () => {
   const router = useRouter();
   useEffect(() => {
     if (state.status === 201) {
-      router.push("/admin");
+      router.push("/admin/sites");
     }
   }, [state, router]);
   return (

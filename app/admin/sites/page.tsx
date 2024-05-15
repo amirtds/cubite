@@ -3,12 +3,12 @@ import Link from "next/link";
 import { getAdministratedSites } from "../../utils/getSitesAdmins";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../api/auth/authOptions";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 
 const Sites = async () => {
   const session = await getServerSession(authOptions);
   const sites = await getAdministratedSites(session?.user?.email);
 
-  console.log(sites);
   return (
     <div>
       <div className="flex-1 p-6 md:p-8">
@@ -28,33 +28,39 @@ const Sites = async () => {
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
 
-      {sites.status === 200
-        ? sites.sites.map((site) => (
-            <div key={sites.id} className="card w-96 bg-base-100 shadow-xl">
-              <div className="card-body">
-                <h2 className="card-title">{sites.name}</h2>
-                <p className="text-xl font-semibold">{site.domainName}</p>
-                <p>Custom Domain: {site.customDomain}</p>
-                <p>
-                  Status:{" "}
-                  {site.isActive ? (
-                    <span>Active</span>
-                  ) : (
-                    <span>Deactivated</span>
-                  )}
-                </p>
-                <div className="card-actions justify-end">
-                  <Link
-                    href={`/admin/sites/${site.domainName}`}
-                    className="btn btn-outline btn-accent"
-                  >
-                    Go to the Site
-                  </Link>
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
+        {sites.status === 200
+          ? sites.sites.map((site) => (
+              <div key={site.id} className="border-2">
+                <div className="p-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-lg font-medium uppercase">
+                        {site.name}
+                      </h3>
+                      <p className="text-sm">{site.domainName}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <div className="h-3 w-3 rounded-full bg-green-500 animate-ping" />
+                      <span className="text-sm font-medium text-green-500">
+                        Active
+                      </span>
+                    </div>
+                  </div>
+                  <div className="mt-4 flex justify-end">
+                    <Link
+                      className="inline-flex items-center btn btn-outline"
+                      href={`/admin/sites/${site.domainName}`}
+                    >
+                      <Cog6ToothIcon className="h-6 w-6" />
+                      Manage
+                    </Link>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        : "No site"}
+            ))
+          : "No site"}
+      </div>
     </div>
   );
 };
