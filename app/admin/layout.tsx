@@ -5,6 +5,7 @@ import { authOptions } from "../api/auth/authOptions";
 import { WindowIcon } from "@heroicons/react/24/outline";
 import { ChartPieIcon } from "@heroicons/react/24/outline";
 import { UsersIcon } from "@heroicons/react/24/outline";
+import { PaintBrushIcon } from "@heroicons/react/24/outline";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
@@ -29,6 +30,13 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
             >
               <WindowIcon className="h-6 w-6" />
               <span>Sites</span>
+            </Link>
+            <Link
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+              href="/admin/sites"
+            >
+              <PaintBrushIcon className="h-6 w-6" />
+              <span>Interface Design</span>
             </Link>
             <Link
               className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"

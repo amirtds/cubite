@@ -1,14 +1,110 @@
-import React from "react";
+"use client";
+
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { getAdministratedSites } from "../../utils/getSitesAdmins";
-import { getServerSession } from "next-auth";
-import { authOptions } from "../../api/auth/authOptions";
+import { useSession } from "next-auth/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
 
-const Sites = async () => {
-  const session = await getServerSession(authOptions);
-  const sites = await getAdministratedSites(session?.user?.email);
+interface Site {
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  domainName: string;
+  customDomain?: string;
+  isActive: boolean;
+  admins: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+    createdAt: Date;
+    image?: string;
+  }[];
+  siteRoles?: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+    createdAt: Date;
+    image?: string;
+  }[];
+}
+
+const Sites = () => {
+  const [sites, setSites] = useState<Site[]>([]);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(true);
+  const { status, data: session } = useSession();
+
+  useEffect(() => {
+    const fetchSites = async () => {
+      try {
+        const response = await fetch(`/api/site/mysites`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userEmail: session?.user.email,
+          }),
+        });
+        const result = await response.json();
+        if (result.status === 200) {
+          setSites(result.sites);
+        } else {
+          setError(result.message);
+        }
+      } catch (err) {
+        setError("Failed to fetch sites.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    if (status === "authenticated" && session) {
+      fetchSites();
+    }
+  }, [session, status]);
+
+  if (loading) {
+    return (
+      <div>
+        <div className="flex-1 py-6 md:py-8">
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-2xl font-bold">Sites</h1>
+              <p className="mt-2">
+                In the following you can see all the sites you can manage.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="border-b mb-24">
+          <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
+        </div>
+        <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
+          <div className="flex flex-col gap-4 w-52 mt-8">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+          <div className="flex flex-col gap-4 w-52 mt-8">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+          <div className="flex flex-col gap-4 w-52 mt-8">
+            <div className="skeleton h-32 w-full"></div>
+            <div className="skeleton h-4 w-28"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -20,7 +116,7 @@ const Sites = async () => {
               In the following you can see all the sites you can manage.
             </p>
           </div>
-          {sites.sites.length > 0 && (
+          {sites.length > 0 && (
             <Link
               href="/admin/sites/new"
               className="h-10 w-auto btn btn-primary"
@@ -34,10 +130,10 @@ const Sites = async () => {
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
 
-      {sites.status === 200 ? (
-        sites.sites.length > 0 ? (
+      {!error ? (
+        sites.length > 0 ? (
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
-            {sites.sites.map((site) => (
+            {sites.map((site) => (
               <div key={site.id} className="border-2">
                 <div className="p-4">
                   <div className="flex items-center justify-between">
