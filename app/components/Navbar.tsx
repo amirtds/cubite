@@ -8,12 +8,20 @@ const Navbar = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [isLight, setIsLight] = useState(
+    JSON.parse(localStorage.getItem("isLight"))
+  );
+
+  const handleThemeChange = () => {
+    setIsLight(!isLight);
+  };
 
   useEffect(() => {
+    localStorage.setItem("isLight", JSON.stringify(isLight));
     if (status !== "loading") {
       setLoading(false);
     }
-  }, [status]);
+  }, [status, isLight]);
 
   const renderAvatar = () => {
     if (session?.user?.image) {
@@ -62,7 +70,13 @@ const Navbar = () => {
         {/* Container for alignment */}
         <label className="swap swap-rotate">
           {/* this hidden checkbox controls the state */}
-          <input type="checkbox" className="theme-controller" value="emerald" />
+          <input
+            type="checkbox"
+            className="theme-controller"
+            value="emerald"
+            checked={isLight}
+            onClick={handleThemeChange}
+          />
 
           {/* sun icon */}
           <svg
