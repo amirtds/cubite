@@ -26,20 +26,22 @@ const SitesNew = () => {
     }
   }, [state, router]);
   return (
-    <div className="flex-1 p-6 md:p-8">
-      <div className="flex items-center justify-between mb-6">
-        <div>
-          <h1 className="text-2xl font-bold">Create a New Site</h1>
-          <p className="mt-2">
-            Provide the following information and click on Create
-          </p>
+    <div className="">
+      <div className="flex-1 py-6 md:py-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Create a New Site</h1>
+            <p className="mt-2">
+              Fill the following information to create a new site.
+            </p>
+          </div>
         </div>
+      </div>
+      <div className="border-b mb-24">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
       <form action={formAction}>
         <div className="space-y-12">
-          <div className="border-b pb-12">
-            <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
-          </div>
           <div className="border-b pb-12">
             <h2 className="font-semibold leading-7 text-lg">
               Site Information

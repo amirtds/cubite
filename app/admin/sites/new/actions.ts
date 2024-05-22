@@ -7,7 +7,7 @@ export const registerSite = async (prevState: any, formData: FormData) =>{
     const siteName = formData.get("siteName")?.toString() || '';
     const subDomain = formData.get("subDomain")?.toString() || '';
     const customDomain = formData.get("customDomain")?.toString() || '';
-    const theme = formData.get("theme")?.toString() || 'sunset';
+    const theme = formData.get("theme")?.toString() || 'business';
     const userEmail = formData.get("userEmail")?.toString() || '';
 
     // Ensure userEmail is provided

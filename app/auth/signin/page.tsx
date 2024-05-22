@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { getProviders, signIn } from "next-auth/react";
+import Link from "next/link";
 
 const SignIn = () => {
   const [providers, setProviders] = useState<any>({});
@@ -98,6 +99,12 @@ const SignIn = () => {
           <button type="submit" className="w-full py-2 px-4 btn btn-primary">
             Sign in
           </button>
+          <p>
+            You don't have account ? Register{" "}
+            <Link className="underline" href="/auth/register">
+              here
+            </Link>
+          </p>
         </form>
       </div>
     </div>

@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useFormState } from "react-dom";
 import registerUser from "./actions";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 const initialState = {
   status: 0,
@@ -130,6 +131,12 @@ const Register = () => {
           <button type="submit" className="w-full btn btn-primary">
             Register
           </button>
+          <p className="pt-4">
+            You already have an account ? Login{" "}
+            <Link className="underline" href="/auth/signin">
+              here
+            </Link>
+          </p>
         </form>
       </div>
     </div>

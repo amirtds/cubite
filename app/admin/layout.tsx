@@ -4,6 +4,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../api/auth/authOptions";
 import { WindowIcon } from "@heroicons/react/24/outline";
 import { ChartPieIcon } from "@heroicons/react/24/outline";
+import { UsersIcon } from "@heroicons/react/24/outline";
 
 const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
   const session = await getServerSession(authOptions);
@@ -23,14 +24,21 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
         <nav className="flex-1 overflow-y-auto px-4 py-4">
           <div className="grid gap-2">
             <Link
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
               href="/admin/sites"
             >
               <WindowIcon className="h-6 w-6" />
               <span>Sites</span>
             </Link>
             <Link
-              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium"
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+              href="/admin/users"
+            >
+              <UsersIcon className="h-6 w-6" />
+              <span>Users</span>
+            </Link>
+            <Link
+              className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
               href="/admin/reports"
             >
               <ChartPieIcon className="h-6 w-6" />

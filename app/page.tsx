@@ -29,7 +29,7 @@ export default async function Home() {
             </>
           ) : (
             <Link className="btn btn-outline px-6" href="/admin">
-              admin
+              Admin Dashboard
             </Link>
           )}
         </div>
