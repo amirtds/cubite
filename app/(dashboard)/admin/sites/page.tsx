@@ -141,9 +141,30 @@ const Sites = () => {
                       <h3 className="text-lg font-medium capitalize">
                         {site.name}
                       </h3>
-                      <p className="text-sm text-secondary">
+                      <a
+                        className="text-sm text-secondary link"
+                        href={`https://${site.domainName}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
                         {site.domainName}
-                      </p>
+                      </a>
+                      {process.env.NODE_ENV === "development" && (
+                        <div>
+                          <a
+                            className="text-sm text-ghost link"
+                            href={`http://${
+                              site.domainName.split(".cubite.io")[0]
+                            }.localhost:3000`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                          >
+                            {`${
+                              site.domainName.split(".cubite.io")[0]
+                            }.localhost:3000`}
+                          </a>
+                        </div>
+                      )}
                     </div>
                     {site.isActive ? (
                       <div className="flex items-center gap-2">

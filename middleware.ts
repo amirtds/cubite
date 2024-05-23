@@ -13,7 +13,7 @@ export async function middleware(request: NextRequest) {
   const mainDomain = process.env.ROOT_URL;
   const isMainDomain = hostname === mainDomain;
   const isSubDomain = !isMainDomain && hostname?.endsWith(mainDomain!);
-  const subDomain = isSubDomain && hostname?.split(".")[0];
+  const subDomain = isSubDomain && hostname?.split(`.${process.env.ROOT_URL}`)[0];
 
   // If it is a subdomain rewrite the request to send it to the domain dynamic route
   if (isSubDomain) {

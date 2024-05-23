@@ -1,10 +1,11 @@
 "use client";
 
-import React, { FormEventHandler, useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { getRoles } from "@/app/utils/getRoles";
-import { now } from "next-auth/client/_utils";
+import { useAlert } from "@/app/utils/useAlert";
+import { useRouter } from "next/navigation";
 
 interface Props {
   params: {
@@ -47,19 +48,48 @@ interface User {
 }
 
 const SitePage = ({ params: { domainName } }: Props) => {
+  const router = useRouter();
   const [site, setSite] = useState<Site | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [admins, setAdmins] = useState<User[]>([]);
-  const [members, setMembers] = useState<User[]>([]);
-  const [createAdminStatus, setCreateAdminStatus] = useState<number>(0);
-  const [createAdminMessage, setCreateAdminMessage] = useState<string>("");
-  const [deleteAdminMessage, setDeleteAdminMessage] = useState<string>("");
   const [roles, setRoles] = useState([]);
-  const [createMemberStatus, setCreateMemberStatus] = useState<number>(0);
-  const [createMemberMessage, setCreateMemberMessage] = useState<string>("");
-  const [updateSiteStatus, setUpdateSiteStatus] = useState<number>(0);
-  const [updateSiteMessage, setUpdateSiteMessage] = useState<string>("");
+  const {
+    message: createAdminMessage,
+    status: createAdminStatus,
+    setMessage: setCreateAdminMessage,
+    setStatus: setCreateAdminStatus,
+  } = useAlert();
+  const {
+    message: deleteAdminMessage,
+    status: deleteAdminStatus,
+    setMessage: setDeleteAdminMessage,
+    setStatus: setDeleteAdminStatus,
+  } = useAlert();
+  const {
+    message: createMemberMessage,
+    status: createMemberStatus,
+    setMessage: setCreateMemberMessage,
+    setStatus: setCreateMemberStatus,
+  } = useAlert();
+  const {
+    message: updateSiteMessage,
+    status: updateSiteStatus,
+    setMessage: setUpdateSiteMessage,
+    setStatus: setUpdateSiteStatus,
+  } = useAlert();
+  const {
+    message: updateMemberRoleMessage,
+    status: updateMemberRoleStatus,
+    setMessage: setUpdateMemberRoleMessage,
+    setStatus: setUpdateMemberRoleStatus,
+  } = useAlert();
+  const {
+    message: deleteSiteMessage,
+    status: deleteSiteStatus,
+    setMessage: setDeleteSiteMessage,
+    setStatus: setDeleteSiteStatus,
+  } = useAlert();
 
   const handleAddAdminSubmit = async (e) => {
     e.preventDefault(); // Prevent default form submission
@@ -129,7 +159,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
       };
       const allMembers = [...site.siteRoles, newSiteRole];
       setSite({ ...site, siteRoles: allMembers });
-      console.log(site);
       document.getElementById("add_member").close();
     }
   };
@@ -137,6 +166,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
   const handleAdminDeletion = async (userId: string, siteId: string) => {
     if (admins.length === 1) {
       setDeleteAdminMessage("There should be at least one admin for the site");
+      setDeleteAdminStatus(400);
       return;
     }
     const response = await fetch(`/api/site/${domainName}/admins`, {
@@ -151,7 +181,11 @@ const SitePage = ({ params: { domainName } }: Props) => {
     });
     const result = await response.json();
 
-    setAdmins(admins.filter((a) => a.id !== userId));
+    setDeleteAdminMessage(result.message);
+    setDeleteAdminStatus(result.status);
+    if (result.status === 200) {
+      setAdmins(admins.filter((a) => a.id !== userId));
+    }
   };
 
   const handleMemberDeletion = async (userId: string, siteId: string) => {
@@ -211,9 +245,36 @@ const SitePage = ({ params: { domainName } }: Props) => {
     setUpdateSiteStatus(result.status);
     setUpdateSiteMessage(result.message);
     if (result.status === 200) {
-      setSite(result.site);
+      // Merge the updated site data with the existing site roles
+      setSite({ ...result.site, siteRoles: site.siteRoles });
     } else {
       console.error("Failed to update site:", result.message);
+    }
+  };
+
+  const handleDeleteSite = async () => {
+    try {
+      const response = await fetch(`/api/site/${domainName}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ domainName: site?.domainName }),
+      });
+
+      const result = await response.json();
+      setDeleteSiteMessage(result.message);
+      setDeleteSiteStatus(result.status);
+
+      if (result.status === 200) {
+        router.push("/admin/sites");
+      } else {
+        console.error("Failed to delete site:", result.message);
+      }
+    } catch (error) {
+      console.error("Error deleting site:", error);
+      setDeleteSiteMessage("An error occurred while deleting the site.");
+      setDeleteSiteStatus(500);
     }
   };
 
@@ -231,6 +292,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
       }),
     });
     const result = await response.json();
+    setUpdateMemberRoleStatus(result.status);
+    setUpdateMemberRoleMessage(result.message);
     if (result.status === 200) {
       // Update the site roles state
       const updatedRoles = site.siteRoles.map((role) =>
@@ -305,7 +368,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                 <h2 className="font-semibold leading-7 text-lg">
                   Site Information
                 </h2>
-                {updateSiteStatus === 200 ? (
+                {updateSiteStatus === 200 && updateSiteMessage && (
                   <div role="alert" className="alert alert-success my-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -322,12 +385,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
                     </svg>
                     <span>{updateSiteMessage}</span>
                   </div>
-                ) : createAdminStatus === 0 ? (
-                  <p className="py-4">
-                    Please fill this information. This is basic info after
-                    creating the site you can provide more info.
-                  </p>
-                ) : (
+                )}
+                {updateSiteStatus !== 200 && updateSiteMessage && (
                   <div role="alert" className="alert alert-error my-4">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -342,10 +401,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span>{createAdminMessage}</span>
+                    <span>{updateSiteMessage}</span>
                   </div>
                 )}
-
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label className="form-control w-full max-w-full">
@@ -488,6 +546,11 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       />
                     </label>
                   </div>
+                  <div className="mt-6 flex items-center justify-end gap-x-6">
+                    <button type="submit" className="btn btn-primary px-8">
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -506,7 +569,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
             name="sites_tabs"
             role="tab"
             className="tab"
-            aria-label="Courses"
+            aria-label="Certificates"
           />
           <div role="tabpanel" className="tab-content py-10"></div>
           <input
@@ -609,6 +672,42 @@ const SitePage = ({ params: { domainName } }: Props) => {
           <div role="tabpanel" className="tab-content py-10">
             {site.siteRoles && site.siteRoles.length > 0 ? (
               <div className="overflow-x-auto">
+                {updateMemberRoleStatus === 200 && updateMemberRoleMessage && (
+                  <div role="alert" className="alert alert-success my-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="stroke-current shrink-0 h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>{updateMemberRoleMessage}</span>
+                  </div>
+                )}
+                {updateMemberRoleStatus !== 200 && updateMemberRoleMessage && (
+                  <div role="alert" className="alert alert-error my-4">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="stroke-current shrink-0 h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>{updateMemberRoleMessage}</span>
+                  </div>
+                )}
                 <div className="my-6 flex items-center justify-end gap-x-6">
                   <button
                     type="button"
@@ -737,12 +836,28 @@ const SitePage = ({ params: { domainName } }: Props) => {
               </div>
             )}
           </div>
-        </div>
-
-        <div className="mt-6 flex items-center justify-end gap-x-6">
-          <button type="submit" className="btn btn-primary px-8">
-            Save
-          </button>
+          <input
+            type="radio"
+            name="sites_tabs"
+            role="tab"
+            className="tab"
+            aria-label="Danger"
+          />
+          <div role="tabpanel" className="tab-content py-10">
+            <p>
+              Deleting a site will remove all the site related data and users.
+              You can also deactivate a site instead of delete it.
+            </p>
+            <div className="mt-6  gap-x-6">
+              <button
+                className="btn btn-outline btn-error mt-4"
+                onClick={handleDeleteSite}
+              >
+                <TrashIcon className="h-5 w-6" aria-hidden="true" />
+                Delete {site.name}
+              </button>
+            </div>
+          </div>
         </div>
       </form>
       {/* Add a new admin modal */}

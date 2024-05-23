@@ -1,6 +1,6 @@
 "use server";
 
-import createUser from "../../utils/createUser";
+import createUser from "@/app/utils/createUser";
 import { z } from "zod";
 
 const personalEmailDomains = [

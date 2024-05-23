@@ -1,6 +1,6 @@
 "use server";
 
-import { createSite } from "../../../utils/createSite"
+import { createSite } from "@/app/utils/createSite"
 
 export const registerSite = async (prevState: any, formData: FormData) =>{
     // Extract relevant form data fields
