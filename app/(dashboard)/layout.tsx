@@ -11,7 +11,7 @@ interface Props {
 
 export default function RootLayout({ children }: Props) {
   return (
-    <html lang="en" data-theme="night">
+    <html lang="en" data-theme="forest">
       <body className="max-w-screen-2xl items-center mx-auto">
         <AuthProvider>
           <Navbar />

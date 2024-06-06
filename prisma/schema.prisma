@@ -9,27 +9,29 @@ datasource db {
 
 enum Role {
   STUDENT
-  INSTRUCTIONAL_DESIGNER
-  MAINTAINER
-  ADMINISTRATOR
+  INSTRUCTOR
+  MANAGER
 }
 
 model User {
-  id                 String         @id @default(cuid())
+  id                 String             @id @default(cuid())
   name               String
-  email              String         @unique
+  email              String             @unique
   emailVerified      DateTime?
   hashedPassword     String?
-  username           String         @unique
+  username           String             @unique
   isActive           Boolean
-  organizations      Organization[] @relation("UserOrganization")
-  administratedSites Site[]         @relation("SiteAdmins")
+  organizations      Organization[]     @relation("UserOrganization")
+  administratedSites Site[]             @relation("SiteAdmins")
   siteRoles          SiteRole[]
   image              String?
   accounts           Account[]
   sessions           Session[]
-  createdAt          DateTime       @default(now())
-  updatedAt          DateTime       @updatedAt
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+  CourseInstructor   CourseInstructor[]
+  CourseEnrollment   CourseEnrollment[]
+  CourseContent      CourseContent[]    @relation("ContentAuthor")
 
   @@map("users")
 }
@@ -41,19 +43,20 @@ model Organization {
 }
 
 model Site {
-  id             String     @id @default(cuid())
-  name           String
-  domainName     String     @unique
-  customDomain   String?    @unique
-  admins         User[]     @relation("SiteAdmins")
-  siteRoles      SiteRole[]
-  themeName      String
-  courses        Course[]
-  features       Feature[]  @relation("SiteFeatures")
-  isActive       Boolean
-  frontendConfig Json
-  createdAt      DateTime   @default(now())
-  updatedAt      DateTime   @updatedAt
+  id                String             @id @default(cuid())
+  name              String
+  domainName        String             @unique
+  customDomain      String?            @unique
+  admins            User[]             @relation("SiteAdmins")
+  siteRoles         SiteRole[]
+  themeName         String
+  courses           Course[]
+  features          Feature[]          @relation("SiteFeatures")
+  isActive          Boolean
+  frontendConfig    Json
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  courseEnrollments CourseEnrollment[]
 
   @@map("sites")
 }
@@ -72,16 +75,89 @@ model SiteRole {
 }
 
 model Course {
-  id     String @id @default(cuid())
-  title  String
-  site   Site   @relation(fields: [siteId], references: [id])
-  siteId String
+  id                     String             @id @default(cuid())
+  name                   String
+  description            String?
+  subjects               Subject[]          @relation("CourseSubjects")
+  topics                 Topic[]            @relation("CourseTopics")
+  startDate              DateTime?
+  endDate                DateTime?
+  price                  Float?
+  coverImage             String?
+  introVideo             String?
+  instructors            CourseInstructor[]
+  sites                  Site[]
+  createdAt              DateTime           @default(now())
+  updatedAt              DateTime           @updatedAt
+  courseEnrollments      CourseEnrollment[]
+  level                  String?
+  certificateTitle       String?
+  certificateDescription String?
+  certificateBackground  String?
+  contents               CourseContent[]    @relation("CourseContents")
+}
+
+model CourseContent {
+  id        String   @id @default(cuid())
+  content   Json
+  version   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  courseId  String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, name: "ContentAuthor")
+  course    Course   @relation(fields: [courseId], references: [id], onDelete: Cascade, name: "CourseContents")
+
+  @@unique([courseId, version])
+  @@index([authorId])
+  @@index([courseId])
+}
+
+model CourseInstructor {
+  courseId   String
+  userId     String
+  assignedAt DateTime @default(now())
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, userId])
+  @@index([userId])
+}
+
+model Subject {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  courses Course[] @relation("CourseSubjects")
+}
+
+model Topic {
+  id      String   @id @default(cuid())
+  name    String   @unique
+  courses Course[] @relation("CourseTopics")
+}
+
+model CourseEnrollment {
+  courseId   String
+  userId     String
+  siteId     String
+  enrolledAt DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  expiresAt  DateTime?
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site   Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId, siteId])
+  @@index([userId])
+  @@index([siteId])
 }
 
 model Feature {
-  id   String @id @default(cuid())
-  name String
-  site Site[] @relation("SiteFeatures")
+  id    String @id @default(cuid())
+  name  String
+  sites Site[] @relation("SiteFeatures")
 }
 
 model Account {

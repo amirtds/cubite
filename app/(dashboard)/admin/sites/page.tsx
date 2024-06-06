@@ -79,7 +79,7 @@ const Sites = () => {
             </div>
           </div>
         </div>
-        <div className="border-b mb-24">
+        <div className="border-b mb-12">
           <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
         </div>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
@@ -126,7 +126,7 @@ const Sites = () => {
           )}
         </div>
       </div>
-      <div className="border-b mb-24">
+      <div className="border-b mb-12">
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
 

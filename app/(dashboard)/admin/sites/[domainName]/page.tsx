@@ -6,6 +6,7 @@ import { TrashIcon } from "@heroicons/react/24/outline";
 import { getRoles } from "@/app/utils/getRoles";
 import { useAlert } from "@/app/utils/useAlert";
 import { useRouter } from "next/navigation";
+import { formatDateTime } from "@/app/utils/formatDateTime";
 
 interface Props {
   params: {
@@ -349,7 +350,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
           </div>
         </div>
       </div>
-      <div className="border-b mb-24 ">
+      <div className="border-b mb-12 ">
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
       <form onSubmit={handleUpdateSite} className="p-6 md:p-8">
@@ -413,7 +414,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       <textarea
                         name="createdAt"
                         id="createdAt"
-                        defaultValue={site.createdAt ? site.createdAt : ""}
+                        defaultValue={
+                          site.createdAt ? formatDateTime(site.createdAt) : ""
+                        }
                         readOnly
                         className="textarea textarea-bordered "
                       />
@@ -432,7 +435,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       <textarea
                         name="updatedAt"
                         id="updatedAt"
-                        defaultValue={site.updatedAt ? site.updatedAt : ""}
+                        defaultValue={
+                          site.updatedAt ? formatDateTime(site.updatedAt) : ""
+                        }
                         readOnly
                         className="textarea textarea-bordered"
                       />
@@ -564,14 +569,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
           />
           <div role="tabpanel" className="tab-content py-10"></div>
 
-          <input
-            type="radio"
-            name="sites_tabs"
-            role="tab"
-            className="tab"
-            aria-label="Certificates"
-          />
-          <div role="tabpanel" className="tab-content py-10"></div>
           <input
             type="radio"
             name="sites_tabs"

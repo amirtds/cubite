@@ -3,8 +3,11 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { BookOpenIcon } from "@heroicons/react/24/outline";
+import { CldImage } from "next-cloudinary";
+import { format } from "date-fns";
+import { Alert } from "@/app/components/Alert";
 
 interface Site {
   createdAt: string;
@@ -31,11 +34,67 @@ interface Site {
   }[];
 }
 
+interface Course {
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  coverImage?: string;
+  sites: {
+    name: string;
+  }[];
+}
+
 const Courses = () => {
-  const [courses, setCourses] = useState<Site[]>([]);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [error, setError] = useState<string>("");
+  const [success, setSuccess] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
   const { status, data: session } = useSession();
+
+  useEffect(() => {
+    async function getCourses() {
+      const response = await fetch("/api/courses");
+      const result = await response.json();
+
+      if (result.status === 200) {
+        setCourses(result.courses);
+      }
+    }
+    getCourses();
+  }, []);
+
+  const handleDeleteCourse = async (courseId: string) => {
+    const response = await fetch(`/api/courses`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ courseId }),
+    });
+    const result = await response.json();
+    if (result.status === 200) {
+      setCourses(courses.filter((course) => course.id !== courseId));
+      setSuccess(result.message);
+    } else {
+      setError(result.message);
+    }
+  };
+
+  const handleCopyCourse = async (courseId: string) => {
+    const response = await fetch(`/api/courses/copyCourse`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ courseId }),
+    });
+    const result = await response.json();
+    if (result.status === 201) {
+      setCourses([...courses, result.newCourse]);
+    } else {
+      setError(result.message);
+    }
+  };
 
   if (loading) {
     return (
@@ -45,12 +104,12 @@ const Courses = () => {
             <div>
               <h1 className="text-2xl font-bold">Courses</h1>
               <p className="mt-2">
-                In the following you can see all the sites you can manage.
+                In the following you can see all the courses you can manage.
               </p>
             </div>
           </div>
         </div>
-        <div className="border-b mb-24">
+        <div className="border-b mb-12">
           <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
         </div>
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
@@ -82,128 +141,123 @@ const Courses = () => {
       <div className="flex-1 py-6 md:py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Sites</h1>
+            <h1 className="text-2xl font-bold">Courses</h1>
             <p className="mt-2">
-              In the following you can see all the sites you can manage.
+              In the following you can see all the courses you can manage.
             </p>
           </div>
           {courses.length > 0 && (
             <Link
-              href="/admin/sites/new"
+              href="/admin/courses/new"
               className="h-10 w-auto btn btn-primary"
             >
-              Create a Site
+              Create a Course
             </Link>
           )}
         </div>
       </div>
-      <div className="border-b mb-24">
+      <div className="border-b mb-12">
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
 
-      {!error ? (
-        courses.length > 0 ? (
-          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
-            {courses.map((course) => (
-              <div key={course.id} className="border-2">
-                <div className="p-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-medium capitalize">
-                        {course.name}
-                      </h3>
-                      <a
-                        className="text-sm text-secondary link"
-                        href={`https://${course.domainName}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {course.domainName}
-                      </a>
-                      {process.env.NODE_ENV === "development" && (
-                        <div>
-                          <a
-                            className="text-sm text-ghost link"
-                            href={`http://${
-                              course.domainName.split(".cubite.io")[0]
-                            }.localhost:3000`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                          >
-                            {`${
-                              course.domainName.split(".cubite.io")[0]
-                            }.localhost:3000`}
-                          </a>
+      {courses.length > 0 ? (
+        <div className="overflow-x-auto">
+          <table className="table">
+            {/* head */}
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Created</th>
+                <th>Updated</th>
+                <th></th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {courses.map((course) => (
+                <tr key={course.id}>
+                  <td>
+                    <div className="flex items-center gap-3">
+                      <div className="avatar">
+                        <div className="mask mask-squircle w-12 h-12">
+                          <CldImage
+                            width="960"
+                            height="600"
+                            src={
+                              course.coverImage
+                                ? course.coverImage
+                                : "photo-1715967635831-f5a1f9658880_mhlqwu"
+                            }
+                            sizes="100vw"
+                            alt="Description of my image"
+                          />
                         </div>
-                      )}
+                      </div>
+                      <div>
+                        <div className="font-bold">{course.name}</div>
+                        <div className="text-sm opacity-50">
+                          {course.sites &&
+                            course.sites.map((site) => site.name).join(", ")}
+                        </div>
+                      </div>
                     </div>
-                    {course.isActive ? (
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 rounded-full bg-green-500 animate-ping" />
-                        <span className="text-sm font-medium text-green-500">
-                          Active
-                        </span>
-                      </div>
-                    ) : (
-                      <div className="flex items-center gap-2">
-                        <div className="h-3 w-3 rounded-full bg-red-500" />
-                        <span className="text-sm font-medium text-red-500">
-                          Inactive
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                  <div className="mt-4 flex justify-end">
+                  </td>
+                  <td>{format(new Date(course.createdAt), "PPP")}</td>
+                  <td>{format(new Date(course.updatedAt), "PPP")}</td>
+                  <th>
                     <Link
-                      className="inline-flex items-center btn btn-outline"
-                      href={`/admin/sites/${course.domainName}`}
+                      className="btn btn-outline btn-accent"
+                      href={`/admin/courses/${course.id}`}
                     >
-                      <Cog6ToothIcon className="h-6 w-6" />
-                      Manage
+                      Details
                     </Link>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center">
-            <svg
-              className="mx-auto h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                vectorEffect="non-scaling-stroke"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-semibold">No courses</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              You don't have any course. Create new one.
-            </p>
-            <div className="mt-6">
+                  </th>
+                  <td>
+                    <button
+                      className="btn btn-outline btn-secondary"
+                      onClick={() => handleCopyCourse(course.id)}
+                    >
+                      Copy
+                    </button>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-outline btn-error"
+                      onClick={() => handleDeleteCourse(course.id)}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      ) : (
+        <div className="mx-auto max-w-md sm:max-w-3xl">
+          <div>
+            <div className="text-center">
+              <BookOpenIcon className="h-12 w-12 mx-auto" />
+              <h2 className="mt-2 text-base font-semibold leading-6">
+                Create a Course
+              </h2>
+              <p className="mt-1 text-sm ">
+                You don't have any course, create one.
+              </p>
               <Link
-                href={"/admin/courses/new"}
                 type="button"
-                className="inline-flex items-center btn btn-primary"
+                className="btn btn-outline btn-ghost mt-4"
+                href="/admin/courses/new"
               >
                 <PlusIcon
                   className="-ml-0.5 mr-1.5 h-5 w-5"
                   aria-hidden="true"
                 />
-                New Course
+                Create a Course
               </Link>
             </div>
           </div>
-        )
-      ) : (
-        "No site"
+        </div>
       )}
     </div>
   );
