@@ -18,6 +18,7 @@ import Image from "@/app/plugins/image/index";
 import Embed from "@editorjs/embed";
 import CheckBox from "@/app/plugins/problem-checkbox/index";
 import MultipleChoice from "@/app/plugins/problem-multiple-choice/index";
+import Poll from "@/app/plugins/poll/index";
 
 interface Content {
   time: number;
@@ -66,6 +67,7 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         image: Image,
         checkbox: CheckBox,
         multipleChoice: MultipleChoice,
+        poll: Poll,
       },
       onReady: () => {
         editorRef.current = editor;
