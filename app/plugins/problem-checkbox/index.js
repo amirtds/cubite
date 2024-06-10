@@ -86,8 +86,8 @@ class CheckBox {
       };
 
       const handleQuestionText = (e) => {
-        this.data.questionText = e.target.innerText;
-        setQuestionText(e.target.innerText);
+        this.data.questionText = e.target.value;
+        setQuestionText(e.target.value);
       };
 
       const handleCheckboxChange = (index, checked) => {
@@ -108,15 +108,15 @@ class CheckBox {
       };
 
       return (
-        <div>
-          <p
-            className="text-md focus:outline-none"
+        <div className="my-12 grid">
+          <input
+            type="text"
+            className="focus:outline-none font-medium text-gray-900 mb-4"
             contentEditable={true}
             suppressContentEditableWarning={true}
-            onInput={handleQuestionText}
-          >
-            {questionText}
-          </p>
+            onChange={handleQuestionText}
+            value={questionText}
+          />
 
           <fieldset>
             <legend className="sr-only">Options</legend>
@@ -136,7 +136,7 @@ class CheckBox {
                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-600"
                     />
                   </div>
-                  <div className="ml-3 text-sm leading-6">
+                  <div className="ml-3 text-sm leading-6 w-full">
                     <input
                       type="text"
                       value={option.text}
@@ -145,7 +145,7 @@ class CheckBox {
                       }
                       onKeyDown={(e) => handleKeyOnOption(e, index)}
                       ref={(el) => (optionRefs.current[index] = el)}
-                      className="font-medium text-gray-900 focus:outline-none"
+                      className="w-full focus:outline-none"
                     />
                   </div>
                 </div>

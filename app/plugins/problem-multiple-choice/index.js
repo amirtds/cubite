@@ -86,7 +86,7 @@ class MultipleChoice {
       };
 
       const handleQuestionText = (e) => {
-        const newQuestionText = e.target.innerText;
+        const newQuestionText = e.target.value;
         this.data.questionText = newQuestionText;
         setQuestionText(newQuestionText);
       };
@@ -111,15 +111,14 @@ class MultipleChoice {
       };
 
       return (
-        <div>
-          <p
-            className="text-md focus:outline-none"
+        <div className="my-12 grid">
+          <input
+            className="focus:outline-none font-medium text-gray-900 mb-4"
             contentEditable={true}
             suppressContentEditableWarning={true}
-            onInput={handleQuestionText}
-          >
-            {questionText}
-          </p>
+            onChange={handleQuestionText}
+            value={questionText}
+          />
           <fieldset>
             <legend className="sr-only">Options</legend>
             <div className="space-y-5">
@@ -145,7 +144,7 @@ class MultipleChoice {
                       }
                       onKeyDown={(e) => handleKeyOnOption(e, index)}
                       ref={(el) => (optionRefs.current[index] = el)}
-                      className="font-medium text-gray-900 focus:outline-none w-full"
+                      className="focus:outline-none w-full"
                     />
                   </div>
                 </div>
