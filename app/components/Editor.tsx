@@ -15,7 +15,6 @@ import Underline from "@editorjs/underline";
 import Tooltip from "editorjs-tooltip";
 import Strikethrough from "@sotaproject/strikethrough";
 import Image from "@/app/plugins/image/index";
-import Embed from "@editorjs/embed";
 import CheckBox from "@/app/plugins/problem-checkbox/index";
 import MultipleChoice from "@/app/plugins/problem-multiple-choice/index";
 import Poll from "@/app/plugins/poll/index";
@@ -63,7 +62,6 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         underline: Underline,
         tooltip: Tooltip,
         strikethrough: Strikethrough,
-        embed: Embed,
         image: Image,
         checkbox: CheckBox,
         multipleChoice: MultipleChoice,
@@ -72,7 +70,7 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
       onReady: () => {
         editorRef.current = editor;
       },
-      onChange: async () => {
+      onChange: async (api, event) => {
         const content = await editor.save();
         onChange(content); // Pass the content back to the parent component
       },

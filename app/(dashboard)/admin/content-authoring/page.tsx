@@ -29,6 +29,20 @@ const page = () => {
   }, []);
   return (
     <div>
+      {/* Courses */}
+      <div className="flex-1 py-6 md:py-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Courses</h1>
+            <p className="mt-2">
+              Choose a course to edit or create content for.
+            </p>
+          </div>
+        </div>
+      </div>
+      <div className="border-b mb-12">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
+      </div>
       <div className="my-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
         {courses.map((course) => (
           <div
@@ -57,6 +71,18 @@ const page = () => {
             </div>
           </div>
         ))}
+      </div>
+      {/* Posts */}
+      <div className="flex-1 py-6 md:py-8">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl font-bold">Posts</h1>
+            <p className="mt-2">Choose a post to edit or create content for.</p>
+          </div>
+        </div>
+      </div>
+      <div className="border-b mb-12">
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
     </div>
   );

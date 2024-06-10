@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Editor from "@/app/components/Editor";
 import Alert from "@/app/components/Alert";
 import { useSession } from "next-auth/react";
@@ -13,21 +13,27 @@ interface Props {
 }
 
 interface Content {
-  time: Number;
+  time: number;
   blocks: [];
-  version: Number;
+  version: number;
 }
 
 const CourseAuthoring = ({ params: { id } }: Props) => {
   const [alertStatus, setStatus] = useState<number>(0);
   const [message, setMessage] = useState<string>("");
   const [content, setContent] = useState<Content | null>(null);
-  const [editorContent, setEditorContent] = useState<Content | null>(null);
+  const [changedContent, setChangedContent] = useState<Content | null>(null);
   const [courseContentVersions, setCourseContentVersions] = useState([]);
   const { status, data: session } = useSession();
   const [userId, setUserId] = useState<string>("");
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
 
-  const handleContentSave = async () => {
+  const handleContentChange = useCallback((content: Content) => {
+    setChangedContent(content);
+    setHasUnsavedChanges(true);
+  }, []);
+
+  const handleContentSave = useCallback(async () => {
     try {
       const response = await fetch(`/api/course-content/${id}`, {
         method: "POST",
@@ -37,24 +43,19 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
         body: JSON.stringify({
           courseId: id,
           authorId: userId,
-          content: editorContent ? editorContent : content,
+          content: changedContent ? changedContent : content,
         }),
       });
       const result = await response.json();
       setMessage(result.message);
       setStatus(result.status);
+      setHasUnsavedChanges(false); // Reset unsaved changes flag after saving
     } catch (err) {
       console.log(err);
     }
-  };
+  }, [changedContent, content, id, userId]);
+
   useEffect(() => {
-    const getUserId = async () => {
-      const response = await fetch("/api/getUserById");
-      const result = await response.json();
-      if (result.status === 200) {
-        setUserId(result.id);
-      }
-    };
     const getCourseContent = async (courseId: string) => {
       const response = await fetch(`/api/course-content/${courseId}`);
       const result = await response.json();
@@ -68,6 +69,15 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
         setMessage("");
       }
     };
+
+    const getUserId = async () => {
+      const response = await fetch("/api/getUserById");
+      const result = await response.json();
+      if (result.status === 200) {
+        setUserId(result.id);
+      }
+    };
+
     const getCourseContentVersions = async () => {
       const response = await fetch(`/api/course-content-versions/${id}`);
       const result = await response.json();
@@ -75,10 +85,22 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
         setCourseContentVersions(result.changeLog);
       }
     };
+
     getCourseContent(id);
     getUserId();
     getCourseContentVersions();
   }, [id]);
+
+  useEffect(() => {
+    const autosaveInterval = setInterval(() => {
+      if (hasUnsavedChanges) {
+        handleContentSave();
+      }
+    }, 300000); // Autosave every 1 minute
+
+    return () => clearInterval(autosaveInterval); // Cleanup interval on unmount
+  }, [hasUnsavedChanges, handleContentSave]);
+
   return (
     <>
       <div className="flex-1 py-6 md:py-8">
@@ -91,6 +113,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
             <button
               className="btn btn-outline btn-primary px-6"
               onClick={handleContentSave}
+              disabled={!hasUnsavedChanges} // Disable save button if there are no unsaved changes
             >
               Save
             </button>
@@ -166,7 +189,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
           setStatus(0), setMessage("");
         }}
       />
-      <Editor savedContent={content} onChange={setEditorContent} />
+      <Editor savedContent={content} onChange={handleContentChange} />
     </>
   );
 };
