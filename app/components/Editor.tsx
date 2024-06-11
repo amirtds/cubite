@@ -18,6 +18,7 @@ import Image from "@/app/plugins/image/index";
 import CheckBox from "@/app/plugins/problem-checkbox/index";
 import MultipleChoice from "@/app/plugins/problem-multiple-choice/index";
 import Poll from "@/app/plugins/poll/index";
+import Youtube from "@/app/plugins/youtube/index";
 
 interface Content {
   time: number;
@@ -66,11 +67,12 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         checkbox: CheckBox,
         multipleChoice: MultipleChoice,
         poll: Poll,
+        youtube: Youtube,
       },
       onReady: () => {
         editorRef.current = editor;
       },
-      onChange: async (api, event) => {
+      onChange: async () => {
         const content = await editor.save();
         onChange(content); // Pass the content back to the parent component
       },
