@@ -63,7 +63,7 @@ class Image {
                 ref={inputRef}
                 type="text"
                 value={caption && caption}
-                placeholder={!caption && "Write caption here"}
+                placeholder={caption ? "" : "Write caption here"}
                 onChange={handleCaption}
                 className="input input-bordered w-full"
               />

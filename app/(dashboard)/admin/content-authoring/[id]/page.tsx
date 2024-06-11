@@ -117,29 +117,16 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
             >
               Save
             </button>
-            <div className="drawer drawer-end">
-              <input
-                id="my-drawer-4"
-                type="checkbox"
-                className="drawer-toggle"
-              />
-              <div className="drawer-content mx-2">
-                {/* Page content here */}
-                <label
-                  htmlFor="my-drawer-4"
-                  className="drawer-button btn btn-outline btn-secondary"
-                >
-                  Change Log
-                </label>
-              </div>
-              <div className="drawer-side">
-                <label
-                  htmlFor="my-drawer-4"
-                  aria-label="close sidebar"
-                  className="drawer-overlay"
-                ></label>
-                <ul className="menu w-80 min-h-full bg-base-200 text-base-content p-0 list-disc">
-                  <div className="text-xl font-bold bg-primary px-4 py-8  text-gray-50">
+            <button
+              className="btn btn-outline btn-ghost mx-2"
+              onClick={() => document.getElementById("change_log").showModal()}
+            >
+              Change log
+            </button>
+            <dialog id="change_log" className="modal">
+              <div className="modal-box p-0">
+                <ul className="menu min-h-full text-base-content p-0 list-disc">
+                  <div className="text-xl font-bold bg-neutral px-4 py-8  text-gray-50">
                     Detail of Course Change
                     <p className="text-lg font-semibold text-gray-100 underline underline-offset-4">
                       #{courseContentVersions.length}
@@ -175,7 +162,10 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
                   </div>
                 </ul>
               </div>
-            </div>
+              <form method="dialog" className="modal-backdrop">
+                <button>close</button>
+              </form>
+            </dialog>
           </div>
         </div>
       </div>
