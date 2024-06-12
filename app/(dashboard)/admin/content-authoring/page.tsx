@@ -91,7 +91,7 @@ const page = () => {
         </div>
       </div>
       <div className="border-b mb-12">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+        <div className="my-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           {posts.map((post) => (
             <div
               className="card w-96 bg-base-100 shadow-xl image-full lg:col-span-3 2xl:col-span-2"
