@@ -18,7 +18,6 @@ export async function GET(
 
 export async function POST(request: NextRequest) {
   const contentData = await request.json();
-  console.log(contentData);
   const result = await createCourseContent(contentData);
   return NextResponse.json(result);
 }

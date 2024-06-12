@@ -32,6 +32,8 @@ model User {
   CourseInstructor   CourseInstructor[]
   CourseEnrollment   CourseEnrollment[]
   CourseContent      CourseContent[]    @relation("ContentAuthor")
+  PostAuthor         PostAuthor[]
+  PostContent        PostContent[]      @relation("PostContentAuthor")
 
   @@map("users")
 }
@@ -51,6 +53,7 @@ model Site {
   siteRoles         SiteRole[]
   themeName         String
   courses           Course[]
+  posts             Post[]
   features          Feature[]          @relation("SiteFeatures")
   isActive          Boolean
   frontendConfig    Json
@@ -97,6 +100,22 @@ model Course {
   contents               CourseContent[]    @relation("CourseContents")
 }
 
+model Post {
+  id          String      @id @default(cuid())
+  title       String
+  description String?
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  permalink   String      @unique
+  subjects    Subject[]   @relation("PostSubjects")
+  topics      Topic[]     @relation("PostTopics")
+  image       String?
+  sites       Site[]
+  blurb       String?
+  authors     PostAuthor[]
+  contents    PostContent[] @relation("PostContents")
+}
+
 model CourseContent {
   id        String   @id @default(cuid())
   content   Json
@@ -113,6 +132,23 @@ model CourseContent {
   @@index([courseId])
 }
 
+
+model PostContent {
+  id        String   @id @default(cuid())
+  content   Json
+  version   Int
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now()) @updatedAt
+  postId    String
+  authorId  String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, name: "PostContentAuthor")
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, name: "PostContents")
+
+  @@unique([postId, version])
+  @@index([authorId])
+  @@index([postId])
+}
+
 model CourseInstructor {
   courseId   String
   userId     String
@@ -125,16 +161,32 @@ model CourseInstructor {
   @@index([userId])
 }
 
+model PostAuthor {
+  postId String
+  userId String
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+  @@index([userId])
+
+}
+
 model Subject {
   id      String   @id @default(cuid())
   name    String   @unique
   courses Course[] @relation("CourseSubjects")
+    posts   Post[]   @relation("PostSubjects")
+
 }
 
 model Topic {
   id      String   @id @default(cuid())
   name    String   @unique
   courses Course[] @relation("CourseTopics")
+    posts   Post[]   @relation("PostTopics")
+
 }
 
 model CourseEnrollment {
