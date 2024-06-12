@@ -7,6 +7,7 @@ import MultiSelect from "@/app/components/MultiSelect";
 import { CldImage } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -167,6 +168,12 @@ const Post = ({ params: { id } }: Props) => {
             </p>
           </div>
           <div>
+            <Link
+              className="btn mx-2 btn-outline btn-ghost"
+              href={`/admin/content-authoring/post/${id}`}
+            >
+              Content Authoring
+            </Link>
             <button className="btn btn-primary" onClick={handlePostUpdate}>
               Save
             </button>

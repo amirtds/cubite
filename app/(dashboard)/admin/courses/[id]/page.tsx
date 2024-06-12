@@ -11,6 +11,7 @@ import { formatDateTime } from "@/app/utils/formatDateTime";
 import DateTimeInput from "@/app/components/DateTimeInput";
 import { TrashIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -291,6 +292,12 @@ const Course = ({ params: { id } }: Props) => {
             </p>
           </div>
           <div>
+            <Link
+              className="btn mx-2 btn-outline btn-ghost"
+              href={`/admin/content-authoring/course/${id}`}
+            >
+              Content Authoring
+            </Link>
             <button className="btn btn-primary" onClick={handleCourseSave}>
               Save
             </button>
