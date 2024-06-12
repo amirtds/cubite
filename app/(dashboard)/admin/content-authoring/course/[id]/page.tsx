@@ -27,6 +27,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
   const { status, data: session } = useSession();
   const [userId, setUserId] = useState<string>("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
+  const [course, setCourse] = useState([]);
 
   const handleContentChange = useCallback((content: Content) => {
     setChangedContent(content);
@@ -35,7 +36,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
 
   const handleContentSave = useCallback(async () => {
     try {
-      const response = await fetch(`/api/course-content/${id}`, {
+      const response = await fetch(`/api/content/course/${id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,7 +58,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
 
   useEffect(() => {
     const getCourseContent = async (courseId: string) => {
-      const response = await fetch(`/api/course-content/${courseId}`);
+      const response = await fetch(`/api/content/course/${courseId}`);
       const result = await response.json();
       setStatus(result.status);
       setMessage(result.message);
@@ -79,14 +80,21 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
     };
 
     const getCourseContentVersions = async () => {
-      const response = await fetch(`/api/course-content-versions/${id}`);
+      const response = await fetch(`/api/content-versions/course/${id}`);
       const result = await response.json();
       if (result.status === 200) {
         setCourseContentVersions(result.changeLog);
       }
     };
-
+    async function getCourse() {
+      const response = await fetch(`/api/course/${id}`);
+      const result = await response.json();
+      if (result.status === 200) {
+        setCourse(result.course);
+      }
+    }
     getCourseContent(id);
+    getCourse();
     getUserId();
     getCourseContentVersions();
   }, [id]);
@@ -106,7 +114,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
       <div className="flex-1 py-6 md:py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{id}</h1>
+            <h1 className="text-2xl font-bold">{course.name}</h1>
             <p className="mt-2">Write and Edit the course content</p>
           </div>
           <div className="flex items-end">

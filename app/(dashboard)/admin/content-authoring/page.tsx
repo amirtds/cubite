@@ -16,6 +16,7 @@ interface Course {
 
 const page = () => {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     async function getCourses() {
       const response = await fetch("/api/courses");
@@ -25,7 +26,15 @@ const page = () => {
         setCourses(result.courses);
       }
     }
+    async function getPosts() {
+      const response = await fetch("/api/posts");
+      const result = await response.json();
+      if (result.status === 200) {
+        setPosts(result.posts);
+      }
+    }
     getCourses();
+    getPosts();
   }, []);
   return (
     <div>
@@ -62,7 +71,7 @@ const page = () => {
               <p>{course.description}</p>
               <div className="card-actions justify-end">
                 <Link
-                  href={`/admin/content-authoring/${course.id}`}
+                  href={`/admin/content-authoring/course/${course.id}`}
                   className="btn btn-primary"
                 >
                   Enter
@@ -82,7 +91,35 @@ const page = () => {
         </div>
       </div>
       <div className="border-b mb-12">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
+        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+          {posts.map((post) => (
+            <div
+              className="card w-96 bg-base-100 shadow-xl image-full lg:col-span-3 2xl:col-span-2"
+              key={post.id}
+            >
+              <figure>
+                <CldImage
+                  width={500}
+                  height={500}
+                  src={post?.image}
+                  alt="Description of my image"
+                />
+              </figure>
+              <div className="card-body">
+                <h2 className="card-title">{post.title}</h2>
+                <p>{post.description}</p>
+                <div className="card-actions justify-end">
+                  <Link
+                    href={`/admin/content-authoring/post/${post.id}`}
+                    className="btn btn-primary"
+                  >
+                    Enter
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
