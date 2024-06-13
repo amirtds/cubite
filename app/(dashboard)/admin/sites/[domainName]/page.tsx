@@ -7,6 +7,8 @@ import { getRoles } from "@/app/utils/getRoles";
 import { useAlert } from "@/app/utils/useAlert";
 import { useRouter } from "next/navigation";
 import { formatDateTime } from "@/app/utils/formatDateTime";
+import { CldImage } from "next-cloudinary";
+import { CldUploadWidget } from "next-cloudinary";
 
 interface Props {
   params: {
@@ -51,6 +53,8 @@ interface User {
 const SitePage = ({ params: { domainName } }: Props) => {
   const router = useRouter();
   const [site, setSite] = useState<Site | null>(null);
+  const [isActive, setIsActive] = useState<Boolean>(false);
+  const [logo, setLogo] = useState<String>("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string>("");
   const [admins, setAdmins] = useState<User[]>([]);
@@ -120,6 +124,14 @@ const SitePage = ({ params: { domainName } }: Props) => {
       setAdmins(allAdmins);
       document.getElementById("add_admin").close();
     }
+  };
+
+  const handleIsActive = (e) => {
+    setIsActive(e.target.checked);
+  };
+
+  const handleSiteLogo = (imageSrc) => {
+    setLogo(imageSrc);
   };
 
   const handleAddMemberSubmit = async (e) => {
@@ -216,7 +228,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const updatedAt = new Date().toISOString();
-    const isActive = formData.get("isActive") === "on";
     const siteName = formData.get("siteName");
     const subDomain = formData.get("subDomain");
     const customDomain = formData.get("customDomain");
@@ -225,6 +236,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
     const updateData = {
       updatedAt,
       isActive,
+      logo,
       name: siteName,
       domainName: `${subDomain}.cubite.io`,
       customDomain,
@@ -312,10 +324,11 @@ const SitePage = ({ params: { domainName } }: Props) => {
     async function fetchSiteData() {
       try {
         const response = await fetch(`/api/site/${domainName}`);
-        const site = await response.json();
-        setAdmins(site.data.admins);
         if (response.status === 200) {
+          const site = await response.json();
+          setAdmins(site.data.admins);
           setSite(site.data);
+          setLogo(site.data.logo);
         } else {
           throw new Error(site.message);
         }
@@ -346,6 +359,22 @@ const SitePage = ({ params: { domainName } }: Props) => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold mb-2">{site.name}</h1>
+            <div className="form-control w-52 mb-4">
+              <label className="cursor-pointer label">
+                <span className="label-text font-medium text-lg">
+                  Is Active
+                </span>
+                <input
+                  className="toggle toggle-secondary"
+                  id="isActive"
+                  name="isActive"
+                  type="checkbox"
+                  defaultChecked={site.isActive}
+                  onChange={handleIsActive}
+                />
+              </label>
+            </div>
+
             <p className="text-sm text-gray-500">
               Created at {site?.createdAt && formatDateTime(site?.createdAt)}
             </p>
@@ -371,9 +400,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
           <div role="tabpanel" className="tab-content py-10">
             <div className="space-y-12">
               <div className="border-b pb-12">
-                <h2 className="font-semibold leading-7 text-lg">
-                  Site Information
-                </h2>
                 {updateSiteStatus === 200 && updateSiteMessage && (
                   <div role="alert" className="alert alert-success my-4">
                     <svg
@@ -411,6 +437,38 @@ const SitePage = ({ params: { domainName } }: Props) => {
                   </div>
                 )}
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+                  <div className="flex items-center justify-start gap-x-6">
+                    <CldUploadWidget
+                      uploadPreset="dtskghsx"
+                      options={{
+                        multiple: false,
+                        cropping: true,
+                      }}
+                      onSuccess={(results, options) => {
+                        handleSiteLogo(results.info?.public_id);
+                      }}
+                    >
+                      {({ open }) => {
+                        return (
+                          <div className="avatar">
+                            <div className="w-24 rounded-full ring ring-neutral ring-offset-base-100 ring-offset-2">
+                              {" "}
+                              <CldImage
+                                width={250}
+                                height={250}
+                                className="rounded-md"
+                                src={
+                                  logo ? logo : "courseCovers/600x400_er61hk"
+                                }
+                                onClick={() => open()}
+                                alt="Description of my image"
+                              />
+                            </div>
+                          </div>
+                        );
+                      }}
+                    </CldUploadWidget>
+                  </div>
                   <div className="sm:col-span-2">
                     <label className="form-control w-full max-w-xs">
                       <div className="label">
@@ -498,20 +556,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         <option value="luxury">Luxury</option>
                         <option value="forest">Forest</option>
                       </select>
-                    </label>
-                  </div>
-                  <div className="sm:col-span-2 pt-4">
-                    <label className="form-control w-full max-w-xs">
-                      <div className="label">
-                        <span className="label-text">Is Active</span>
-                      </div>
-                      <input
-                        id="isActive"
-                        name="isActive"
-                        type="checkbox"
-                        className="toggle"
-                        defaultChecked={site.isActive}
-                      />
                     </label>
                   </div>
                   <div className="mt-6 flex items-center justify-end gap-x-6">
