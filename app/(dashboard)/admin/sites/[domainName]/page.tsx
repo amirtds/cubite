@@ -345,8 +345,13 @@ const SitePage = ({ params: { domainName } }: Props) => {
       <div className="flex-1 py-6 md:py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{site.name}</h1>
-            <p className="mt-2">Manage {site.name} Settings</p>
+            <h1 className="text-2xl font-bold mb-2">{site.name}</h1>
+            <p className="text-sm text-gray-500">
+              Created at {site?.createdAt && formatDateTime(site?.createdAt)}
+            </p>
+            <p className="text-sm text-gray-500">
+              Updated at {site?.updatedAt && formatDateTime(site?.updatedAt)}
+            </p>
           </div>
         </div>
       </div>
@@ -406,48 +411,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
                   </div>
                 )}
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="sm:col-span-3">
-                    <label className="form-control w-full max-w-full">
-                      <div className="label">
-                        <span className="label-text">Creation Date</span>
-                      </div>
-                      <textarea
-                        name="createdAt"
-                        id="createdAt"
-                        defaultValue={
-                          site.createdAt ? formatDateTime(site.createdAt) : ""
-                        }
-                        readOnly
-                        className="textarea textarea-bordered "
-                      />
-                      <div className="label">
-                        <span className="label-text-alt">
-                          When Site got created
-                        </span>
-                      </div>
-                    </label>
-                  </div>
-                  <div className="sm:col-span-3">
-                    <label className="form-control w-full max-w-full">
-                      <div className="label">
-                        <span className="label-text">Update Date</span>
-                      </div>
-                      <textarea
-                        name="updatedAt"
-                        id="updatedAt"
-                        defaultValue={
-                          site.updatedAt ? formatDateTime(site.updatedAt) : ""
-                        }
-                        readOnly
-                        className="textarea textarea-bordered"
-                      />
-                      <div className="label">
-                        <span className="label-text-alt">
-                          When Site got updated
-                        </span>
-                      </div>
-                    </label>
-                  </div>
                   <div className="sm:col-span-2">
                     <label className="form-control w-full max-w-xs">
                       <div className="label">
