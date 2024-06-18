@@ -7,9 +7,14 @@ export const getSitesPublicData = async () => {
     const sites = await prisma.site.findMany({
       select: {
         name: true,
+        logo: true,
         domainName: true,
         customDomain: true,
         themeName: true,
+        courses: true,
+        posts: true,
+        features: true,
+        isActive: true,
         frontendConfig: true,
       },
     });
