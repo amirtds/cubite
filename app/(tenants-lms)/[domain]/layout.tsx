@@ -15,7 +15,7 @@ interface Props {
 const SitesLayout = ({ children, params }: Props) => {
   return (
     <html data-theme={params.themeName}>
-      <body className="max-w-screen-2xl items-center mx-auto">{children}</body>
+      <body className="mx-auto max-w-7xl p-6 lg:px-8">{children}</body>
     </html>
   );
 };
