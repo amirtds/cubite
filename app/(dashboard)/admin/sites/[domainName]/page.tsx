@@ -450,20 +450,15 @@ const SitePage = ({ params: { domainName } }: Props) => {
                     >
                       {({ open }) => {
                         return (
-                          <div className="avatar">
-                            <div className="w-24 rounded-full ring ring-neutral ring-offset-base-100 ring-offset-2">
-                              {" "}
-                              <CldImage
-                                width={250}
-                                height={250}
-                                className="rounded-md"
-                                src={
-                                  logo ? logo : "courseCovers/600x400_er61hk"
-                                }
-                                onClick={() => open()}
-                                alt="Description of my image"
-                              />
-                            </div>
+                          <div className="w-24">
+                            <CldImage
+                              width={250}
+                              height={250}
+                              className="rounded-md"
+                              src={logo ? logo : "courseCovers/600x400_er61hk"}
+                              onClick={() => open()}
+                              alt="Description of my image"
+                            />
                           </div>
                         );
                       }}
