@@ -16,6 +16,7 @@ export const getSitesPublicData = async () => {
         features: true,
         isActive: true,
         frontendConfig: true,
+        layout: true,
       },
     });
 

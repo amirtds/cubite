@@ -73,7 +73,7 @@ const Navbar = () => {
           <input
             type="checkbox"
             className="theme-controller"
-            value="emerald"
+            value="lofi"
             checked={isLight}
             onClick={handleThemeChange}
           />

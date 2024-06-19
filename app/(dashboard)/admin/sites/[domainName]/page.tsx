@@ -9,6 +9,12 @@ import { useRouter } from "next/navigation";
 import { formatDateTime } from "@/app/utils/formatDateTime";
 import { CldImage } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
+import NavigationLinks from "@/app/components/NavigationLinks";
+import { FaFacebookF } from "react-icons/fa6";
+import { FaTiktok } from "react-icons/fa";
+import { IoLogoYoutube } from "react-icons/io";
+import { BsInstagram } from "react-icons/bs";
+import { BsTwitterX } from "react-icons/bs";
 
 interface Props {
   params: {
@@ -59,6 +65,23 @@ const SitePage = ({ params: { domainName } }: Props) => {
   const [error, setError] = useState<string>("");
   const [admins, setAdmins] = useState<User[]>([]);
   const [roles, setRoles] = useState([]);
+  const [siteName, setSiteName] = useState("");
+  const [subDomain, setSubDomain] = useState("");
+  const [customDomain, setCustomDomain] = useState("");
+  const [theme, setTheme] = useState("");
+  const [headerLinks, setHeaderLinks] = useState([
+    { text: "", type: "internal", url: "" },
+  ]);
+  const [footerLinks, setFooterLinks] = useState([
+    { text: "", type: "internal", url: "" },
+  ]);
+  const [facebookUrl, setFacebookUrl] = useState("");
+  const [tiktokUrl, setTiktokUrl] = useState("");
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [instagramUrl, setInstagramUrl] = useState("");
+  const [xUrl, setXUrl] = useState("");
+  const [copyrightText, setCopyrightText] = useState("");
+
   const {
     message: createAdminMessage,
     status: createAdminStatus,
@@ -224,15 +247,42 @@ const SitePage = ({ params: { domainName } }: Props) => {
     }
   };
 
+  const handleSiteName = (e) => {
+    setSiteName(e.target.value);
+  };
+
+  const handleSubDomain = (e) => {
+    setSubDomain(e.target.value);
+  };
+
+  const handleCustomDomain = (e) => {
+    setCustomDomain(e.target.value);
+  };
+
+  const handleThemeSelect = (e) => {
+    setTheme(e.target.value);
+  };
+
   const handleUpdateSite = async (e) => {
     e.preventDefault();
-    const formData = new FormData(e.target);
     const updatedAt = new Date().toISOString();
-    const siteName = formData.get("siteName");
-    const subDomain = formData.get("subDomain");
-    const customDomain = formData.get("customDomain");
-    const theme = formData.get("theme");
-
+    // handle layout update
+    const layout = {
+      header: {
+        headerLinks,
+      },
+      footer: {
+        footerLinks,
+        copyrightText,
+        socialMedia: {
+          facebook: facebookUrl,
+          tiktok: tiktokUrl,
+          instagram: instagramUrl,
+          youtube: youtubeUrl,
+          x: xUrl,
+        },
+      },
+    };
     const updateData = {
       updatedAt,
       isActive,
@@ -241,6 +291,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
       domainName: `${subDomain}.cubite.io`,
       customDomain,
       themeName: theme,
+      layout,
     };
 
     const response = await fetch(`/api/site/${domainName}`, {
@@ -318,6 +369,38 @@ const SitePage = ({ params: { domainName } }: Props) => {
     }
   };
 
+  const handleHeaderLinks = (links) => {
+    setHeaderLinks(links);
+  };
+
+  const handleFooterLinks = (links) => {
+    setFooterLinks(links);
+  };
+
+  const handleFacebookURL = (e) => {
+    setFacebookUrl(e.target.value);
+  };
+
+  const handleInstagramURL = (e) => {
+    setInstagramUrl(e.target.value);
+  };
+
+  const handleTiktokURL = (e) => {
+    setTiktokUrl(e.target.value);
+  };
+
+  const handleYoutubeURL = (e) => {
+    setYoutubeUrl(e.target.value);
+  };
+
+  const handleXURL = (e) => {
+    setXUrl(e.target.value);
+  };
+
+  const handleCopyright = (e) => {
+    setCopyrightText(e.target.value);
+  };
+
   useEffect(() => {
     const roles = getRoles();
     setRoles(roles);
@@ -329,6 +412,21 @@ const SitePage = ({ params: { domainName } }: Props) => {
           setAdmins(site.data.admins);
           setSite(site.data);
           setLogo(site.data.logo);
+          setSiteName(site.data.name);
+          setSubDomain(site.data.domainName.split(".cubite.io")[0]);
+          setCustomDomain(site.data.customDomain);
+          setTheme(site.data.themeName);
+          setIsActive(site.data.isActive);
+          if (site.data.layout) {
+            setHeaderLinks(site.data.layout.header.headerLinks);
+            setFooterLinks(site.data.layout.footer.footerLinks);
+            setFacebookUrl(site.data.layout.footer.socialMedia.facebook);
+            setYoutubeUrl(site.data.layout.footer.socialMedia.youtube);
+            setInstagramUrl(site.data.layout.footer.socialMedia.instagram);
+            setXUrl(site.data.layout.footer.socialMedia.x);
+            setTiktokUrl(site.data.layout.footer.socialMedia.tiktok);
+            setCopyrightText(site.data.layout.footer.copyrightText);
+          }
         } else {
           throw new Error(site.message);
         }
@@ -382,12 +480,59 @@ const SitePage = ({ params: { domainName } }: Props) => {
               Updated at {site?.updatedAt && formatDateTime(site?.updatedAt)}
             </p>
           </div>
+          <div className="mt-6 flex items-center justify-end gap-x-6">
+            <button
+              type="submit"
+              className="btn btn-primary px-8"
+              onClick={handleUpdateSite}
+            >
+              Save
+            </button>
+          </div>
+        </div>
+        <div>
+          {updateSiteStatus === 200 && updateSiteMessage && (
+            <div role="alert" className="alert alert-success my-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{updateSiteMessage}</span>
+            </div>
+          )}
+          {updateSiteStatus !== 200 && updateSiteMessage && (
+            <div role="alert" className="alert alert-error my-4">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{updateSiteMessage}</span>
+            </div>
+          )}
         </div>
       </div>
       <div className="border-b mb-12 ">
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
-      <form onSubmit={handleUpdateSite} className="p-6 md:p-8">
+      <div className="p-6 md:p-8">
         <div role="tablist" className="tabs tabs-bordered tabs-lg">
           <input
             type="radio"
@@ -400,70 +545,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
           <div role="tabpanel" className="tab-content py-10">
             <div className="space-y-12">
               <div className="border-b pb-12">
-                {updateSiteStatus === 200 && updateSiteMessage && (
-                  <div role="alert" className="alert alert-success my-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{updateSiteMessage}</span>
-                  </div>
-                )}
-                {updateSiteStatus !== 200 && updateSiteMessage && (
-                  <div role="alert" className="alert alert-error my-4">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="stroke-current shrink-0 h-6 w-6"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                    <span>{updateSiteMessage}</span>
-                  </div>
-                )}
                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-                  <div className="flex items-center justify-start gap-x-6">
-                    <CldUploadWidget
-                      uploadPreset="dtskghsx"
-                      options={{
-                        multiple: false,
-                        cropping: true,
-                      }}
-                      onSuccess={(results, options) => {
-                        handleSiteLogo(results.info?.public_id);
-                      }}
-                    >
-                      {({ open }) => {
-                        return (
-                          <div className="w-24">
-                            <CldImage
-                              width={250}
-                              height={250}
-                              className="rounded-md"
-                              src={logo ? logo : "courseCovers/600x400_er61hk"}
-                              onClick={() => open()}
-                              alt="Description of my image"
-                            />
-                          </div>
-                        );
-                      }}
-                    </CldUploadWidget>
-                  </div>
                   <div className="sm:col-span-2">
                     <label className="form-control w-full max-w-xs">
                       <div className="label">
@@ -476,6 +558,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         defaultValue={site.name}
                         placeholder="Acme LMS"
                         className="input input-bordered w-full max-w-xs"
+                        onChange={handleSiteName}
                       />
                       <div className="label">
                         <span className="label-text-alt">
@@ -495,6 +578,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                             type="text"
                             name="subDomain"
                             id="subDomain"
+                            onChange={handleSubDomain}
                             defaultValue={
                               site.domainName.split(".cubite.io")[0]
                             }
@@ -522,6 +606,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         type="text"
                         name="customDomain"
                         id="customDomain"
+                        onChange={handleCustomDomain}
                         defaultValue={
                           site.customDomain ? site.customDomain : "example.com"
                         }
@@ -534,16 +619,202 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       </div>
                     </label>
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <input
+            type="radio"
+            name="sites_tabs"
+            role="tab"
+            className="tab"
+            aria-label="Layout"
+          />
+          <div role="tabpanel" className="tab-content py-10">
+            <div className="collapse collapse-arrow bg-base-200 my-2">
+              <input type="radio" name="my-accordion-2" defaultChecked />
+              <div className="collapse-title text-xl font-semibold">Header</div>
+              <div className="collapse-content mx-4">
+                <div className="">
+                  <h3 className="font-medium my-2 mb-8">Logo</h3>
+                  <div className="mx-4">
+                    <CldUploadWidget
+                      uploadPreset="dtskghsx"
+                      options={{
+                        multiple: false,
+                        cropping: true,
+                      }}
+                      onSuccess={(results, options) => {
+                        handleSiteLogo(results.info?.public_id);
+                      }}
+                    >
+                      {({ open }) => {
+                        return (
+                          <div className="w-16">
+                            <CldImage
+                              width={250}
+                              height={250}
+                              className="rounded-md"
+                              src={logo ? logo : "courseCovers/600x400_er61hk"}
+                              onClick={() => open()}
+                              alt="Description of my image"
+                            />
+                          </div>
+                        );
+                      }}
+                    </CldUploadWidget>
+                  </div>
+                </div>
+                <div className="divider"></div>
+
+                <NavigationLinks
+                  title={"Links"}
+                  onLinksChange={handleHeaderLinks}
+                  existingLink={headerLinks}
+                />
+              </div>
+            </div>
+
+            <div className="collapse collapse-arrow bg-base-200 my-2">
+              <input type="radio" name="my-accordion-2" />
+              <div className="collapse-title text-xl font-semibold">Footer</div>
+              <div className="collapse-content mx-4">
+                <NavigationLinks
+                  title={"Links"}
+                  onLinksChange={handleFooterLinks}
+                  existingLink={footerLinks}
+                />
+                <div className="divider"></div>
+
+                <div>
+                  <h3 className="font-medium my-2">Social Media</h3>
+                  <div className="overflow-x-auto">
+                    <table className="table">
+                      {/* head */}
+                      <thead></thead>
+                      <tbody>
+                        {/* row 1 */}
+                        <tr>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <FaFacebookF className="w-6 h-6" />
+                            </div>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              placeholder="Facebook URL"
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={handleFacebookURL}
+                              defaultValue={facebookUrl ? facebookUrl : ""}
+                            />
+                          </td>
+                        </tr>
+                        {/* row 1 */}
+                        <tr>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <FaTiktok className="w-6 h-6" />
+                            </div>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              placeholder="TikTok URL"
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={handleTiktokURL}
+                              defaultValue={tiktokUrl ? tiktokUrl : ""}
+                            />
+                          </td>
+                        </tr>
+                        {/* row 1 */}
+                        <tr>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <IoLogoYoutube className="w-6 h-6" />
+                            </div>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              placeholder="Youtube URL"
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={handleYoutubeURL}
+                              defaultValue={youtubeUrl ? youtubeUrl : ""}
+                            />
+                          </td>
+                        </tr>
+                        {/* row 1 */}
+                        <tr>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <BsInstagram className="w-6 h-6" />
+                            </div>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              placeholder="Instagram URL"
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={handleInstagramURL}
+                              defaultValue={instagramUrl ? instagramUrl : ""}
+                            />
+                          </td>
+                        </tr>
+                        {/* row 1 */}
+                        <tr>
+                          <td>
+                            <div className="flex items-center gap-3">
+                              <BsTwitterX className="w-6 h-6" />
+                            </div>
+                          </td>
+                          <td>
+                            <input
+                              type="text"
+                              placeholder="X URL"
+                              className="input input-bordered w-full max-w-xs"
+                              onChange={handleXURL}
+                              defaultValue={xUrl ? xUrl : ""}
+                            />
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div className="divider"></div>
+
+                <div>
+                  <h3 className="font-medium my-2 mb-6">Copyright Notice</h3>
+                  <input
+                    type="text"
+                    placeholder="Copyright © 2024 Cubite Technologies. All rights reserved."
+                    className="input input-bordered w-full max-w-lg"
+                    onChange={handleCopyright}
+                    defaultValue={copyrightText ? copyrightText : ""}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="collapse collapse-arrow bg-base-200 my-2">
+              <input type="radio" name="my-accordion-2" />
+              <div className="collapse-title text-xl font-semibold">Theme</div>
+              <div className="collapse-content">
+                <div className="m-6 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
                   <div className="sm:col-span-2">
                     <label className="form-control w-full max-w-xs">
                       <div className="label">
-                        <span className="label-text">Theme</span>
+                        <span className="label-text">Theme Name</span>
                       </div>
                       <select
                         name="theme"
                         required
                         className="select select-bordered"
                         defaultValue={site.themeName}
+                        onChange={handleThemeSelect}
                       >
                         <option value="lofi">Lofi</option>
                         <option value="winter">Winter</option>
@@ -553,15 +824,11 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       </select>
                     </label>
                   </div>
-                  <div className="mt-6 flex items-center justify-end gap-x-6">
-                    <button type="submit" className="btn btn-primary px-8">
-                      Save
-                    </button>
-                  </div>
                 </div>
               </div>
             </div>
           </div>
+
           <input
             type="radio"
             name="sites_tabs"
@@ -858,7 +1125,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
             </div>
           </div>
         </div>
-      </form>
+      </div>
       {/* Add a new admin modal */}
       <dialog id="add_admin" className="modal">
         <div className="modal-box">
