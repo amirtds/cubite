@@ -62,6 +62,8 @@ model Site {
   updatedAt         DateTime           @updatedAt
   courseEnrollments CourseEnrollment[]
   layout            Json?
+  googleAnalytics   String?
+  googleTagManager  String?
 
   @@map("sites")
 }

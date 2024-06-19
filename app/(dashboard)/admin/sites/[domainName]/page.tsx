@@ -81,6 +81,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
   const [instagramUrl, setInstagramUrl] = useState("");
   const [xUrl, setXUrl] = useState("");
   const [copyrightText, setCopyrightText] = useState("");
+  const [googleTagManager, setGoogleTagManager] = useState("");
+  const [googleAnalytics, setGoogleAnalytics] = useState("");
 
   const {
     message: createAdminMessage,
@@ -263,6 +265,14 @@ const SitePage = ({ params: { domainName } }: Props) => {
     setTheme(e.target.value);
   };
 
+  const handleGoogleAnalytics = (e) => {
+    setGoogleAnalytics(e.target.value);
+  };
+
+  const handleGoogleTagManager = (e) => {
+    setGoogleTagManager(e.target.value);
+  };
+
   const handleUpdateSite = async (e) => {
     e.preventDefault();
     const updatedAt = new Date().toISOString();
@@ -292,6 +302,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
       customDomain,
       themeName: theme,
       layout,
+      googleAnalytics,
+      googleTagManager,
     };
 
     const response = await fetch(`/api/site/${domainName}`, {
@@ -427,6 +439,10 @@ const SitePage = ({ params: { domainName } }: Props) => {
             setTiktokUrl(site.data.layout.footer.socialMedia.tiktok);
             setCopyrightText(site.data.layout.footer.copyrightText);
           }
+          site.data.googleAnalytics &&
+            setGoogleAnalytics(site.data.googleAnalytics);
+          site.data.googleTagManager &&
+            setGoogleAnalytics(site.data.googleTagManager);
         } else {
           throw new Error(site.message);
         }
@@ -836,7 +852,48 @@ const SitePage = ({ params: { domainName } }: Props) => {
             className="tab"
             aria-label="Features"
           />
-          <div role="tabpanel" className="tab-content py-10"></div>
+          <div role="tabpanel" className="tab-content py-10">
+            <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              <div className="sm:col-span-2">
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Google Analytics ID</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="googleAnalytics"
+                    id="googleAnalytics"
+                    defaultValue={site.googleAnalytics}
+                    placeholder="UA-xxxxx"
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={handleGoogleAnalytics}
+                  />
+                  <div className="label">
+                    <span className="label-text-alt"></span>
+                  </div>
+                </label>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Google Tag Manager ID</span>
+                  </div>
+                  <input
+                    type="text"
+                    name="googleTagManager"
+                    id="googleTagManager"
+                    defaultValue={site.googleTagManager}
+                    placeholder="GTM-xxxxx"
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={handleGoogleTagManager}
+                  />
+                  <div className="label">
+                    <span className="label-text-alt"></span>
+                  </div>
+                </label>
+              </div>
+            </div>
+          </div>
 
           <input
             type="radio"

@@ -32,35 +32,35 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
           <nav className="flex-1 overflow-y-auto px-4 py-4">
             <div className="grid gap-2">
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/sites"
               >
                 <WindowIcon className="h-6 w-6" />
                 <span>Sites</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/courses"
               >
                 <BookOpenIcon className="h-6 w-6" />
                 <span>Courses</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/pages"
               >
                 <DocumentTextIcon className="h-6 w-6" />
                 <span>Pages</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/content-authoring"
               >
                 <PencilSquareIcon className="h-6 w-6" />
                 <span>Content Authoring</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/courses"
               >
                 <MapIcon className="h-6 w-6" />
@@ -68,21 +68,21 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
               </Link>
 
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/users"
               >
                 <UsersIcon className="h-6 w-6" />
                 <span>Users</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/reports"
               >
                 <ChartPieIcon className="h-6 w-6" />
                 <span>Reports</span>
               </Link>
               <Link
-                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
+                className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary hover:text-base-200"
                 href="/admin/reports"
               >
                 <LinkIcon className="h-6 w-6" />
