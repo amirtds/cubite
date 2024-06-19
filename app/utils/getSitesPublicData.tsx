@@ -12,7 +12,7 @@ export const getSitesPublicData = async () => {
         customDomain: true,
         themeName: true,
         courses: true,
-        posts: true,
+        pages: true,
         features: true,
         isActive: true,
         frontendConfig: true,

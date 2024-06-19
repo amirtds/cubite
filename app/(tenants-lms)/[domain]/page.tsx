@@ -20,7 +20,7 @@ async function getSites() {
 export default async function Home({ params: { domain } }: Props) {
   const result = await getSites();
   let site;
-
+  console.log(result);
   if (result.status === 200) {
     site = result.sites.find(
       (s) => s.domainName.split(`.${process.env.MAIN_DOMAIN}`)[0] === domain

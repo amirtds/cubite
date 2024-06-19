@@ -16,7 +16,6 @@ interface Course {
 
 const page = () => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [posts, setPosts] = useState([]);
   useEffect(() => {
     async function getCourses() {
       const response = await fetch("/api/courses");
@@ -26,15 +25,7 @@ const page = () => {
         setCourses(result.courses);
       }
     }
-    async function getPosts() {
-      const response = await fetch("/api/posts");
-      const result = await response.json();
-      if (result.status === 200) {
-        setPosts(result.posts);
-      }
-    }
     getCourses();
-    getPosts();
   }, []);
   return (
     <div>
@@ -80,46 +71,6 @@ const page = () => {
             </div>
           </div>
         ))}
-      </div>
-      {/* Posts */}
-      <div className="flex-1 py-6 md:py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Posts</h1>
-            <p className="mt-2">Choose a post to edit or create content for.</p>
-          </div>
-        </div>
-      </div>
-      <div className="border-b mb-12">
-        <div className="my-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          {posts.map((post) => (
-            <div
-              className="card w-96 bg-base-100 shadow-xl image-full lg:col-span-3 2xl:col-span-2"
-              key={post.id}
-            >
-              <figure>
-                <CldImage
-                  width={500}
-                  height={500}
-                  src={post?.image}
-                  alt="Description of my image"
-                />
-              </figure>
-              <div className="card-body">
-                <h2 className="card-title">{post.title}</h2>
-                <p>{post.description}</p>
-                <div className="card-actions justify-end">
-                  <Link
-                    href={`/admin/content-authoring/post/${post.id}`}
-                    className="btn btn-primary"
-                  >
-                    Enter
-                  </Link>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
       </div>
     </div>
   );

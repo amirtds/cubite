@@ -47,10 +47,10 @@ const AdminLayout = async ({ children }: { children: React.ReactNode }) => {
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"
-                href="/admin/posts"
+                href="/admin/pages"
               >
                 <DocumentTextIcon className="h-6 w-6" />
-                <span>Posts</span>
+                <span>Pages</span>
               </Link>
               <Link
                 className="flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-secondary"

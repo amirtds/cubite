@@ -32,8 +32,8 @@ model User {
   CourseInstructor   CourseInstructor[]
   CourseEnrollment   CourseEnrollment[]
   CourseContent      CourseContent[]    @relation("ContentAuthor")
-  PostAuthor         PostAuthor[]
-  PostContent        PostContent[]      @relation("PostContentAuthor")
+  PageAuthor         PageAuthor[]
+  PageContent        PageContent[]      @relation("PageContentAuthor")
 
   @@map("users")
 }
@@ -54,7 +54,7 @@ model Site {
   siteRoles         SiteRole[]
   themeName         String
   courses           Course[]
-  posts             Post[]
+  pages             Page[]
   features          Feature[]          @relation("SiteFeatures")
   isActive          Boolean
   frontendConfig    Json
@@ -101,20 +101,20 @@ model Course {
   contents               CourseContent[]    @relation("CourseContents")
 }
 
-model Post {
+model Page {
   id          String      @id @default(cuid())
   title       String
   description String?
   createdAt   DateTime    @default(now())
   updatedAt   DateTime    @updatedAt
   permalink   String      @unique
-  subjects    Subject[]   @relation("PostSubjects")
-  topics      Topic[]     @relation("PostTopics")
+  subjects    Subject[]   @relation("PageSubjects")
+  topics      Topic[]     @relation("PageTopics")
   image       String?
   sites       Site[]
   blurb       String?
-  authors     PostAuthor[]
-  contents    PostContent[] @relation("PostContents")
+  authors     PageAuthor[]
+  contents    PageContent[] @relation("PageContents")
 }
 
 model CourseContent {
@@ -134,20 +134,20 @@ model CourseContent {
 }
 
 
-model PostContent {
+model PageContent {
   id        String   @id @default(cuid())
   content   Json
   version   Int
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
-  postId    String
+  pageId    String
   authorId  String
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, name: "PostContentAuthor")
-  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade, name: "PostContents")
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade, name: "PageContentAuthor")
+  page      Page     @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageContents")
 
-  @@unique([postId, version])
+  @@unique([pageId, version])
   @@index([authorId])
-  @@index([postId])
+  @@index([pageId])
 }
 
 model CourseInstructor {
@@ -162,14 +162,14 @@ model CourseInstructor {
   @@index([userId])
 }
 
-model PostAuthor {
-  postId String
+model PageAuthor {
+  pageId String
   userId String
 
-  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@id([postId, userId])
+  @@id([pageId, userId])
   @@index([userId])
 
 }
@@ -178,7 +178,7 @@ model Subject {
   id      String   @id @default(cuid())
   name    String   @unique
   courses Course[] @relation("CourseSubjects")
-    posts   Post[]   @relation("PostSubjects")
+    pages   Page[]   @relation("PageSubjects")
 
 }
 
@@ -186,7 +186,7 @@ model Topic {
   id      String   @id @default(cuid())
   name    String   @unique
   courses Course[] @relation("CourseTopics")
-    posts   Post[]   @relation("PostTopics")
+    pages   Page[]   @relation("PageTopics")
 
 }
 
