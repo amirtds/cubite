@@ -53,6 +53,8 @@ const NavigationLinks = ({ onLinksChange, title, existingLink }) => {
               <option disabled>Type</option>
               <option value={"internal"}>Internal</option>
               <option value={"external"}>External</option>
+              <option value={"primary-button"}>Primary Button</option>
+              <option value={"neutral-button"}>Neutral Button</option>
             </select>
 
             <label className="form-control max-w-xs m-1 flex-none w-1/4">

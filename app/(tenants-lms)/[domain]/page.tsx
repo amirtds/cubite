@@ -33,6 +33,8 @@ export default async function Home({ params: { domain } }: Props) {
     );
   }
 
+  const headerLinks = site.layout.header.headerLinks;
+
   if (site.layout.footer) {
     ({ x, tiktok, youtube, facebook, instagram } =
       site.layout.footer.socialMedia);
@@ -110,29 +112,44 @@ export default async function Home({ params: { domain } }: Props) {
               </div>
               <div className="navbar-center hidden lg:flex">
                 <ul className="menu menu-horizontal px-1">
-                  <li>
-                    <a>Item 1</a>
-                  </li>
-                  <li>
-                    <details>
-                      <summary>Parent</summary>
-                      <ul className="p-2">
+                  {headerLinks.map(
+                    (link) =>
+                      (link.type === "internal" ||
+                        link.type === "external") && (
                         <li>
-                          <a>Submenu 1</a>
+                          <a key={link.url} href={link.url}>
+                            {link.text}
+                          </a>
                         </li>
-                        <li>
-                          <a>Submenu 2</a>
-                        </li>
-                      </ul>
-                    </details>
-                  </li>
-                  <li>
-                    <a>Item 3</a>
-                  </li>
+                      )
+                  )}
                 </ul>
               </div>
               <div className="navbar-end">
-                <a className="btn">Button</a>
+                {headerLinks.map(
+                  (link) =>
+                    link.type === "primary-button" && (
+                      <a
+                        key={link.url}
+                        className="btn btn-primary btn-outline mx-2"
+                        href={link.url}
+                      >
+                        {link.text}
+                      </a>
+                    )
+                )}
+                {headerLinks.map(
+                  (link) =>
+                    link.type === "neutral-button" && (
+                      <a
+                        key={link.url}
+                        className="btn btn-ghost btn-outline mx-2"
+                        href={link.url}
+                      >
+                        {link.text}
+                      </a>
+                    )
+                )}
               </div>
             </div>
             <div className="">
