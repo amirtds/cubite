@@ -25,20 +25,24 @@ async function getSites() {
 export default async function Home({ params: { domain } }: Props) {
   const result = await getSites();
   let site;
+  let footerColumns = [];
+  let facebook, instagram, tiktok, youtube, x;
   if (result.status === 200) {
     site = result.sites.find(
       (s) => s.domainName.split(`.${process.env.MAIN_DOMAIN}`)[0] === domain
     );
   }
-  const { x, tiktok, youtube, facebook, instagram } =
-    site.layout.footer.socialMedia;
 
-  // Calculate the number of columns and distribute footer links across columns
-  const footerLinks = site ? site.layout.footer.footerLinks : [];
-  const columns = Math.ceil(footerLinks.length / 3);
-  const footerColumns = Array.from({ length: columns }, (_, index) =>
-    footerLinks.slice(index * 3, index * 3 + 3)
-  );
+  if (site.layout.footer) {
+    ({ x, tiktok, youtube, facebook, instagram } =
+      site.layout.footer.socialMedia);
+    // Calculate the number of columns and distribute footer links across columns
+    const footerLinks = site.layout.footer.footerLinks;
+    const columns = Math.ceil(footerLinks.length / 3);
+    footerColumns = Array.from({ length: columns }, (_, index) =>
+      footerLinks.slice(index * 3, index * 3 + 3)
+    );
+  }
 
   return (
     <SitesLayout params={site}>
@@ -96,7 +100,7 @@ export default async function Home({ params: { domain } }: Props) {
                   className="btn btn-ghost text-xl hover:bg-transparent"
                 >
                   <Image
-                    src={site.logo}
+                    src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
                     width={100}
                     height={100}
                     alt="test"
@@ -173,13 +177,16 @@ export default async function Home({ params: { domain } }: Props) {
               <footer className="footer px-10 py-4 border-t bg-base-200 text-base-content border-base-300">
                 <aside className="items-center grid-flow-col">
                   <Image
-                    src={site.logo}
+                    src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
                     width={50}
                     height={50}
                     alt="test"
                     sizes="100vw"
                   />
-                  <p className="mx-2">{site.layout.footer.copyrightText}</p>
+                  <p className="mx-2">
+                    {site.layout.footer.copyrightText &&
+                      site.layout.footer.copyrightText}
+                  </p>
                 </aside>
                 <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
                   {facebook && (
