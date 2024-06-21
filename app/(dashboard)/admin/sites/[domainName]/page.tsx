@@ -1174,11 +1174,34 @@ const SitePage = ({ params: { domainName } }: Props) => {
             <div className="mt-6  gap-x-6">
               <button
                 className="btn btn-outline btn-error mt-4"
-                onClick={handleDeleteSite}
+                onClick={() =>
+                  document.getElementById("delete_site_modal").showModal()
+                }
               >
                 <TrashIcon className="h-5 w-6" aria-hidden="true" />
                 Delete {site.name}
               </button>
+              <dialog id="delete_site_modal" className="modal">
+                <div className="modal-box">
+                  <form method="dialog">
+                    {/* if there is a button in form, it will close the modal */}
+                    <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+                      ✕
+                    </button>
+                  </form>
+                  <h3 className="font-bold text-lg">Are you sure ?</h3>
+                  <p className="py-4">
+                    Click on Delete to remove site completely. If you don't want
+                    to delete the site press ESC key or click on ✕ button.
+                  </p>
+                  <button
+                    className="btn btn-outline btn-primary"
+                    onClick={handleDeleteSite}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </dialog>
             </div>
           </div>
         </div>
