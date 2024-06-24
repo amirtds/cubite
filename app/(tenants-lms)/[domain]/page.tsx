@@ -6,6 +6,16 @@ import { BsInstagram } from "react-icons/bs";
 import { FaTiktok } from "react-icons/fa";
 import { IoLogoYoutube } from "react-icons/io";
 import { BsTwitterX } from "react-icons/bs";
+import Alert from "@/app/components/Alert";
+import EditorHeader from "@/app/components/editorjsToReact/EditorHeader";
+import EditorParagraph from "@/app/components/editorjsToReact/EditorParagraph";
+import EditorList from "@/app/components/editorjsToReact/EditorList";
+import EditorTable from "@/app/components/editorjsToReact/EditorTable";
+import EditorChecklist from "@/app/components/editorjsToReact/EditorChecklist";
+import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
+import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
+import EditorImage from "@/app/components/editorjsToReact/EditorImage";
+import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
 
 interface Props {
   params: {
@@ -20,6 +30,17 @@ async function getSites() {
   );
   const result = await response.json();
   return result;
+}
+
+async function pageContent() {
+  const response = await fetch(
+    `${process.env.NEXTAUTH_URL}/api/content/page/clxt3pa7r000bwgg2mnau04i1`
+  );
+  const result = await response.json();
+  if (result.status === 200) {
+    const content = result.contents.content;
+    return content;
+  }
 }
 
 export default async function Home({ params: { domain } }: Props) {
@@ -46,6 +67,9 @@ export default async function Home({ params: { domain } }: Props) {
     );
   }
 
+  const pageContet = await pageContent();
+  const pageBlocks = await pageContet.blocks;
+  console.log(pageBlocks);
   return (
     <SitesLayout params={site}>
       <div>
@@ -151,6 +175,82 @@ export default async function Home({ params: { domain } }: Props) {
                     )
                 )}
               </div>
+            </div>
+            {/* page content */}
+            <div className="prose mx-auto max-w-7xl p-6 lg:px-8">
+              {pageBlocks.map((block) => {
+                if (block.type === "header") {
+                  return (
+                    <EditorHeader
+                      key={block.id}
+                      text={block.data.text}
+                      alignment={block.data.alignment}
+                      level={block.data.level}
+                    />
+                  );
+                }
+                if (block.type === "paragraph") {
+                  return (
+                    <EditorParagraph
+                      key={block.id}
+                      text={block.data.text}
+                      alignment={block.data.alignment}
+                    />
+                  );
+                }
+                if (block.type === "list") {
+                  return (
+                    <EditorList
+                      key={block.id}
+                      items={block.data.items}
+                      style={block.data.style}
+                    />
+                  );
+                }
+                if (block.type === "delimiter") {
+                  return <div class="ce-delimiter cdx-block"></div>;
+                }
+                if (block.type === "table") {
+                  return (
+                    <EditorTable
+                      withHeadings={block.data.withHeadings}
+                      content={block.data.content}
+                    />
+                  );
+                }
+                if (block.type === "checklist") {
+                  return <EditorChecklist items={block.data.items} />;
+                }
+                if (block.type === "alert") {
+                  return (
+                    <EditorAlert
+                      type={block.data.type}
+                      align={block.data.align}
+                      message={block.data.message}
+                    />
+                  );
+                }
+                if (block.type === "quote") {
+                  return (
+                    <EditorQuote
+                      text={block.data.text}
+                      caption={block.data.caption}
+                      alignment={block.data.alignment}
+                    />
+                  );
+                }
+                if (block.type === "image") {
+                  return (
+                    <EditorImage
+                      src={block.data.src}
+                      caption={block.data.caption}
+                    />
+                  );
+                }
+                if (block.type === "youtube") {
+                  return <EditorYoutube youtubeId={block.data.youtubeId} />;
+                }
+              })}
             </div>
             <div className="">
               <footer className="footer p-10 bg-base-200 text-base-content">

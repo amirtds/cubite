@@ -344,12 +344,14 @@ const Page = ({ params: { id } }: Props) => {
                   </div>
                 </div>
               )}
-              <MultiSelect
-                title={"Sites"}
-                onChange={handleSites}
-                options={sites}
-                preSelectedOptions={page?.sites}
-              />
+              {!page?.isProtected && (
+                <MultiSelect
+                  title={"Sites"}
+                  onChange={handleSites}
+                  options={sites}
+                  preSelectedOptions={page?.sites}
+                />
+              )}
             </div>
           </div>
         </div>

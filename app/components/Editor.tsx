@@ -12,7 +12,6 @@ import Table from "@editorjs/table";
 import Marker from "@editorjs/marker";
 import InlineCode from "@editorjs/inline-code";
 import Underline from "@editorjs/underline";
-import Tooltip from "editorjs-tooltip";
 import Strikethrough from "@sotaproject/strikethrough";
 import Image from "@/app/plugins/image/index";
 import CheckBox from "@/app/plugins/problem-checkbox/index";
@@ -55,13 +54,17 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         },
         quote: Quote,
         delimiter: Delimiter,
-        alert: Alert,
+        alert: {
+          class: Alert,
+          config: {
+            alertTypes: ["info", "success", "warning", "danger"],
+          },
+        },
         checklist: Checklist,
         table: Table,
         Marker: Marker,
         inlineCode: InlineCode,
         underline: Underline,
-        tooltip: Tooltip,
         strikethrough: Strikethrough,
         image: Image,
         checkbox: CheckBox,

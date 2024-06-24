@@ -106,7 +106,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
       if (hasUnsavedChanges) {
         handleContentSave();
       }
-    }, 1000); // Autosave every 3 minutes
+    }, 1000000); // Autosave every 3 minutes
 
     return () => clearInterval(autosaveInterval); // Cleanup interval on unmount
   }, [hasUnsavedChanges, handleContentSave]);
