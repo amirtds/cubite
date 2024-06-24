@@ -118,6 +118,7 @@ model Page {
   blurb       String?
   authors     PageAuthor[]
   contents    PageContent[] @relation("PageContents")
+  isProtected Boolean      @default(false)
 }
 
 model CourseContent {
