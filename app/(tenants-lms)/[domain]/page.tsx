@@ -4,7 +4,7 @@ import Link from "next/link";
 import { FaFacebookF } from "react-icons/fa6";
 import { BsInstagram } from "react-icons/bs";
 import { FaTiktok } from "react-icons/fa";
-import { FaYoutube } from "react-icons/fa";
+import { IoLogoYoutube } from "react-icons/io";
 import { BsTwitterX } from "react-icons/bs";
 
 interface Props {
@@ -128,10 +128,10 @@ export default async function Home({ params: { domain } }: Props) {
               <div className="navbar-end">
                 {headerLinks.map(
                   (link) =>
-                    link.type === "primary-button" && (
+                    link.type === "neutral-button" && (
                       <a
                         key={link.url}
-                        className="btn btn-primary btn-outline mx-2"
+                        className="btn btn-ghost btn-outline mx-2"
                         href={link.url}
                       >
                         {link.text}
@@ -140,10 +140,10 @@ export default async function Home({ params: { domain } }: Props) {
                 )}
                 {headerLinks.map(
                   (link) =>
-                    link.type === "neutral-button" && (
+                    link.type === "primary-button" && (
                       <a
                         key={link.url}
-                        className="btn btn-ghost btn-outline mx-2"
+                        className="btn btn-primary mx-2"
                         href={link.url}
                       >
                         {link.text}
@@ -223,7 +223,7 @@ export default async function Home({ params: { domain } }: Props) {
                   )}
                   {youtube && (
                     <a href={youtube}>
-                      <FaYoutube className="w-6 h-6" />
+                      <IoLogoYoutube className="w-8 h-8" />
                     </a>
                   )}
                   {x && (
