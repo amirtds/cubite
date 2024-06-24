@@ -15,6 +15,17 @@ export const deleteSite = async (domainName: string) => {
       };
     }
 
+    // Delete the associated pages
+    const deletePages = await prisma.page.deleteMany({
+      where: {
+        sites: {
+          some: {
+            id: site.id,
+          },
+        },
+      },
+    });
+
     const deletedSite = await prisma.site.delete({
       where: {
         id: site.id,

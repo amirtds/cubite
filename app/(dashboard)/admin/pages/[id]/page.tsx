@@ -247,6 +247,7 @@ const Page = ({ params: { id } }: Props) => {
                     className="input input-bordered w-full max-w-xs"
                     onChange={handlePermalink}
                     required={true}
+                    readOnly={page?.isProtected}
                   />
                   <div className="label">
                     <span className="label-text-alt">
@@ -309,12 +310,14 @@ const Page = ({ params: { id } }: Props) => {
                   </label>
                   <div className="mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10">
                     <div className="text-center">
-                      <CldImage
-                        width={500}
-                        height={500}
-                        src={page?.image}
-                        alt="Description of my image"
-                      />
+                      {page?.image && (
+                        <CldImage
+                          width={500}
+                          height={500}
+                          src={page.image}
+                          alt="Description of my image"
+                        />
+                      )}
                       <div className="mt-4 flex text-sm leading-6">
                         <CldUploadWidget
                           uploadPreset="dtskghsx"

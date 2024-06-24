@@ -59,7 +59,7 @@ export const createSite = async (data: SiteData) => {
   const indexPage = await prisma.page.create({
     data: {
       title: "Index",
-      permalink: "index",
+      permalink: `index-${newSite.id}`,
       isProtected: true,
       authors: {
         create: [{ user: { connect: { id: user.id } } }],
