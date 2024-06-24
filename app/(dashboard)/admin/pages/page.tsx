@@ -148,22 +148,26 @@ const Pages = () => {
                       <PencilIcon className="h-6 w-6 mx-auto" />
                     </Link>
                   </th>
-                  <td>
-                    <button
-                      className="btn btn-outline btn-secondary"
-                      onClick={() => handleCopyPage(page.id)}
-                    >
-                      <DocumentDuplicateIcon className="h-6 w-6 mx-auto" />
-                    </button>
-                  </td>
-                  <td>
-                    <button
-                      className="btn btn-outline btn-error"
-                      onClick={() => handleDeletePage(page.id)}
-                    >
-                      <TrashIcon className="h-6 w-6 mx-auto" />
-                    </button>
-                  </td>
+                  {!page.isProtected && (
+                    <>
+                      <td>
+                        <button
+                          className="btn btn-outline btn-secondary"
+                          onClick={() => handleCopyPage(page.id)}
+                        >
+                          <DocumentDuplicateIcon className="h-6 w-6 mx-auto" />
+                        </button>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-outline btn-error"
+                          onClick={() => handleDeletePage(page.id)}
+                        >
+                          <TrashIcon className="h-6 w-6 mx-auto" />
+                        </button>
+                      </td>
+                    </>
+                  )}
                 </tr>
               ))}
             </tbody>

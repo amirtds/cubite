@@ -55,6 +55,21 @@ export const createSite = async (data: SiteData) => {
     },
   });
 
+  // Create the index page for the new site
+  const indexPage = await prisma.page.create({
+    data: {
+      title: "Index",
+      permalink: "index",
+      isProtected: true,
+      authors: {
+        create: [{ user: { connect: { id: user.id } } }],
+      },
+      sites: {
+        connect: { id: newSite.id },
+      },
+    },
+  });
+
   return {
     status: 201,
     message: "Successfully created a new site",
@@ -63,6 +78,7 @@ export const createSite = async (data: SiteData) => {
       name: newSite.name,
       domainName: newSite.domainName,
       customDomain: newSite.customDomain,
+      indexPageId: indexPage.id, // Include the ID of the index page
     },
   };
 };
