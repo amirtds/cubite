@@ -18,6 +18,7 @@ import CheckBox from "@/app/plugins/problem-checkbox/index";
 import MultipleChoice from "@/app/plugins/problem-multiple-choice/index";
 import Poll from "@/app/plugins/poll/index";
 import Youtube from "@/app/plugins/youtube/index";
+import Courses from "@/app/plugins/courses/index";
 
 interface Content {
   time: number;
@@ -71,6 +72,7 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         multipleChoice: MultipleChoice,
         poll: Poll,
         youtube: Youtube,
+        courses: Courses,
       },
       onReady: () => {
         editorRef.current = editor;

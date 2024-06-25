@@ -56,6 +56,8 @@ export const getCourses = async (userEmail: string) => {
         },
       },
       sites: true,
+      topics: true,
+      subjects: true,
     },
   });
 

@@ -448,7 +448,7 @@ const Course = ({ params: { id } }: Props) => {
                   <select
                     className="select select-bordered"
                     onChange={handleLevel}
-                    defaultValue={course.level ? course.level : "Beginner"}
+                    defaultValue={course.level ? course.level : ""}
                   >
                     <option>Beginner</option>
                     <option>Intermidiate</option>

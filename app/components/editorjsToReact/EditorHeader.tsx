@@ -51,7 +51,7 @@ const EditorHeader = ({ text, level, alignment }: Props) => {
   }
 
   // Combine classes
-  const combinedClasses = `${fontSizeClass} ${alignmentClass}`;
+  const combinedClasses = ` my-6 ${fontSizeClass} ${alignmentClass}`;
 
   return <p className={combinedClasses}>{text}</p>;
 };

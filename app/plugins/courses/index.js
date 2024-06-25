@@ -1,0 +1,225 @@
+import React, { useState, useEffect } from "react";
+import { createRoot } from "react-dom/client";
+
+class Courses {
+  static get toolbox() {
+    return {
+      title: "Courses",
+      icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6"><path stroke-linecap="round" stroke-linejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" /></svg>',
+    };
+  }
+
+  constructor({ data }) {
+    this.data = data || { courses: [], sortBy: "name_asc", limitCourses: 3 };
+  }
+
+  render() {
+    const wrapper = document.createElement("div");
+    const root = createRoot(wrapper);
+
+    const CoursesComponent = ({ initialData, updateData }) => {
+      const [courses, setCourses] = useState(initialData.courses || []);
+      const [sortBy, setSortBy] = useState(initialData.sortBy || "name_asc");
+      const [limitCourses, setLimitCourses] = useState(
+        initialData.limitCourses || 3
+      );
+
+      useEffect(() => {
+        const getCourses = async () => {
+          const response = await fetch(`/api/courses`);
+          const result = await response.json();
+          const updatedCourses = result.courses.map((course) => {
+            const existingCourse = initialData.courses.find(
+              (c) => c.id === course.id
+            );
+            return {
+              ...course,
+              featured: existingCourse ? existingCourse.featured : false,
+              hide: existingCourse ? existingCourse.hide : false,
+            };
+          });
+          setCourses(updatedCourses);
+        };
+        getCourses();
+      }, []);
+
+      const handleLimitCourses = (e) => {
+        const value = e.target.value;
+        setLimitCourses(value);
+        updateData({ limitCourses: value });
+      };
+
+      const handleSortBy = (e) => {
+        const value = e.target.value;
+        setSortBy(value);
+        updateData({ sortBy: value });
+      };
+
+      const handleFeatured = (courseId, checked) => {
+        const updatedCourses = courses.map((course) =>
+          course.id === courseId ? { ...course, featured: checked } : course
+        );
+        setCourses(updatedCourses);
+        updateData({ courses: updatedCourses });
+      };
+
+      const handleHide = (courseId, checked) => {
+        const updatedCourses = courses.map((course) =>
+          course.id === courseId ? { ...course, hide: checked } : course
+        );
+        setCourses(updatedCourses);
+        updateData({ courses: updatedCourses });
+      };
+
+      const sortedCourses = [...courses]
+        .sort((a, b) => {
+          if (sortBy === "name_asc") return a.name.localeCompare(b.name);
+          if (sortBy === "name_desc") return b.name.localeCompare(a.name);
+          if (sortBy === "level") return a.level.localeCompare(b.level);
+          if (sortBy === "start_date")
+            return new Date(a.startDate) - new Date(b.startDate);
+          return 0;
+        })
+        .slice(0, limitCourses);
+
+      return (
+        <div className="my-3">
+          <div role="tablist" className="tabs tabs-lifted">
+            <input
+              type="radio"
+              name="courses_tabs"
+              role="tab"
+              className="tab"
+              aria-label="Courses Table"
+              defaultChecked
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+            >
+              <div className="overflow-x-auto">
+                <table className="table">
+                  <thead>
+                    <tr className="text-left">
+                      <th>Name</th>
+                      <th>Level</th>
+                      <th>Start Date</th>
+                      <th>Featured</th>
+                      <th>Hide</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {sortedCourses.map((course) => (
+                      <tr key={course.id} className="hover">
+                        <td>{course.name}</td>
+                        <td>{course.level}</td>
+                        <td>{course.startDate ? course.startDate : "-"}</td>
+                        <td>
+                          <label>
+                            <input
+                              type="checkbox"
+                              className="checkbox"
+                              name="featured"
+                              checked={!!course.featured}
+                              onChange={(e) =>
+                                handleFeatured(course.id, e.target.checked)
+                              }
+                            />
+                          </label>
+                        </td>
+                        <td>
+                          <label>
+                            <input
+                              type="checkbox"
+                              className="checkbox"
+                              name="hide"
+                              checked={!!course.hide}
+                              onChange={(e) =>
+                                handleHide(course.id, e.target.checked)
+                              }
+                            />
+                          </label>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <input
+              type="radio"
+              name="courses_tabs"
+              role="tab"
+              className="tab"
+              aria-label="Section Configs"
+            />
+            <div
+              role="tabpanel"
+              className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+            >
+              <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-4">
+                <div className="sm:col-span-2">
+                  <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                      <span className="label-text">Sort By</span>
+                    </div>
+                    <select
+                      className="select select-bordered"
+                      onChange={handleSortBy}
+                      value={sortBy}
+                    >
+                      <option disabled>Pick one</option>
+                      <option value="name_asc">Name (A - Z)</option>
+                      <option value="name_desc">Name (Z - A)</option>
+                      <option value="level">Level</option>
+                      <option value="start_date">Start Date</option>
+                    </select>
+                  </label>
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                      <span className="label-text">
+                        Number of Courses to Show
+                      </span>
+                    </div>
+                    <input
+                      type="number"
+                      min={1}
+                      max={9}
+                      value={limitCourses}
+                      className="input input-bordered w-full max-w-xs"
+                      onChange={handleLimitCourses}
+                    />
+                  </label>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    root.render(
+      <CoursesComponent
+        initialData={this.data}
+        updateData={(newData) => {
+          this.data = { ...this.data, ...newData };
+        }}
+      />
+    );
+
+    return wrapper;
+  }
+
+  save(blockContent) {
+    return {
+      courses: this.data.courses,
+      sortBy: this.data.sortBy,
+      limitCourses: this.data.limitCourses,
+    };
+  }
+}
+
+export default Courses;
