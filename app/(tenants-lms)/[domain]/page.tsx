@@ -32,14 +32,19 @@ async function getSites() {
   return result;
 }
 
-async function pageContent() {
-  const response = await fetch(
-    `${process.env.NEXTAUTH_URL}/api/content/page/clxt3pa7r000bwgg2mnau04i1`
-  );
-  const result = await response.json();
-  if (result.status === 200) {
-    const content = result.contents.content;
-    return content;
+async function pageContent(pageId: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXTAUTH_URL}/api/content/page/${pageId}`
+    );
+    const result = await response.json();
+    if (result.status === 200) {
+      return result.contents.content;
+    }
+    return null;
+  } catch (error) {
+    console.error("Error fetching page content:", error);
+    return null;
   }
 }
 
@@ -67,9 +72,10 @@ export default async function Home({ params: { domain } }: Props) {
     );
   }
 
-  const pageContet = await pageContent();
-  const pageBlocks = await pageContet.blocks;
-  console.log(pageBlocks);
+  const indexPageId = site.pages.find((page) => page.title === "Index")?.id;
+  const pageContentData = indexPageId ? await pageContent(indexPageId) : null;
+  const pageBlocks = pageContentData ? pageContentData.blocks : [];
+
   return (
     <SitesLayout params={site}>
       <div>
@@ -180,208 +186,215 @@ export default async function Home({ params: { domain } }: Props) {
             </div>
             {/* page content */}
             <div className="mx-auto max-w-7xl p-6 lg:px-8">
-              {pageBlocks.map((block) => {
-                if (block.type === "header") {
-                  return (
-                    <EditorHeader
-                      key={block.id}
-                      text={block.data.text}
-                      alignment={block.data.alignment}
-                      level={block.data.level}
-                    />
-                  );
-                }
-                if (block.type === "paragraph") {
-                  return (
-                    <EditorParagraph
-                      key={block.id}
-                      text={block.data.text}
-                      alignment={block.data.alignment}
-                    />
-                  );
-                }
-                if (block.type === "list") {
-                  return (
-                    <EditorList
-                      key={block.id}
-                      items={block.data.items}
-                      style={block.data.style}
-                    />
-                  );
-                }
-                if (block.type === "delimiter") {
-                  return <div className="ce-delimiter cdx-block"></div>;
-                }
-                if (block.type === "table") {
-                  return (
-                    <EditorTable
-                      key={block.id}
-                      withHeadings={block.data.withHeadings}
-                      content={block.data.content}
-                    />
-                  );
-                }
-                if (block.type === "checklist") {
-                  return (
-                    <EditorChecklist key={block.id} items={block.data.items} />
-                  );
-                }
-                if (block.type === "alert") {
-                  return (
-                    <EditorAlert
-                      key={block.id}
-                      type={block.data.type}
-                      align={block.data.align}
-                      message={block.data.message}
-                    />
-                  );
-                }
-                if (block.type === "quote") {
-                  return (
-                    <EditorQuote
-                      key={block.id}
-                      text={block.data.text}
-                      caption={block.data.caption}
-                      alignment={block.data.alignment}
-                    />
-                  );
-                }
-                if (block.type === "image") {
-                  return (
-                    <EditorImage
-                      key={block.id}
-                      src={block.data.src}
-                      caption={block.data.caption}
-                    />
-                  );
-                }
-                if (block.type === "youtube") {
-                  return (
-                    <EditorYoutube
-                      key={block.id}
-                      youtubeId={block.data.youtubeId}
-                    />
-                  );
-                }
-                if (block.type === "courses") {
-                  const visibleCourses = block.data.courses.filter(
-                    (course) => !course.hide
-                  );
+              {pageBlocks.length > 0 ? (
+                pageBlocks.map((block) => {
+                  if (block.type === "header") {
+                    return (
+                      <EditorHeader
+                        key={block.id}
+                        text={block.data.text}
+                        alignment={block.data.alignment}
+                        level={block.data.level}
+                      />
+                    );
+                  }
+                  if (block.type === "paragraph") {
+                    return (
+                      <EditorParagraph
+                        key={block.id}
+                        text={block.data.text}
+                        alignment={block.data.alignment}
+                      />
+                    );
+                  }
+                  if (block.type === "list") {
+                    return (
+                      <EditorList
+                        key={block.id}
+                        items={block.data.items}
+                        style={block.data.style}
+                      />
+                    );
+                  }
+                  if (block.type === "delimiter") {
+                    return <div className="ce-delimiter cdx-block"></div>;
+                  }
+                  if (block.type === "table") {
+                    return (
+                      <EditorTable
+                        key={block.id}
+                        withHeadings={block.data.withHeadings}
+                        content={block.data.content}
+                      />
+                    );
+                  }
+                  if (block.type === "checklist") {
+                    return (
+                      <EditorChecklist
+                        key={block.id}
+                        items={block.data.items}
+                      />
+                    );
+                  }
+                  if (block.type === "alert") {
+                    return (
+                      <EditorAlert
+                        key={block.id}
+                        type={block.data.type}
+                        align={block.data.align}
+                        message={block.data.message}
+                      />
+                    );
+                  }
+                  if (block.type === "quote") {
+                    return (
+                      <EditorQuote
+                        key={block.id}
+                        text={block.data.text}
+                        caption={block.data.caption}
+                        alignment={block.data.alignment}
+                      />
+                    );
+                  }
+                  if (block.type === "image") {
+                    return (
+                      <EditorImage
+                        key={block.id}
+                        src={block.data.src}
+                        caption={block.data.caption}
+                      />
+                    );
+                  }
+                  if (block.type === "youtube") {
+                    return (
+                      <EditorYoutube
+                        key={block.id}
+                        youtubeId={block.data.youtubeId}
+                      />
+                    );
+                  }
+                  if (block.type === "courses") {
+                    const visibleCourses = block.data.courses.filter(
+                      (course) => !course.hide
+                    );
 
-                  const sortedCourses = [...visibleCourses]
-                    .sort((a, b) => {
-                      if (block.data.sortBy === "name_asc")
-                        return a.name.localeCompare(b.name);
-                      if (block.data.sortBy === "name_desc")
-                        return b.name.localeCompare(a.name);
-                      if (block.data.sortBy === "level")
-                        return (a.level || "").localeCompare(b.level || "");
-                      if (block.data.sortBy === "start_date")
-                        return (
-                          new Date(a.startDate || 0) -
-                          new Date(b.startDate || 0)
-                        );
-                      return 0;
-                    })
-                    .slice(0, block.data.limitCourses || 3);
+                    const sortedCourses = [...visibleCourses]
+                      .sort((a, b) => {
+                        if (block.data.sortBy === "name_asc")
+                          return a.name.localeCompare(b.name);
+                        if (block.data.sortBy === "name_desc")
+                          return b.name.localeCompare(a.name);
+                        if (block.data.sortBy === "level")
+                          return (a.level || "").localeCompare(b.level || "");
+                        if (block.data.sortBy === "start_date")
+                          return (
+                            new Date(a.startDate || 0) -
+                            new Date(b.startDate || 0)
+                          );
+                        return 0;
+                      })
+                      .slice(0, block.data.limitCourses || 3);
 
-                  return (
-                    <div
-                      key={block.id}
-                      className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
-                    >
-                      {sortedCourses.map((course) => (
-                        <div
-                          key={course.id}
-                          className="card bg-base-100 shadow-xl"
-                        >
-                          <figure>
-                            <Image
-                              src={
-                                course.coverImage
-                                  ? course.coverImage
-                                  : "photo-1715967635831-f5a1f9658880_mhlqwu"
-                              }
-                              width={500}
-                              height={250}
-                              alt="Course cover"
-                              sizes="100vw"
-                            />
-                          </figure>
-                          <div className="card-body">
-                            <div className="card-actions justify-start">
-                              {course.topics.map((topic) => (
-                                <div
-                                  key={topic.id}
-                                  className="badge badge-outline"
-                                >
-                                  {topic.name}
-                                </div>
-                              ))}
-                            </div>
-                            <h2 className="card-title">
-                              {course.name}
-                              {course.featured && (
-                                <div className="badge badge-secondary">
-                                  FEATURED
-                                </div>
-                              )}
-                            </h2>
-                            <p>
-                              {course.description
-                                ? course.description
-                                : "Click on enroll now to see the course"}
-                            </p>
-                            <div className="card-actions justify-end">
-                              <button className="btn btn-primary">
-                                Enroll Now
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                }
-                if (block.type === "cta") {
-                  return (
-                    <div className="overflow-hidden py-12">
-                      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                          <div className="flex flex-col justify-center">
-                            <h2 className="text-3xl font-bold tracking-tight sm:text-4xl !mt-3 !mb-0">
-                              {block.data.title}
-                            </h2>
-                            <p className="mt-6 text-base leading-7">
-                              {block.data.description}
-                            </p>
-                            <div className="mt-4 flex">
-                              <a
-                                className="btn btn-outline btn-ghost"
-                                href={block.data.buttonUrl}
-                              >
-                                {block.data.buttonText}
-                              </a>
-                            </div>
-                          </div>
-                          <div className="text-center">
-                            <div className="mt-4 flex text-sm leading-6">
+                    return (
+                      <div
+                        key={block.id}
+                        className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
+                      >
+                        {sortedCourses.map((course) => (
+                          <div
+                            key={course.id}
+                            className="card bg-base-100 shadow-xl"
+                          >
+                            <figure>
                               <Image
-                                src={block.data.image}
+                                src={
+                                  course.coverImage
+                                    ? course.coverImage
+                                    : "photo-1715967635831-f5a1f9658880_mhlqwu"
+                                }
                                 width={500}
-                                height={500}
-                                alt="test"
+                                height={250}
+                                alt="Course cover"
                                 sizes="100vw"
-                                className="rounded-md"
                               />
+                            </figure>
+                            <div className="card-body">
+                              <div className="card-actions justify-start">
+                                {course.topics.map((topic) => (
+                                  <div
+                                    key={topic.id}
+                                    className="badge badge-outline"
+                                  >
+                                    {topic.name}
+                                  </div>
+                                ))}
+                              </div>
+                              <h2 className="card-title">
+                                {course.name}
+                                {course.featured && (
+                                  <div className="badge badge-secondary">
+                                    FEATURED
+                                  </div>
+                                )}
+                              </h2>
+                              <p>
+                                {course.description
+                                  ? course.description
+                                  : "Click on enroll now to see the course"}
+                              </p>
+                              <div className="card-actions justify-end">
+                                <button className="btn btn-primary">
+                                  Enroll Now
+                                </button>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    );
+                  }
+                  if (block.type === "cta") {
+                    return (
+                      <div className="overflow-hidden py-12">
+                        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+                          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            <div className="flex flex-col justify-center">
+                              <h2 className="text-3xl font-bold tracking-tight sm:text-4xl !mt-3 !mb-0">
+                                {block.data.title}
+                              </h2>
+                              <p className="mt-6 text-base leading-7">
+                                {block.data.description}
+                              </p>
+                              <div className="mt-4 flex">
+                                <a
+                                  className="btn btn-outline btn-ghost"
+                                  href={block.data.buttonUrl}
+                                >
+                                  {block.data.buttonText}
+                                </a>
+                              </div>
+                            </div>
+                            <div className="text-center">
+                              <div className="mt-4 flex text-sm leading-6">
+                                <Image
+                                  src={block.data.image}
+                                  width={500}
+                                  height={500}
+                                  alt="test"
+                                  sizes="100vw"
+                                  className="rounded-md"
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
-                    </div>
-                  );
-                }
-              })}
+                    );
+                  }
+                })
+              ) : (
+                <div>No content available</div>
+              )}
             </div>
             <div className="bg-base-200">
               <div className="mx-auto max-w-7xl">

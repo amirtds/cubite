@@ -58,6 +58,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
 
   useEffect(() => {
     const getPageContent = async (pageId: string) => {
+      console.log(pageId);
       const response = await fetch(`/api/content/page/${pageId}`);
       const result = await response.json();
       setStatus(result.status);

@@ -4,15 +4,12 @@ import { createPageContent } from "@/app/utils/createPageContent";
 
 interface Props {
   params: {
-    courseId: string;
+    pageId: string;
   };
 }
 
-export async function GET(
-  request: NextRequest,
-  { params: { courseId } }: Props
-) {
-  const result = await getPageContent(courseId);
+export async function GET(request: NextRequest, { params: { pageId } }: Props) {
+  const result = await getPageContent(pageId);
   return NextResponse.json(result);
 }
 
