@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
+import { formatDateTime } from "@/app/utils/formatDateTime";
+import { Image } from "@/app/components/Image";
 
 class Courses {
   static get toolbox() {
@@ -14,10 +16,11 @@ class Courses {
   }
 
   render() {
+    console.log(this.data);
     const wrapper = document.createElement("div");
     const root = createRoot(wrapper);
 
-    const CoursesComponent = ({ initialData, updateData }) => {
+    const CoursesComponent = ({ initialData }) => {
       const [courses, setCourses] = useState(initialData.courses || []);
       const [sortBy, setSortBy] = useState(initialData.sortBy || "name_asc");
       const [limitCourses, setLimitCourses] = useState(
@@ -28,8 +31,8 @@ class Courses {
         const getCourses = async () => {
           const response = await fetch(`/api/courses`);
           const result = await response.json();
-          const updatedCourses = result.courses.map((course) => {
-            const existingCourse = initialData.courses.find(
+          const fetchedCourses = result.courses.map((course) => {
+            const existingCourse = initialData.courses?.find(
               (c) => c.id === course.id
             );
             return {
@@ -38,21 +41,21 @@ class Courses {
               hide: existingCourse ? existingCourse.hide : false,
             };
           });
-          setCourses(updatedCourses);
+          setCourses(fetchedCourses);
         };
         getCourses();
-      }, []);
+      }, [initialData.courses]);
 
       const handleLimitCourses = (e) => {
         const value = e.target.value;
         setLimitCourses(value);
-        updateData({ limitCourses: value });
+        this.data.limitCourses = value;
       };
 
       const handleSortBy = (e) => {
         const value = e.target.value;
         setSortBy(value);
-        updateData({ sortBy: value });
+        this.data.sortBy = value;
       };
 
       const handleFeatured = (courseId, checked) => {
@@ -60,7 +63,7 @@ class Courses {
           course.id === courseId ? { ...course, featured: checked } : course
         );
         setCourses(updatedCourses);
-        updateData({ courses: updatedCourses });
+        this.data.courses = updatedCourses;
       };
 
       const handleHide = (courseId, checked) => {
@@ -68,19 +71,8 @@ class Courses {
           course.id === courseId ? { ...course, hide: checked } : course
         );
         setCourses(updatedCourses);
-        updateData({ courses: updatedCourses });
+        this.data.courses = updatedCourses;
       };
-
-      const sortedCourses = [...courses]
-        .sort((a, b) => {
-          if (sortBy === "name_asc") return a.name.localeCompare(b.name);
-          if (sortBy === "name_desc") return b.name.localeCompare(a.name);
-          if (sortBy === "level") return a.level.localeCompare(b.level);
-          if (sortBy === "start_date")
-            return new Date(a.startDate) - new Date(b.startDate);
-          return 0;
-        })
-        .slice(0, limitCourses);
 
       return (
         <div className="my-3">
@@ -102,18 +94,14 @@ class Courses {
                   <thead>
                     <tr className="text-left">
                       <th>Name</th>
-                      <th>Level</th>
-                      <th>Start Date</th>
                       <th>Featured</th>
                       <th>Hide</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {sortedCourses.map((course) => (
+                    {courses.map((course) => (
                       <tr key={course.id} className="hover">
                         <td>{course.name}</td>
-                        <td>{course.level}</td>
-                        <td>{course.startDate ? course.startDate : "-"}</td>
                         <td>
                           <label>
                             <input
@@ -201,14 +189,7 @@ class Courses {
       );
     };
 
-    root.render(
-      <CoursesComponent
-        initialData={this.data}
-        updateData={(newData) => {
-          this.data = { ...this.data, ...newData };
-        }}
-      />
-    );
+    root.render(<CoursesComponent initialData={this.data} />);
 
     return wrapper;
   }

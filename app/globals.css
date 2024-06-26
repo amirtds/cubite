@@ -8,6 +8,14 @@
   @apply prose;
 }
 
+.ce-block__content {
+  max-width: 800px;
+}
+
+.ce-toolbar__content {
+  max-width: 800px;
+}
+
 /* marker */
 
 .cdx-marker {

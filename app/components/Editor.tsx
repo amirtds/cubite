@@ -19,6 +19,7 @@ import MultipleChoice from "@/app/plugins/problem-multiple-choice/index";
 import Poll from "@/app/plugins/poll/index";
 import Youtube from "@/app/plugins/youtube/index";
 import Courses from "@/app/plugins/courses/index";
+import CTA from "@/app/plugins/call-to-action/index";
 
 interface Content {
   time: number;
@@ -73,6 +74,7 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         poll: Poll,
         youtube: Youtube,
         courses: Courses,
+        cta: CTA,
       },
       onReady: () => {
         editorRef.current = editor;

@@ -371,7 +371,11 @@ const Course = ({ params: { id } }: Props) => {
                     <CldImage
                       width={500}
                       height={500}
-                      src={course?.coverImage}
+                      src={
+                        course?.coverImage
+                          ? course.coverImage
+                          : "photo-1715967635831-f5a1f9658880_mhlqwu"
+                      }
                       alt="Description of my image"
                     />
                     <div className="mt-4 flex text-sm leading-6">
