@@ -21,8 +21,9 @@ const SitesNew = () => {
   const [state, formAction] = useFormState(registerSite, initialState);
   const router = useRouter();
   useEffect(() => {
+    console.log(state);
     if (state.status === 201) {
-      router.push("/admin/sites");
+      router.push(`/admin/sites/${state.site.domainName}`);
     }
   }, [state, router]);
   return (
