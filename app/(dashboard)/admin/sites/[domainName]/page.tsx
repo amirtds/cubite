@@ -667,13 +667,6 @@ const SitePage = ({ params: { domainName } }: Props) => {
                       </div>
                     </label>
                   </div>
-                  <div className="sm:col-span-6">
-                    <RegistrationFields
-                      title={"Extra Registration Fields"}
-                      onFieldChange={handleExtraRegistrationFields}
-                      existingFields={extraRegistrationFields}
-                    />
-                  </div>
                 </div>
               </div>
             </div>
@@ -884,7 +877,22 @@ const SitePage = ({ params: { domainName } }: Props) => {
               </div>
             </div>
           </div>
-
+          <input
+            type="radio"
+            name="sites_tabs"
+            role="tab"
+            className="tab"
+            aria-label="Authentication"
+          />
+          <div role="tabpanel" className="tab-content py-10">
+            <div className="sm:col-span-6">
+              <RegistrationFields
+                title={"Extra Registration Fields"}
+                onFieldChange={handleExtraRegistrationFields}
+                existingFields={extraRegistrationFields}
+              />
+            </div>
+          </div>
           <input
             type="radio"
             name="sites_tabs"
