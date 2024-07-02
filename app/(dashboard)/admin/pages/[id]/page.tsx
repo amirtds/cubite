@@ -137,7 +137,6 @@ const Page = ({ params: { id } }: Props) => {
 
   const handlePageUpdate = async () => {
     if (!page) return;
-    console.log(page);
     const response = await fetch(`/api/page/${id}`, {
       method: "PUT",
       headers: {

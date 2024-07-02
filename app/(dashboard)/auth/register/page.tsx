@@ -70,6 +70,7 @@ const Register = () => {
                 required
                 className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm"
                 minLength={6}
+                required
               />
             </div>
             <div>

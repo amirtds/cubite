@@ -56,7 +56,6 @@ class CTA {
       const handleUploadSuccess = (src) => {
         this.data.image = src;
         setImage(src);
-        console.log(src);
       };
 
       const handleUrlChange = (e) => {

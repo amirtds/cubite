@@ -3,25 +3,39 @@ import { getToken } from "next-auth/jwt";
 
 export async function middleware(request: NextRequest) {
   // Check authentication
-  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+  const token = await getToken({
+    req: request,
+    secret: process.env.NEXTAUTH_SECRET,
+  });
 
   // Define the protected routes
   const protectedRoutes = ["/admin"];
+
+  // Define the public routes for login and register
+  const publicRoutes = ["/auth/signin", "/auth/register"];
 
   // Find hostname, if the hostname is main domain or subdomain
   const hostname = request.headers.get("host");
   const mainDomain = process.env.ROOT_URL;
   const isMainDomain = hostname === mainDomain;
   const isSubDomain = !isMainDomain && hostname?.endsWith(mainDomain!);
-  const subDomain = isSubDomain && hostname?.split(`.${process.env.ROOT_URL}`)[0];
+  const subDomain =
+    isSubDomain && hostname?.split(`.${process.env.ROOT_URL}`)[0];
 
   // If it is a subdomain rewrite the request to send it to the domain dynamic route
   if (isSubDomain) {
-    return NextResponse.rewrite(new URL(`/${subDomain}`, request.url));
+    let path = request.nextUrl.pathname;
+    if (token && (path === "/auth/register" || path === "/auth/signin")) {
+      path = "/";
+    }
+    return NextResponse.rewrite(new URL(`/${subDomain}${path}`, request.url));
   }
 
   // Redirect to login if the user is not authenticated and trying to access a protected route
-  if (!token && protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))) {
+  if (
+    !token &&
+    protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+  ) {
     const loginUrl = new URL("/api/auth/signin", request.url);
     loginUrl.searchParams.set("callbackUrl", request.url);
     return NextResponse.redirect(loginUrl);

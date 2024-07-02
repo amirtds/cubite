@@ -34,6 +34,7 @@ model User {
   CourseContent      CourseContent[]    @relation("ContentAuthor")
   PageAuthor         PageAuthor[]
   PageContent        PageContent[]      @relation("PageContentAuthor")
+  extraInfo          Json?
 
   @@map("users")
 }
@@ -64,6 +65,7 @@ model Site {
   layout            Json?
   googleAnalytics   String?
   googleTagManager  String?
+  extraRegistrationFields Json? 
 
   @@map("sites")
 }

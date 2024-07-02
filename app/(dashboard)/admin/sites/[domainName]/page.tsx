@@ -10,6 +10,7 @@ import { formatDateTime } from "@/app/utils/formatDateTime";
 import { CldImage } from "next-cloudinary";
 import { CldUploadWidget } from "next-cloudinary";
 import NavigationLinks from "@/app/components/NavigationLinks";
+import RegistrationFields from "@/app/components/RegistrationFields";
 import { FaFacebookF } from "react-icons/fa6";
 import { FaTiktok } from "react-icons/fa";
 import { IoLogoYoutube } from "react-icons/io";
@@ -74,6 +75,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
   ]);
   const [footerLinks, setFooterLinks] = useState([
     { text: "", type: "internal", url: "" },
+  ]);
+  const [extraRegistrationFields, setExtraRegistrationFields] = useState([
+    { text: "", type: "text", required: false },
   ]);
   const [facebookUrl, setFacebookUrl] = useState("");
   const [tiktokUrl, setTiktokUrl] = useState("");
@@ -302,6 +306,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
       customDomain,
       themeName: theme,
       layout,
+      extraRegistrationFields,
       googleAnalytics,
       googleTagManager,
     };
@@ -389,6 +394,10 @@ const SitePage = ({ params: { domainName } }: Props) => {
     setFooterLinks(links);
   };
 
+  const handleExtraRegistrationFields = (fields) => {
+    setExtraRegistrationFields(fields);
+  };
+
   const handleFacebookURL = (e) => {
     setFacebookUrl(e.target.value);
   };
@@ -429,6 +438,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
           setCustomDomain(site.data.customDomain);
           setTheme(site.data.themeName);
           setIsActive(site.data.isActive);
+          setExtraRegistrationFields(site.data.extraRegistrationFields);
           if (site.data.layout) {
             setHeaderLinks(site.data.layout.header.headerLinks);
             setFooterLinks(site.data.layout.footer.footerLinks);
@@ -495,6 +505,28 @@ const SitePage = ({ params: { domainName } }: Props) => {
             <p className="text-sm text-gray-500">
               Updated at {site?.updatedAt && formatDateTime(site?.updatedAt)}
             </p>
+            <a
+              className="text-sm text-secondary link"
+              href={`https://${site.domainName}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {site.domainName}
+            </a>
+            {process.env.NODE_ENV === "development" && (
+              <div>
+                <a
+                  className="text-sm text-ghost link"
+                  href={`http://${
+                    site.domainName.split(".cubite.io")[0]
+                  }.localhost:3000`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {`${site.domainName.split(".cubite.io")[0]}.localhost:3000`}
+                </a>
+              </div>
+            )}
           </div>
           <div className="mt-6 flex items-center justify-end gap-x-6">
             <button
@@ -634,6 +666,13 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         </span>
                       </div>
                     </label>
+                  </div>
+                  <div className="sm:col-span-6">
+                    <RegistrationFields
+                      title={"Extra Registration Fields"}
+                      onFieldChange={handleExtraRegistrationFields}
+                      existingFields={extraRegistrationFields}
+                    />
                   </div>
                 </div>
               </div>
@@ -837,6 +876,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         <option value="dark">Dark</option>
                         <option value="luxury">Luxury</option>
                         <option value="forest">Forest</option>
+                        <option value="autumn">Autumn</option>
                       </select>
                     </label>
                   </div>

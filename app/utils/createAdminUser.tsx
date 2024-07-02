@@ -9,7 +9,7 @@ interface UserData {
   organization: string;
 }
 
-const createUser = async (userData: UserData) => {
+const createAdminUser = async (userData: UserData) => {
   const hashedPassword = await bcrypt.hash(userData.password, 12);
 
   // Check if email or username already exists
@@ -83,4 +83,4 @@ const createUser = async (userData: UserData) => {
   };
 };
 
-export default createUser;
+export default createAdminUser;

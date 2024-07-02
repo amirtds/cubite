@@ -6,6 +6,7 @@ export const getSitesPublicData = async () => {
     // Fetch data for all sites
     const sites = await prisma.site.findMany({
       select: {
+        id: true,
         name: true,
         logo: true,
         domainName: true,
@@ -17,6 +18,7 @@ export const getSitesPublicData = async () => {
         isActive: true,
         frontendConfig: true,
         layout: true,
+        extraRegistrationFields: true,
       },
     });
 

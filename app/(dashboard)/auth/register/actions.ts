@@ -1,6 +1,6 @@
 "use server";
 
-import createUser from "@/app/utils/createUser";
+import createAdminUser from "@/app/utils/createAdminUser";
 import { z } from "zod";
 
 const personalEmailDomains = [
@@ -87,45 +87,65 @@ const personalEmailDomains = [
 ];
 
 const registerUser = async (prevState: any, formData: FormData) => {
-  
   const userObject = {
-      name: formData.get("name")!.toString(),
-      username: formData.get("username")!.toString(),
-      email: formData.get("email")!.toString(),
-      password: formData.get("password")!.toString(),
-      organization: formData.get("organization")!.toString(),
+    name: formData.get("name")!.toString(),
+    username: formData.get("username")!.toString(),
+    email: formData.get("email")!.toString(),
+    password: formData.get("password")!.toString(),
+    organization: formData.get("organization")!.toString(),
   };
 
   const schema = z.object({
-    name: z.string().min(6, { message: "Name should be at least 6 characters long." }),
-    username: z.string().min(3, { message: "Username should be at least 3 characters long." }),
-    email: z.string().email().refine((email) => {
-        const domain = email.split("@")[1];
-        return !personalEmailDomains.includes(domain);
-    }, {
-        message: "Please use your work email address.",
-    }),
-    password: z.string().min(6, { message: "Password should be at least 6 characters long." }).max(32, { message: "Password should be at most 32 characters long." }).refine((password) => {
-        const hasNumber = /[0-9]/.test(password);
-        const hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(password);
-        return hasNumber && hasSpecialCharacter;
-    }, {
-        message: "Password must contain at least one number and one special character.",
-    }),
-    organization: z.string().min(3, { message: "Organization should be at least 3 characters long." }),
-});
+    name: z
+      .string()
+      .min(6, { message: "Name should be at least 6 characters long." }),
+    username: z
+      .string()
+      .min(3, { message: "Username should be at least 3 characters long." }),
+    email: z
+      .string()
+      .email()
+      .refine(
+        (email) => {
+          const domain = email.split("@")[1];
+          return !personalEmailDomains.includes(domain);
+        },
+        {
+          message: "Please use your work email address.",
+        }
+      ),
+    password: z
+      .string()
+      .min(6, { message: "Password should be at least 6 characters long." })
+      .max(32, { message: "Password should be at most 32 characters long." })
+      .refine(
+        (password) => {
+          const hasNumber = /[0-9]/.test(password);
+          const hasSpecialCharacter = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+          return hasNumber && hasSpecialCharacter;
+        },
+        {
+          message:
+            "Password must contain at least one number and one special character.",
+        }
+      ),
+    organization: z
+      .string()
+      .min(3, {
+        message: "Organization should be at least 3 characters long.",
+      }),
+  });
 
   const validation = schema.safeParse(userObject);
   if (!validation.success) {
-      return {
-          status: 400,
-          message: validation.error.issues.map(issue => issue.message).join(", "),
-      };
+    return {
+      status: 400,
+      message: validation.error.issues.map((issue) => issue.message).join(", "),
+    };
   }
 
-  const newUser = await createUser(userObject);
-  return newUser
+  const newUser = await createAdminUser(userObject);
+  return newUser;
 };
 
-
-  export default registerUser;
+export default registerUser;

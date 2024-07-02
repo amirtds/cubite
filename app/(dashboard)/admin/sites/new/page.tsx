@@ -153,6 +153,7 @@ const SitesNew = () => {
                     <option value="dark">Dark</option>
                     <option value="luxury">Luxury</option>
                     <option value="forest">Forest</option>
+                    <option value="autumn">Autumn</option>
                   </select>
                 </label>
               </div>

@@ -16,7 +16,6 @@ class Courses {
   }
 
   render() {
-    console.log(this.data);
     const wrapper = document.createElement("div");
     const root = createRoot(wrapper);
 

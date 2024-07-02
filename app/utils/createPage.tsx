@@ -13,7 +13,6 @@ interface PageData {
 }
 
 export const createPage = async (pageData: PageData) => {
-  console.log(pageData);
   try {
     const {
       title,

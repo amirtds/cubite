@@ -1,11 +1,4 @@
-import SitesLayout from "./layout";
 import { Image } from "@/app/components/Image";
-import Link from "next/link";
-import { FaFacebookF } from "react-icons/fa6";
-import { BsInstagram } from "react-icons/bs";
-import { FaTiktok } from "react-icons/fa";
-import { IoLogoYoutube } from "react-icons/io";
-import { BsTwitterX } from "react-icons/bs";
 import EditorHeader from "@/app/components/editorjsToReact/EditorHeader";
 import EditorParagraph from "@/app/components/editorjsToReact/EditorParagraph";
 import EditorList from "@/app/components/editorjsToReact/EditorList";
@@ -56,7 +49,6 @@ export default async function Home({ params }: Props) {
         s.domainName.split(`.${process.env.MAIN_DOMAIN}`)[0] === params.domain
     );
   }
-
   const indexPageId = site?.pages.find((page) => page.title === "Index")?.id;
   const pageContentData = indexPageId ? await pageContent(indexPageId) : null;
   const pageBlocks = pageContentData ? pageContentData.blocks : [];
