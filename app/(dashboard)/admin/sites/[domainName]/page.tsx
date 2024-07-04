@@ -1110,14 +1110,18 @@ const SitePage = ({ params: { domainName } }: Props) => {
                   <tbody>
                     {site.siteRoles.map((member) => (
                       <tr key={member.user.id}>
-                        <td>
+                        <td className="">
                           {member.user.image ? (
-                            <img
+                            <CldImage
+                              width={250}
+                              height={250}
+                              className="w-12 h-12 rounded-full"
                               src={member.user.image}
+                              onClick={() => open()}
                               alt={member.user.name}
                             />
                           ) : (
-                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-500 text-white">
+                            <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gray-500 text-white">
                               {member.user.name.charAt(0).toUpperCase()}
                             </div>
                           )}
