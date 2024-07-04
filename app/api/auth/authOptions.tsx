@@ -43,12 +43,28 @@ export const authOptions: NextAuthOptions = {
     signIn: "/auth/signin", // Custom sign-in page
   },
   callbacks: {
-    async redirect({ url, baseUrl }) {
-      // Redirect to /admin after login
-      if (url === baseUrl) {
-        return `${baseUrl}/admin`;
+    async session({ session, token }) {
+      // Fetch the user from the database using the email from the session
+      const user = await prisma.user.findUnique({
+        where: { email: session.user.email },
+      });
+
+      // Add the user image and id to the session object
+      if (user) {
+        session.user.image = user.image;
+        session.user.id = user.id;
       }
-      return url;
+
+      return session;
+    },
+    async jwt({ token, user }) {
+      // Pass the user data to the JWT token
+      if (user) {
+        token.id = user.id;
+        token.email = user.email;
+      }
+
+      return token;
     },
   },
   session: {

@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import { CldImage } from "next-cloudinary";
 import { Image } from "@/app/components/Image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
@@ -27,7 +28,17 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
   const renderAvatar = () => {
     if (session?.user?.image) {
       return (
-        <img alt="Avatar" src={session.user.image} className="rounded-full" />
+        <div className="avatar">
+          <div className="w-12 h-12 rounded-xl">
+            <CldImage
+              fill
+              className="rounded-full"
+              src={session?.user?.image}
+              sizes="100vw"
+              alt="Description of my image"
+            />
+          </div>
+        </div>
       );
     } else if (session?.user?.name) {
       const initial = session.user.name.charAt(0).toUpperCase();
@@ -110,7 +121,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 </div>
               </button>
               <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="">
+                <div tabIndex={0} role="button" className="avatar">
                   {renderAvatar()}
                 </div>
                 <ul

@@ -51,10 +51,10 @@ function SiteSignin({ siteId }: Props) {
     } else {
       // Check if the user is part of this site
       const response = await fetch("/api/student");
-      const data = await response.json();
+      const result = await response.json();
 
-      if (data.status === 200) {
-        const siteRoles = data.student.siteRoles;
+      if (result.status === 200) {
+        const siteRoles = result.student.siteRoles;
         const isMember = siteRoles.some((site) => site.siteId === siteId);
 
         if (isMember) {

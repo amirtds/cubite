@@ -10,6 +10,8 @@ export const getStudentData = async (userId: string) => {
       name: true,
       email: true,
       username: true,
+      image: true,
+      extraInfo: true,
       isActive: true,
       createdAt: true,
       updatedAt: true,
