@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import DashboardCourseCard from "@/app/components/DashboardCourseCard";
 
 interface Props {

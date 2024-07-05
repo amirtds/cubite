@@ -4,11 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import EmptyDashboard from "./EmptyDashboard";
 import { CldImage } from "next-cloudinary";
+import DashboardCourseCardLoader from "./DashboardCourseCardLoader";
 import Link from "next/link";
 
 const DashboardCourseCard = () => {
   const { status, data: session } = useSession();
   const [enrollments, setEnrollments] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const getEnrollments = async () => {
@@ -16,16 +18,24 @@ const DashboardCourseCard = () => {
         const response = await fetch("/api/enrollments");
         const result = await response.json();
         setEnrollments(result.enrollments);
+        setLoading(false);
       }
     };
     getEnrollments();
   }, [session]);
 
+  if (loading) {
+    return <DashboardCourseCardLoader />;
+  }
+
   return (
     <div className="flex flex-col space-y-4">
       {enrollments.length > 0 ? (
         enrollments.map((enrollment) => (
-          <div className="divide-y overflow-hidden rounded-md border-2 border-ghost">
+          <div
+            key={enrollment.course.id}
+            className="divide-y overflow-hidden rounded-md border-2 border-ghost"
+          >
             <div className="grid grid-cols-3">
               <div className="col-span-1">
                 <CldImage
