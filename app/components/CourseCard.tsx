@@ -50,14 +50,12 @@ const CourseCard = ({ course, site }) => {
       </Link>
 
       <div className="flex flex-row  px-4 py-8 gap-2 place-items-center">
-        <p className="w-1/3">XP 500</p>
+        {course.xp ? <p className="w-1/3">XP {course.xp}</p> : null}
         {course.level ? (
           <p className="w-2/3">
             Level <span className="font-medium">{course.level}</span>
           </p>
-        ) : (
-          ""
-        )}
+        ) : null}
         <Enrollment siteId={site.id} courseId={course.id} />
       </div>
     </div>

@@ -17,6 +17,7 @@ interface CourseData {
   certificateTitle?: string;
   certificateDescription?: string;
   certificateBackground?: string;
+  xp?: Number;
 }
 
 export const updateCourse = async (courseData: CourseData) => {
@@ -38,6 +39,7 @@ export const updateCourse = async (courseData: CourseData) => {
       certificateTitle,
       certificateDescription,
       certificateBackground,
+      xp,
     } = courseData;
 
     // Create or find subjects
@@ -71,6 +73,7 @@ export const updateCourse = async (courseData: CourseData) => {
         startDate: startDate ? new Date(startDate) : undefined,
         endDate: endDate ? new Date(endDate) : undefined,
         price,
+        xp,
         coverImage,
         introVideo,
         level,

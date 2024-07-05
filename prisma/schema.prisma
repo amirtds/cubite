@@ -103,6 +103,7 @@ model Course {
   certificateTitle       String?
   certificateDescription String?
   certificateBackground  String?
+  xp                     Int?
   contents               CourseContent[]    @relation("CourseContents")
 }
 

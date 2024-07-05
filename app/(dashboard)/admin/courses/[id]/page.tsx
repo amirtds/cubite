@@ -152,6 +152,11 @@ const Course = ({ params: { id } }: Props) => {
     setCourse(course);
   };
 
+  const handleXp = (e) => {
+    course ? (course.xp = parseFloat(e.target.value)) : "";
+    setCourse(course);
+  };
+
   const handleStartDate = (startDate) => {
     course ? (course.startDate = startDate) : "";
     setCourse(course);
@@ -479,6 +484,25 @@ const Course = ({ params: { id } }: Props) => {
                   />
                   <div className="label">
                     <span className="label-text-alt">Change Course Price</span>
+                  </div>
+                </label>
+              </div>
+              <div className="sm:col-span-2">
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">XP</span>
+                  </div>
+                  <input
+                    type="text"
+                    id="courseXp"
+                    name="courseXp"
+                    placeholder={course?.xp}
+                    defaultValue={course?.xp}
+                    className="input input-bordered w-full max-w-xs"
+                    onChange={handleXp}
+                  />
+                  <div className="label">
+                    <span className="label-text-alt">Change XP</span>
                   </div>
                 </label>
               </div>
