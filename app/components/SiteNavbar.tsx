@@ -26,6 +26,11 @@ interface Props {
 const SiteNavbar = ({ site, headerLinks }: Props) => {
   const { status, data: session } = useSession();
 
+  const handleSignout = () => {
+    signOut({ redirect: false });
+    window.location.href = "/";
+  };
+
   const renderAvatar = () => {
     if (session?.user?.image) {
       return (
@@ -176,7 +181,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                     <Link href={"/settings"}>Settings</Link>
                   </li>
                   <li>
-                    <button onClick={() => signOut()}>Logout</button>
+                    <button onClick={handleSignout}>Logout</button>
                   </li>
                 </ul>
               </div>
