@@ -8,6 +8,8 @@ import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
 import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
 import EditorImage from "@/app/components/editorjsToReact/EditorImage";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
+import Enrollment from "@/app/components/Enrollment";
+import Link from "next/link";
 
 interface Props {
   params: {
@@ -168,7 +170,11 @@ export default async function Home({ params }: Props) {
                   className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
                 >
                   {sortedCourses.map((course) => (
-                    <div key={course.id} className="card bg-base-100 shadow-xl">
+                    <Link
+                      key={course.id}
+                      className="card bg-base-100 shadow-xl"
+                      href={`/about/${course.id}`}
+                    >
                       <figure>
                         <Image
                           src={
@@ -203,13 +209,9 @@ export default async function Home({ params }: Props) {
                             ? course.description
                             : "Click on enroll now to see the course"}
                         </p>
-                        <div className="card-actions justify-end">
-                          <button className="btn btn-primary">
-                            Enroll Now
-                          </button>
-                        </div>
+                        <Enrollment siteId={site.id} courseId={course.id} />
                       </div>
-                    </div>
+                    </Link>
                   ))}
                 </div>
               );

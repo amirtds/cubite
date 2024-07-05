@@ -59,7 +59,7 @@ function SiteSignin({ siteId }: Props) {
 
         if (isMember) {
           // Redirect to admin or another page on successful sign-in
-          window.location.href = "/";
+          window.location.href = "/dashboard";
         } else {
           setStatus(401);
           setError("You are not part of this site, please register first");

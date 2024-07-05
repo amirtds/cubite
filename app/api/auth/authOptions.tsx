@@ -53,18 +53,10 @@ export const authOptions: NextAuthOptions = {
       if (user) {
         session.user.image = user.image;
         session.user.id = user.id;
+        session.user.username = user.username;
       }
 
       return session;
-    },
-    async jwt({ token, user }) {
-      // Pass the user data to the JWT token
-      if (user) {
-        token.id = user.id;
-        token.email = user.email;
-      }
-
-      return token;
     },
   },
   session: {

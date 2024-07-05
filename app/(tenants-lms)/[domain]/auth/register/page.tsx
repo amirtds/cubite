@@ -115,7 +115,7 @@ const Register = ({ params: { domain } }: Props) => {
             password: userObject.password,
           });
           // Redirect to index or another page on successful sign-in
-          window.location.href = "/";
+          window.location.href = "/dashboard";
         }
       } catch (error) {
         setStatus(500);

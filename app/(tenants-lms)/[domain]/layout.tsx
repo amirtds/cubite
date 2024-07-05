@@ -65,7 +65,7 @@ const SitesLayout = async ({ children, params }: Props) => {
                 {/* page content */}
                 <div className="mx-auto max-w-7xl p-6 lg:px-8">{children}</div>
                 {/* Footer Content */}
-                <div className="bg-base-200 absolute inset-x-0 bottom-0">
+                <div className="bg-base-200 inset-x-0 bottom-0">
                   <div className="mx-auto max-w-7xl">
                     <footer className="footer p-10 text-base-content">
                       <nav className="grid grid-cols-1 md:grid-cols-3 gap-4">

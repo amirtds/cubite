@@ -56,7 +56,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       <div className="navbar mx-auto max-w-7xl p-6 lg:px-8">
         <div className="navbar-start">
           <Link
-            href={"/"}
+            href={session?.user ? "/dashboard" : "/"}
             className="btn btn-ghost text-xl hover:bg-transparent"
           >
             <Image
@@ -121,7 +121,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 </div>
               </button>
               <div className="dropdown dropdown-end">
-                <div tabIndex={0} role="button" className="avatar">
+                <div tabIndex={0} role="button" className="">
                   {renderAvatar()}
                 </div>
                 <ul
