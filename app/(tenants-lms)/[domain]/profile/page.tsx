@@ -145,6 +145,7 @@ const Profile = () => {
             id="name"
             defaultValue={studentData.name}
             onChange={handleName}
+            className="bg-transparent"
           />
         </div>
         <div className="col-span-2">
@@ -157,6 +158,7 @@ const Profile = () => {
               id="email"
               defaultValue={studentData.email}
               onChange={handleEmail}
+              className="bg-transparent"
             />
           </div>
           <div className="">
@@ -167,6 +169,7 @@ const Profile = () => {
               id="username"
               defaultValue={studentData.username}
               onChange={handleUsername}
+              className="bg-transparent"
             />
           </div>
           <div className="">
@@ -180,6 +183,7 @@ const Profile = () => {
                     id={key}
                     defaultValue={value}
                     onChange={handleExtraInfo}
+                    className="bg-transparent"
                   />
                 </div>
               ))}
