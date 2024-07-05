@@ -8,7 +8,7 @@ import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
 import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
 import EditorImage from "@/app/components/editorjsToReact/EditorImage";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
-import Enrollment from "@/app/components/Enrollment";
+import CourseCard from "@/app/components/CourseCard";
 import Link from "next/link";
 
 interface Props {
@@ -165,54 +165,21 @@ export default async function Home({ params }: Props) {
                 .slice(0, block.data.limitCourses || 3);
 
               return (
-                <div
-                  key={block.id}
-                  className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
-                >
-                  {sortedCourses.map((course) => (
-                    <Link
-                      key={course.id}
-                      className="card bg-base-100 shadow-xl"
-                      href={`/about/${course.id}`}
-                    >
-                      <figure>
-                        <Image
-                          src={
-                            course.coverImage
-                              ? course.coverImage
-                              : "photo-1715967635831-f5a1f9658880_mhlqwu"
-                          }
-                          width={500}
-                          height={250}
-                          alt="Course cover"
-                          sizes="100vw"
-                        />
-                      </figure>
-                      <div className="card-body">
-                        <div className="card-actions justify-start">
-                          {course.topics.map((topic) => (
-                            <div key={topic.id} className="badge badge-outline">
-                              {topic.name}
-                            </div>
-                          ))}
-                        </div>
-                        <h2 className="card-title">
-                          {course.name}
-                          {course.featured && (
-                            <div className="badge badge-secondary">
-                              FEATURED
-                            </div>
-                          )}
-                        </h2>
-                        <p>
-                          {course.description
-                            ? course.description
-                            : "Click on enroll now to see the course"}
-                        </p>
-                        <Enrollment siteId={site.id} courseId={course.id} />
-                      </div>
-                    </Link>
-                  ))}
+                <div className="">
+                  <Link
+                    href={"/courses"}
+                    className="text-right my-4 font-semibold text-lg block hover:text-primary"
+                  >
+                    View All
+                  </Link>
+                  <div
+                    key={block.id}
+                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
+                  >
+                    {sortedCourses.map((course) => (
+                      <CourseCard course={course} site={site} />
+                    ))}
+                  </div>
                 </div>
               );
             }

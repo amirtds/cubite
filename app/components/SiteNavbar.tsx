@@ -161,7 +161,6 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               <button className="btn btn-ghost btn-circle mx-2">
                 <div className="indicator">
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
-                  <span className="badge badge-xs badge-primary indicator-item"></span>
                 </div>
               </button>
               <div className="dropdown dropdown-end">
