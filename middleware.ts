@@ -9,7 +9,8 @@ export async function middleware(request: NextRequest) {
   });
 
   // Define the protected routes
-  const protectedRoutes = ["/admin"];
+  const AdminSiteProtectedRoutes = ["/admin"];
+  const tenantsProtectedRoutes = ["/dashboard", "/profile", "/settings"];
 
   // Define the public routes for login and register
   const publicRoutes = ["/auth/signin", "/auth/register"];
@@ -28,13 +29,23 @@ export async function middleware(request: NextRequest) {
     if (token && (path === "/auth/register" || path === "/auth/signin")) {
       path = "/";
     }
+    if (
+      !token &&
+      tenantsProtectedRoutes.some((route) =>
+        request.nextUrl.pathname.startsWith(route)
+      )
+    ) {
+      path = "/auth/signin";
+    }
     return NextResponse.rewrite(new URL(`/${subDomain}${path}`, request.url));
   }
 
   // Redirect to login if the user is not authenticated and trying to access a protected route
   if (
     !token &&
-    protectedRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+    AdminSiteProtectedRoutes.some((route) =>
+      request.nextUrl.pathname.startsWith(route)
+    )
   ) {
     const loginUrl = new URL("/api/auth/signin", request.url);
     loginUrl.searchParams.set("callbackUrl", request.url);
