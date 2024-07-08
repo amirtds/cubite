@@ -38,7 +38,7 @@ const DateTimeInput = ({ title, onChange, defaultValue = "" }: Props) => {
         max="2050-01-01T00:00"
         className="input input-bordered w-full max-w-xs"
         onChange={handleSelectDateTime}
-        value={selectedDateTime}
+        value={selectedDateTime || ""}
       />
       <div className="label">
         <span className="label-text-alt">

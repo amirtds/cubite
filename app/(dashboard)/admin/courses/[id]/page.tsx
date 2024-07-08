@@ -49,8 +49,10 @@ const Course = ({ params: { id } }: Props) => {
   const [enrollmentExpiration, setEnrollmentExpiration] = useState();
   const { status, data: session } = useSession();
   const [sites, setSites] = useState([]);
+  const [content, setContent] = useState<Content | null>(null);
 
   useEffect(() => {
+    if (!session) return;
     const getCourseData = async (id: string) => {
       const response = await fetch(`/api/course/${id}`);
       if (response.status === 200) {
@@ -105,7 +107,7 @@ const Course = ({ params: { id } }: Props) => {
     getInstructor();
     getMysites(session?.user?.email);
     fetchEnrollments(id);
-  }, [id, session]);
+  }, [session]);
 
   const handleCourseImage = (imageSrc: string) => {
     course ? (course.coverImage = imageSrc) : "";
@@ -408,24 +410,6 @@ const Course = ({ params: { id } }: Props) => {
                   </div>
                 </div>
               </div>
-              <div className="col-span-full">
-                <label className="form-control">
-                  <div className="label">
-                    <span className="label-text">Course Description</span>
-                  </div>
-                  <textarea
-                    className="textarea textarea-bordered h-24"
-                    placeholder="This course is about ...."
-                    defaultValue={course?.description}
-                    onChange={handleCourseDescription}
-                  ></textarea>
-                  <div className="label">
-                    <span className="label-text-alt">
-                      Write some description about this course
-                    </span>
-                  </div>
-                </label>
-              </div>
 
               <MultiInput
                 title={"Subjects"}
@@ -506,6 +490,36 @@ const Course = ({ params: { id } }: Props) => {
                   </div>
                 </label>
               </div>
+            </div>
+          </div>
+          <input
+            type="radio"
+            name="my_tabs_2"
+            role="tab"
+            className="tab"
+            aria-label="Description"
+          />
+          <div
+            role="tabpanel"
+            className="tab-content bg-base-100 border-base-300 rounded-box p-6"
+          >
+            <div className="col-span-full">
+              <label className="form-control">
+                <div className="label">
+                  <span className="label-text">Course Description</span>
+                </div>
+                <textarea
+                  className="textarea textarea-bordered h-24"
+                  placeholder="This course is about ...."
+                  defaultValue={course?.description}
+                  onChange={handleCourseDescription}
+                ></textarea>
+                <div className="label">
+                  <span className="label-text-alt">
+                    Write some description about this course
+                  </span>
+                </div>
+              </label>
             </div>
           </div>
 
@@ -712,7 +726,7 @@ const Course = ({ params: { id } }: Props) => {
                         id="siteId"
                         name="siteId"
                       >
-                        <option disabled selected>
+                        <option disabled value="Select the site">
                           Select the site
                         </option>
                         {course.sites.map((site) => (
@@ -824,12 +838,12 @@ const Course = ({ params: { id } }: Props) => {
                               defaultValue={enrollment.expiresAt}
                             />
                           </td>
-                          <div
+                          <td
                             className="btn btn-outline btn-error my-7"
                             onClick={() => handleDeleteEnrollment(enrollment)}
                           >
                             <TrashIcon className="h-5 w-6" aria-hidden="true" />
-                          </div>
+                          </td>
                         </tr>
                       ))}
                       {/* row 1 */}

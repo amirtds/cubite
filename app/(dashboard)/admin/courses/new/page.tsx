@@ -34,7 +34,6 @@ const courseSchema = z.object({
 const CourseNew = () => {
   const { status, data: session } = useSession();
   const [courseName, setCourseName] = useState("");
-  const [courseDescription, setCourseDescription] = useState("");
   const [courseCoverImage, setCourseCoverImage] = useState("");
   const [courseIntroVideo, setCourseIntroVideo] = useState("");
   const [coursePrice, setCoursePrice] = useState("");
@@ -52,10 +51,6 @@ const CourseNew = () => {
 
   const handleCourseName = (e) => {
     setCourseName(e.target.value);
-  };
-
-  const handleCourseDescription = (e) => {
-    setCourseDescription(e.target.value);
   };
 
   const handleCoursePrice = (e) => {
@@ -76,7 +71,6 @@ const CourseNew = () => {
 
     const courseData = {
       name: courseName,
-      description: courseDescription,
       coverImage: courseCoverImage,
       introVideo: courseIntroVideo,
       price: coursePrice ? parseFloat(coursePrice) : undefined,
@@ -94,7 +88,6 @@ const CourseNew = () => {
     };
 
     // Conditionally add attributes if they exist and are not empty
-    if (courseDescription) CourseDataCreate.description = courseDescription;
     if (courseCoverImage) CourseDataCreate.coverImage = courseCoverImage;
     if (courseIntroVideo) CourseDataCreate.introVideo = courseIntroVideo;
     if (coursePrice) CourseDataCreate.price = parseFloat(coursePrice);
@@ -200,23 +193,6 @@ const CourseNew = () => {
               </div>
               <MultiInput title={"Subjects"} onChange={setSelectedSubjects} />
               <MultiInput title={"Topics"} onChange={setSelectedTopics} />
-              <div className="col-span-full">
-                <label className="form-control">
-                  <div className="label">
-                    <span className="label-text">Course Description</span>
-                  </div>
-                  <textarea
-                    className="textarea textarea-bordered h-24"
-                    placeholder="This course is about ...."
-                    onChange={handleCourseDescription}
-                  ></textarea>
-                  <div className="label">
-                    <span className="label-text-alt">
-                      Write some description about this course
-                    </span>
-                  </div>
-                </label>
-              </div>
               <DateTimeInput title="Start Date" onChange={setStartDate} />
               <DateTimeInput title="End Date" onChange={setEndtDate} />
               <div className="relative sm:col-span-2">

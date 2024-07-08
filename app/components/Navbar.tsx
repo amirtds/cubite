@@ -75,6 +75,7 @@ const Navbar = () => {
             className="theme-controller"
             value="lofi"
             checked={isLight}
+            onChange={handleThemeChange}
             onClick={handleThemeChange}
           />
 
