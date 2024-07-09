@@ -87,6 +87,7 @@ const CoursesFilter = ({ courses, site }) => {
       {options.map((option) => (
         <li key={option}>
           <label className="label cursor-pointer">
+            <span className="label-text">{option}</span>
             <input
               type="checkbox"
               className="checkbox checkbox-sm"
@@ -97,35 +98,37 @@ const CoursesFilter = ({ courses, site }) => {
               }
               onChange={() => handleFilterChange(type, option)}
             />
-            <span className="label-text">{option}</span>
           </label>
         </li>
       ))}
     </ul>
   );
 
+  const renderFilterButton = (name, count, options, type) => (
+    <div className="dropdown dropdown-hover">
+      <div tabIndex={0} role="button" className="btn m-1 flex items-center">
+        {name}
+        {count > 0 && (
+          <span className="ml-2 badge badge-sm badge-primary">{count}</span>
+        )}
+        <ChevronDownIcon className="w-4 h-4 ml-1" />
+      </div>
+      {renderFilterOptions(options, type)}
+    </div>
+  );
+
   return (
     <div className="mx-12 mb-36">
       <CoursesSearch onSearchChange={handleSearchChange} />
       <div className="my-12 flex gap-4">
-        <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn m-1">
-            Topics <ChevronDownIcon className="w-4 h-4" />
-          </div>
-          {renderFilterOptions(topics, "topics")}
-        </div>
-        <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn m-1">
-            Levels <ChevronDownIcon className="w-4 h-4" />
-          </div>
-          {renderFilterOptions(levels, "levels")}
-        </div>
-        <div className="dropdown dropdown-hover">
-          <div tabIndex={0} role="button" className="btn m-1">
-            Subjects <ChevronDownIcon className="w-4 h-4" />
-          </div>
-          {renderFilterOptions(subjects, "subjects")}
-        </div>
+        {renderFilterButton("Topics", selectedTopics.length, topics, "topics")}
+        {renderFilterButton("Levels", selectedLevels.length, levels, "levels")}
+        {renderFilterButton(
+          "Subjects",
+          selectedSubjects.length,
+          subjects,
+          "subjects"
+        )}
       </div>
       <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-8">
         {filteredCourses.map((course) => (
