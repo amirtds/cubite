@@ -63,7 +63,7 @@ const SitesLayout = async ({ children, params }: Props) => {
               <div className="min-h-screen">
                 <SiteNavbar site={site} headerLinks={headerLinks} />
                 {/* page content */}
-                <div className="mx-auto max-w-7xl p-6 lg:px-8">{children}</div>
+                <div className="mx-auto max-w-7xl">{children}</div>
                 {/* Footer Content */}
                 <div className="bg-base-200 sticky top-[100vh]">
                   <div className="mx-auto max-w-7xl">

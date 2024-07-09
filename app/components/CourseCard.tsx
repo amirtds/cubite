@@ -24,7 +24,7 @@ const CourseCard = ({ course, site }) => {
           />
           <div className="absolute bottom-0 left-0 m-4">
             <div className="">
-              {course.topics.map((topic) => (
+              {course.topics?.map((topic) => (
                 <div key={topic.id} className="badge bg-base-100">
                   {topic.name}
                 </div>

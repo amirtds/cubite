@@ -34,8 +34,11 @@ interface EditorProps {
 
 const Editor = ({ savedContent, onChange }: EditorProps) => {
   const editorRef = useRef<EditorJS | null>(null);
+  const editorHolderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (editorRef.current || !editorHolderRef.current) return;
+
     const initialContent = savedContent || {
       time: Date.now(),
       blocks: [],
@@ -43,10 +46,10 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
     };
 
     const editor = new EditorJS({
-      holder: "editorjs",
+      holder: editorHolderRef.current,
       autofocus: true,
       placeholder: "Write course content...",
-      data: initialContent, // Load saved content here
+      data: initialContent,
       tools: {
         header: Header,
         list: List,
@@ -81,7 +84,7 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
       },
       onChange: async () => {
         const content = await editor.save();
-        onChange(content); // Pass the content back to the parent component
+        onChange(content);
       },
     });
 
@@ -91,11 +94,11 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         editorRef.current = null;
       }
     };
-  }, [savedContent, onChange]); // Re-run the effect if savedContent or onChange changes
+  }, [savedContent, onChange]);
 
   return (
     <div
-      id="editorjs"
+      ref={editorHolderRef}
       className="border-2 border-dashed rounded-md py-12 my-12"
     ></div>
   );

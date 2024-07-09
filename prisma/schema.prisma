@@ -86,7 +86,7 @@ model SiteRole {
 model Course {
   id                     String             @id @default(cuid())
   name                   String
-  description            Json?
+  description            String?
   subjects               Subject[]          @relation("CourseSubjects")
   topics                 Topic[]            @relation("CourseTopics")
   startDate              DateTime?

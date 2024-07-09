@@ -12,7 +12,13 @@ export const getSitesPublicData = async () => {
         domainName: true,
         customDomain: true,
         themeName: true,
-        courses: true,
+        courses: {
+          include: {
+            topics: true,
+            subjects: true,
+            instructors: true,
+          },
+        },
         pages: true,
         features: true,
         isActive: true,
