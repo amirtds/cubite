@@ -33,34 +33,38 @@ const Enrollment = ({ courseId, siteId }: Props) => {
   }, [enrollments, courseId]);
 
   const handleEnrollment = async () => {
-    if (isEnrolled) {
-      window.location.href = `/courseware/${courseId}`;
-    } else {
-      const enrollmentData = {
-        courseId: courseId,
-        name: session?.user.name,
-        email: session?.user?.email,
-        username: session?.user.username,
-        siteId: siteId,
-      };
-      const response = await fetch(`/api/enrollments/${courseId}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(enrollmentData),
-      });
-
-      const result = await response.json();
-      if (result.status === 201) {
-        // Assuming the enrollment is created successfully, update the enrollments state
-        setEnrollments((prevEnrollments) => [
-          ...prevEnrollments,
-          { courseId: courseId, siteId: siteId, userId: session?.user.id },
-        ]);
-        setIsEnrolled(true);
+    if (session) {
+      if (isEnrolled) {
         window.location.href = `/courseware/${courseId}`;
+      } else {
+        const enrollmentData = {
+          courseId: courseId,
+          name: session?.user.name,
+          email: session?.user?.email,
+          username: session?.user.username,
+          siteId: siteId,
+        };
+        const response = await fetch(`/api/enrollments/${courseId}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(enrollmentData),
+        });
+
+        const result = await response.json();
+        if (result.status === 201) {
+          // Assuming the enrollment is created successfully, update the enrollments state
+          setEnrollments((prevEnrollments) => [
+            ...prevEnrollments,
+            { courseId: courseId, siteId: siteId, userId: session?.user.id },
+          ]);
+          setIsEnrolled(true);
+          window.location.href = `/courseware/${courseId}`;
+        }
       }
+    } else {
+      window.location.href = "/auth/signin";
     }
   };
 

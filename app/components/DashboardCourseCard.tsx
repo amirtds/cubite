@@ -29,7 +29,7 @@ const DashboardCourseCard = () => {
   }
 
   return (
-    <div className="flex flex-col space-y-4">
+    <div className="flex flex-col space-y-8">
       {enrollments.length > 0 ? (
         enrollments.map((enrollment) => (
           <div

@@ -9,8 +9,8 @@ interface Props {
 
 const Dashboard = ({ params: { domain } }: Props) => {
   return (
-    <div className="">
-      <div className="text-3xl font-semibold">Dashboard</div>
+    <div className="mx-12 my-24">
+      <div className="text-3xl font-black">Dashboard</div>
       <div className="grid grid-cols-3 my-12">
         <div className="col-span-2">
           <DashboardCourseCard />
