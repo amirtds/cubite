@@ -17,6 +17,7 @@ export const getSitesPublicData = async () => {
             topics: true,
             subjects: true,
             instructors: true,
+            contents: true,
           },
         },
         pages: true,

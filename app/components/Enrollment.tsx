@@ -69,7 +69,7 @@ const Enrollment = ({ courseId, siteId }: Props) => {
   };
 
   return (
-    <div className="flex-none justify-self-end w-1/3">
+    <div className="flex-none justify-self-end">
       <button onClick={handleEnrollment} className="btn btn-primary">
         {isEnrolled ? "Continue" : "Enroll Now"}
       </button>

@@ -5,6 +5,12 @@ export const getCourse = async (id: string) => {
     const course = await prisma.course.findUnique({
       where: { id },
       include: {
+        contents: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          take: 1, // Fetch the latest version
+        },
         subjects: true,
         topics: true,
         instructors: {
