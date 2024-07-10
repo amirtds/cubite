@@ -51,7 +51,7 @@ const DashboardCourseCard = () => {
                   <p className="text-xl font-bold">{enrollment.course.name}</p>
                   <p>{enrollment.course.description}</p>
                   <Link
-                    href={`/courseware/${enrollment.course.id}`}
+                    href={`/course/${enrollment.course.id}/courseware/`}
                     className="btn btn-outline btn-secondary flex-none w-40 justify-self-end"
                   >
                     Go to the Course

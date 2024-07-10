@@ -35,7 +35,7 @@ const Enrollment = ({ courseId, siteId }: Props) => {
   const handleEnrollment = async () => {
     if (session) {
       if (isEnrolled) {
-        window.location.href = `/courseware/${courseId}`;
+        window.location.href = `/course/${courseId}/courseware/`;
       } else {
         const enrollmentData = {
           courseId: courseId,
@@ -60,7 +60,7 @@ const Enrollment = ({ courseId, siteId }: Props) => {
             { courseId: courseId, siteId: siteId, userId: session?.user.id },
           ]);
           setIsEnrolled(true);
-          window.location.href = `/courseware/${courseId}`;
+          window.location.href = `/course/${courseId}/courseware/`;
         }
       }
     } else {
