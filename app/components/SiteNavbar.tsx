@@ -172,12 +172,14 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                   className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow"
                 >
                   <li>
-                    <Link href={"/profile"} className="justify-between">
-                      Profile
+                    <Link href={"/dashboard"} className="justify-between">
+                      Dashboard
                     </Link>
                   </li>
                   <li>
-                    <Link href={"/settings"}>Settings</Link>
+                    <Link href={"/profile"} className="justify-between">
+                      Profile
+                    </Link>
                   </li>
                   <li>
                     <button onClick={handleSignout}>Logout</button>
