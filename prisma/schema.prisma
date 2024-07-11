@@ -31,6 +31,7 @@ model User {
   updatedAt          DateTime           @updatedAt
   CourseInstructor   CourseInstructor[]
   CourseEnrollment   CourseEnrollment[]
+  CourseProgress     CourseProgress[]
   CourseContent      CourseContent[]    @relation("ContentAuthor")
   PageAuthor         PageAuthor[]
   PageContent        PageContent[]      @relation("PageContentAuthor")
@@ -62,6 +63,7 @@ model Site {
   createdAt         DateTime           @default(now())
   updatedAt         DateTime           @updatedAt
   courseEnrollments CourseEnrollment[]
+  CourseProgress    CourseProgress[]
   layout            Json?
   googleAnalytics   String?
   googleTagManager  String?
@@ -99,6 +101,7 @@ model Course {
   createdAt              DateTime           @default(now())
   updatedAt              DateTime           @updatedAt
   courseEnrollments      CourseEnrollment[]
+  CourseProgress         CourseProgress[]
   level                  String?
   certificateTitle       String?
   certificateDescription String?
@@ -106,6 +109,25 @@ model Course {
   xp                     Int?
   contents               CourseContent[]    @relation("CourseContents")
 }
+
+model CourseProgress {
+  id           String   @id @default(cuid())
+  userId       String
+  courseId     String
+  siteId     String
+  lastUnitId   String
+  progress     Float    @default(0.0)
+  updatedAt    DateTime @default(now()) @updatedAt
+
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  site   Site   @relation(fields: [siteId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, userId, siteId])
+  @@index([userId])
+  @@index([siteId])
+}
+
 
 model Page {
   id          String      @id @default(cuid())
