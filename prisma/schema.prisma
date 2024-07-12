@@ -114,7 +114,7 @@ model CourseProgress {
   id           String   @id @default(cuid())
   userId       String
   courseId     String
-  siteId     String
+  siteId       String
   lastUnitId   String
   progress     Float    @default(0.0)
   updatedAt    DateTime @default(now()) @updatedAt
