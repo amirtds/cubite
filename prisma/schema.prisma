@@ -116,7 +116,7 @@ model CourseProgress {
   courseId     String
   siteId       String
   lastUnitId   String
-  progress     Float    @default(0.0)
+  progress     Json?
   updatedAt    DateTime @default(now()) @updatedAt
 
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
