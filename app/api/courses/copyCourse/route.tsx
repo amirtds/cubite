@@ -7,7 +7,7 @@ import { getUserId } from "@/app/utils/getUserId";
 export async function POST(request: NextRequest) {
   const { courseId } = await request.json();
   const session = await getServerSession(authOptions);
-  const userId = await getUserId(session?.user?.email);
+  const userId = session?.user?.id;
 
   if (!courseId) {
     return NextResponse.json({

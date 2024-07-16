@@ -25,7 +25,6 @@ export const copyCourse = async (courseId: string, currentUserId: string) => {
       course.instructors.map((instructor) => instructor.userId)
     );
     instructorIds.add(currentUserId);
-
     // Duplicate the course
     const newCourse = await prisma.course.create({
       data: {
