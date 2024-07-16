@@ -32,8 +32,10 @@ const CourseAbout = ({ courseId, site, courses }) => {
 
   const getRelatedCourses = () => {
     const courseTopics = course.topics.map((topic) => topic.name);
-    return courses.filter((c) =>
-      c.topics.some((topic) => courseTopics.includes(topic.name))
+    return courses.filter(
+      (c) =>
+        c.topics.some((topic) => courseTopics.includes(topic.name)) &&
+        c.id !== courseId
     );
   };
 
