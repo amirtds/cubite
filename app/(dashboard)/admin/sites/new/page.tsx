@@ -5,6 +5,7 @@ import { registerSite } from "./actions";
 import { useFormState } from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Alert from "@/app/components/Alert";
 
 const initialState = {
   status: 0,
@@ -41,6 +42,13 @@ const SitesNew = () => {
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
       </div>
       <form action={formAction}>
+        <Alert
+          status={state.status}
+          message={state.message}
+          onClose={() => {
+            (state.status = 0), (state.message = "");
+          }}
+        />
         <div className="space-y-12">
           <div className="border-b pb-12">
             <h2 className="font-semibold leading-7 text-lg">
