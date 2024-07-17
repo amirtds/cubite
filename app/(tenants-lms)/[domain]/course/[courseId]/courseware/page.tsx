@@ -4,97 +4,195 @@ import React, { useState, useEffect } from "react";
 import Navigation from "@/app/components/courseware/Navigation";
 import SideBar from "@/app/components/courseware/SideBar";
 import Unit from "@/app/components/courseware/Unit";
+import { useSession } from "next-auth/react";
 
 interface Props {
   params: {
     courseId: string;
+    domain: string;
   };
 }
 
-const Courseware = ({ params: { courseId } }: Props) => {
+const Courseware = ({ params: { courseId, domain } }: Props) => {
   const [blocks, setBlocks] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState([]);
   const [courseName, setCourseName] = useState("");
-  const [totalSections, setTotalSections] = useState(0);
-  const [currentSection, setCurrentSection] = useState(1);
+  const [totalUnits, setTotalUnits] = useState(0);
+  const [currentUnit, setCurrentUnit] = useState(1);
+  const [progress, setProgress] = useState({});
+  const [progressPercentage, setProgressPercentage] = useState(0);
+  const { status, data: session } = useSession();
 
   useEffect(() => {
-    async function fetchCourseContent() {
-      const response = await fetch(`/api/course/${courseId}`);
-      const result = await response.json();
-      if (result.status === 200) {
-        const latestContent = result.course.contents[0]?.content?.blocks || [];
-        setBlocks(latestContent);
-        setCourseName(result.course.name);
+    if (status === "authenticated") {
+      async function fetchCourseContent() {
+        const response = await fetch(`/api/course/${courseId}`);
+        const result = await response.json();
+        if (result.status === 200) {
+          const latestContent =
+            result.course.contents[0]?.content?.blocks || [];
+          setBlocks(latestContent);
+          setCourseName(result.course.name);
 
-        const sectionCount = latestContent.filter(
-          (block) => block.type === "header" && block.data.level === 2
-        ).length;
-        setTotalSections(sectionCount);
+          const units = calculateTotalUnits(latestContent);
+          setTotalUnits(units);
 
-        // Set the initial selected unit based on the current section
-        const initialUnit = getUnitContent(latestContent, 1);
-        setSelectedUnit(initialUnit);
+          // Fetch siteId and user progress
+          const siteId = await fetchSiteId(domain);
+          await fetchUserProgress(
+            session?.user?.id,
+            courseId,
+            siteId,
+            latestContent
+          );
+        }
+      }
+      fetchCourseContent();
+    }
+  }, [status, session, courseId, domain]);
+
+  const fetchSiteId = async (domain) => {
+    const response = await fetch(`/api/getSiteId?domain=${domain}`);
+    const result = await response.json();
+    return result.siteId;
+  };
+
+  const fetchUserProgress = async (userId, courseId, siteId, latestContent) => {
+    const response = await fetch(
+      `/api/progress?userId=${userId}&courseId=${courseId}&siteId=${siteId}`
+    );
+    const result = await response.json();
+
+    if (result.status === 200 && result.progress) {
+      setProgress(result.progress.progress || {});
+      const lastUnitId = result.progress.lastUnitId;
+      const unitIndex = getUnitIndexByUnitId(latestContent, lastUnitId);
+      setCurrentUnit(unitIndex);
+      const initialUnit = getUnitContentByUnitId(latestContent, lastUnitId);
+      setSelectedUnit(initialUnit);
+      calculateProgressPercentage(result.progress.progress, latestContent);
+    } else {
+      const initialUnit = getUnitContent(latestContent, 1);
+      setSelectedUnit(initialUnit);
+      calculateProgressPercentage({}, latestContent);
+    }
+  };
+
+  const calculateTotalUnits = (blocks) => {
+    return blocks.filter(
+      (block) => block.type === "header" && block.data.level === 3
+    ).length;
+  };
+
+  const getUnitIndexByUnitId = (blocks, unitId) => {
+    const units = blocks.filter(
+      (block) => block.type === "header" && block.data.level === 3
+    );
+    for (let i = 0; i < units.length; i++) {
+      if (units[i].id === unitId) {
+        return i + 1;
       }
     }
-    fetchCourseContent();
-  }, [courseId]);
+    return 1;
+  };
 
-  const getUnitContent = (blocks, sectionIndex) => {
-    const headers = blocks.filter(
-      (block) => block.type === "header" && block.data.level === 2
+  const getUnitContentByUnitId = (blocks, unitId) => {
+    const units = blocks.filter(
+      (block) => block.type === "header" && block.data.level === 3
     );
-    const section = headers[sectionIndex - 1];
-    if (!section) return [];
+    for (let i = 0; i < units.length; i++) {
+      if (units[i].id === unitId) {
+        const unitIndexInBlocks = blocks.indexOf(units[i]);
+        const nextUnitIndexInBlocks = units[i + 1]
+          ? blocks.indexOf(units[i + 1])
+          : blocks.length;
+        // Ensure we exclude any higher-level headers (sections) in the next unit's content
+        const unitContent = blocks
+          .slice(unitIndexInBlocks, nextUnitIndexInBlocks)
+          .filter(
+            (block) => !(block.type === "header" && block.data.level === 2)
+          );
+        return unitContent;
+      }
+    }
+    return [];
+  };
 
-    const sectionIndexInBlocks = blocks.indexOf(section);
-    const nextSectionIndexInBlocks = headers[sectionIndex]?.id
-      ? blocks.indexOf(headers[sectionIndex])
+  const calculateProgressPercentage = (userProgress, blocks) => {
+    const totalSubsections = calculateTotalUnits(blocks);
+    const completedSubsections = Object.keys(userProgress).length;
+    const percentage = (completedSubsections / totalSubsections) * 100;
+    setProgressPercentage(percentage);
+  };
+
+  const handleSelectUnit = async (unitBlocks, unitIndex) => {
+    setSelectedUnit(unitBlocks);
+    setCurrentUnit(unitIndex);
+    updateProgress(unitIndex, unitBlocks[0]?.id);
+  };
+
+  const updateProgress = async (unitIndex, unitId) => {
+    const lastUnitId = unitId || getUnitContent(blocks, unitIndex)[0]?.id;
+    const newProgress = { ...progress, [lastUnitId]: 1 }; // Assuming 1 means completed
+    setProgress(newProgress);
+
+    const siteId = await fetchSiteId(domain);
+    const response = await fetch(
+      `/api/progress?userId=${session?.user?.id}&courseId=${courseId}&siteId=${siteId}`
+    );
+    const result = await response.json();
+
+    const method = result.status === 200 && result.progress ? "PUT" : "POST";
+
+    await fetch(`/api/progress`, {
+      method: method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        userId: session?.user?.id,
+        courseId,
+        siteId,
+        lastUnitId,
+        progress: newProgress,
+      }),
+    });
+
+    calculateProgressPercentage(newProgress, blocks);
+  };
+
+  const getUnitContent = (blocks, unitIndex) => {
+    const units = blocks.filter(
+      (block) => block.type === "header" && block.data.level === 3
+    );
+    const unit = units[unitIndex - 1];
+    if (!unit) return [];
+
+    const unitIndexInBlocks = blocks.indexOf(unit);
+    const nextUnitIndexInBlocks = units[unitIndex]?.id
+      ? blocks.indexOf(units[unitIndex])
       : blocks.length;
 
-    // Filter out the section header and include only subsections and their content
-    const sectionContent = blocks.slice(
-      sectionIndexInBlocks,
-      nextSectionIndexInBlocks
-    );
-    return sectionContent.filter(
-      (block) => !(block.type === "header" && block.data.level === 2)
-    );
-  };
+    const unitContent = blocks
+      .slice(unitIndexInBlocks, nextUnitIndexInBlocks)
+      .filter((block) => !(block.type === "header" && block.data.level === 2));
 
-  const handleNext = () => {
-    setCurrentSection((prevSection) => {
-      const newSection = Math.min(prevSection + 1, totalSections);
-      setSelectedUnit(getUnitContent(blocks, newSection));
-      return newSection;
-    });
-  };
-
-  const handlePrevious = () => {
-    setCurrentSection((prevSection) => {
-      const newSection = Math.max(prevSection - 1, 1);
-      setSelectedUnit(getUnitContent(blocks, newSection));
-      return newSection;
-    });
-  };
-
-  const handleSelectUnit = (unitBlocks, sectionIndex) => {
-    setSelectedUnit(unitBlocks);
-    setCurrentSection(sectionIndex);
+    return unitContent;
   };
 
   return (
     <div className="m-12">
       <Navigation
         courseName={courseName}
-        totalSections={totalSections}
-        currentSection={currentSection}
-        onNext={handleNext}
-        onPrevious={handlePrevious}
+        progressPercentage={progressPercentage}
       />
       <div className="grid grid-cols-6 space-x-12">
         <div className="col-span-1">
-          <SideBar blocks={blocks} onSelectUnit={handleSelectUnit} />
+          <SideBar
+            blocks={blocks}
+            onSelectUnit={handleSelectUnit}
+            progress={progress}
+          />
         </div>
         <div className="col-span-5 border border-dashed p-8">
           <Unit blocks={selectedUnit} />

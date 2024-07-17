@@ -1,7 +1,8 @@
 import React from "react";
+import { CheckCircleIcon } from "@heroicons/react/24/outline";
 
-const SideBar = ({ blocks, onSelectUnit }) => {
-  const handleClick = (sectionIndex, subsectionIndex) => {
+const SideBar = ({ blocks, onSelectUnit, progress }) => {
+  const handleClick = (sectionIndex, subsectionIndex, unitId) => {
     const headers = blocks.filter(
       (block) => block.type === "header" && block.data.level === 2
     );
@@ -33,48 +34,79 @@ const SideBar = ({ blocks, onSelectUnit }) => {
       nextSubsectionIndexInBlocks
     );
 
-    onSelectUnit(subsectionContent, sectionIndex + 1);
+    onSelectUnit(subsectionContent, sectionIndex + 1, unitId);
+  };
+
+  const isSubsectionComplete = (subsectionId) => {
+    return progress[subsectionId] === 1;
+  };
+
+  const isSectionComplete = (sectionContent) => {
+    const subsections = sectionContent.filter(
+      (block) => block.type === "header" && block.data.level === 3
+    );
+    return subsections.every((subsection) =>
+      isSubsectionComplete(subsection.id)
+    );
   };
 
   return (
     <ul className="menu bg-base-200 rounded-box w-56">
       {blocks
         .filter((block) => block.type === "header" && block.data.level === 2)
-        .map((section, sectionIndex) => (
-          <li key={section.id}>
-            <details>
-              <summary>{section.data.text}</summary>
-              <ul>
-                {blocks
-                  .slice(
-                    blocks.indexOf(section) + 1,
-                    blocks.indexOf(
-                      blocks.find(
-                        (block, index) =>
-                          index > blocks.indexOf(section) &&
-                          block.type === "header" &&
-                          block.data.level === 2
-                      )
+        .map((section, sectionIndex) => {
+          const sectionIndexInBlocks = blocks.indexOf(section);
+          const nextSectionIndexInBlocks = blocks.findIndex(
+            (block, idx) =>
+              idx > sectionIndexInBlocks &&
+              block.type === "header" &&
+              block.data.level === 2
+          );
+          const sectionContent = blocks.slice(
+            sectionIndexInBlocks,
+            nextSectionIndexInBlocks === -1
+              ? blocks.length
+              : nextSectionIndexInBlocks
+          );
+
+          return (
+            <li key={section.id}>
+              <details>
+                <summary>
+                  {section.data.text}{" "}
+                  {isSectionComplete(sectionContent) && (
+                    <CheckCircleIcon className="w-4 h-4 text-green-500 inline-block" />
+                  )}
+                </summary>
+                <ul>
+                  {sectionContent
+                    .filter(
+                      (block) =>
+                        block.type === "header" && block.data.level === 3
                     )
-                  )
-                  .filter(
-                    (block) => block.type === "header" && block.data.level === 3
-                  )
-                  .map((subsection, subsectionIndex) => (
-                    <li key={subsection.id}>
-                      <a
-                        onClick={() =>
-                          handleClick(sectionIndex, subsectionIndex)
-                        }
-                      >
-                        {subsection.data.text}
-                      </a>
-                    </li>
-                  ))}
-              </ul>
-            </details>
-          </li>
-        ))}
+                    .map((subsection, subsectionIndex) => (
+                      <li key={subsection.id}>
+                        <a
+                          onClick={() =>
+                            handleClick(
+                              sectionIndex,
+                              subsectionIndex,
+                              subsection.id
+                            )
+                          }
+                        >
+                          {subsection.data.text}{" "}
+                          {isSubsectionComplete(subsection.id) && (
+                            <CheckCircleIcon className="w-4 h-4 text-green-500 inline-block" />
+                          )}
+                        </a>
+                      </li>
+                    ))}
+                </ul>
+              </details>
+            </li>
+          );
+        })}
     </ul>
   );
 };
