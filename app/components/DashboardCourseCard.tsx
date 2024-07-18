@@ -34,17 +34,31 @@ const DashboardCourseCard = () => {
         enrollments.map((enrollment) => (
           <div
             key={enrollment.course.id}
-            className="divide-y overflow-hidden rounded-md border-2 border-ghost"
+            className="relative divide-y overflow-hidden rounded-md border-2 border-ghost"
           >
             <div className="grid grid-cols-3">
-              <div className="col-span-1">
+              <div className="col-span-1 relative">
                 <CldImage
                   height={250}
                   width={250}
                   sizes="100vw"
                   src={enrollment.course.coverImage}
                   alt={enrollment.course.name}
+                  className="relative"
                 />
+                <div className="absolute top-2 right-6">
+                  <div
+                    className="radial-progress text-base-300 text-xs"
+                    style={{
+                      "--value": `${enrollment.course.CourseProgress[0].progressPercentage}`,
+                      "--size": "3rem",
+                      "--thickness": "0.2rem",
+                    }}
+                    role="progressbar"
+                  >
+                    {enrollment.course.CourseProgress[0].progressPercentage}%
+                  </div>
+                </div>
               </div>
               <div className="col-span-2 py-4">
                 <div className="flex flex-col gap-4">

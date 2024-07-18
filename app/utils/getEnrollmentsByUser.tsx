@@ -5,7 +5,11 @@ export const getEnrollmentsByUser = async (userId: string) => {
     const enrollments = await prisma.courseEnrollment.findMany({
       where: { userId },
       include: {
-        course: true,
+        course: {
+          include: {
+            CourseProgress: true,
+          },
+        },
       },
     });
 

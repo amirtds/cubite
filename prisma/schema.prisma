@@ -111,13 +111,14 @@ model Course {
 }
 
 model CourseProgress {
-  id           String   @id @default(cuid())
-  userId       String
-  courseId     String
-  siteId       String
-  lastUnitId   String
-  progress     Json?
-  updatedAt    DateTime @default(now()) @updatedAt
+  id                String   @id @default(cuid())
+  userId            String
+  courseId          String
+  siteId            String
+  lastUnitId        String
+  progress          Json?
+  progressPercentage Int      @default(0)
+  updatedAt         DateTime @default(now()) @updatedAt
 
   course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -127,6 +128,7 @@ model CourseProgress {
   @@index([userId])
   @@index([siteId])
 }
+
 
 
 model Page {

@@ -155,6 +155,7 @@ const Courseware = ({ params: { courseId, domain } }: Props) => {
         siteId,
         lastUnitId,
         progress: newProgress,
+        progressPercentage: progressPercentage,
       }),
     });
 

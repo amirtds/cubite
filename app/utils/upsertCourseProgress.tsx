@@ -6,12 +6,14 @@ export const upsertCourseProgress = async ({
   siteId,
   lastUnitId,
   progress,
+  progressPercentage,
 }: {
   userId: string;
   courseId: string;
   siteId: string;
   lastUnitId: string;
   progress: Record<string, any>;
+  progressPercentage: number;
 }) => {
   try {
     const existingProgress = await prisma.courseProgress.findUnique({
@@ -36,6 +38,7 @@ export const upsertCourseProgress = async ({
         data: {
           lastUnitId,
           progress,
+          progressPercentage,
         },
       });
 
@@ -51,6 +54,7 @@ export const upsertCourseProgress = async ({
           siteId,
           lastUnitId,
           progress,
+          progressPercentage,
         },
       });
 

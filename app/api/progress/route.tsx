@@ -32,10 +32,17 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const { userId, courseId, siteId, lastUnitId, progress } =
+  const { userId, courseId, siteId, lastUnitId, progress, progressPercentage } =
     await request.json();
 
-  if (!userId || !courseId || !siteId || !lastUnitId || !progress) {
+  if (
+    !userId ||
+    !courseId ||
+    !siteId ||
+    !lastUnitId ||
+    !progress ||
+    !progressPercentage
+  ) {
     return NextResponse.json({
       message: "Missing parameters in request body",
       status: 400,
@@ -48,16 +55,24 @@ export async function POST(request: NextRequest) {
     siteId,
     lastUnitId,
     progress,
+    progressPercentage,
   });
 
   return NextResponse.json(result, { status: result.status });
 }
 
 export async function PUT(request: NextRequest) {
-  const { userId, courseId, siteId, lastUnitId, progress } =
+  const { userId, courseId, siteId, lastUnitId, progress, progressPercentage } =
     await request.json();
 
-  if (!userId || !courseId || !siteId || !lastUnitId || !progress) {
+  if (
+    !userId ||
+    !courseId ||
+    !siteId ||
+    !lastUnitId ||
+    !progress ||
+    !progressPercentage
+  ) {
     return NextResponse.json({
       message: "Missing parameters in request body",
       status: 400,
@@ -70,6 +85,7 @@ export async function PUT(request: NextRequest) {
     siteId,
     lastUnitId,
     progress,
+    progressPercentage,
   });
 
   return NextResponse.json(result, { status: result.status });
