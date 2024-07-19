@@ -128,6 +128,12 @@ const PageNew = () => {
     }
     getInstructor();
     getMysites(session?.user?.email);
+    setSelectedAuthors([
+      {
+        name: session?.user?.name,
+        id: session?.user?.id,
+      },
+    ]);
   }, [session]);
 
   return (
@@ -237,6 +243,12 @@ const PageNew = () => {
                 title="Authors"
                 options={authors}
                 onChange={setSelectedAuthors}
+                preSelectedOptions={[
+                  {
+                    name: session?.user?.name,
+                    id: session?.user?.id,
+                  },
+                ]}
               />
               <div className="col-span-full">
                 <label className="form-control">
