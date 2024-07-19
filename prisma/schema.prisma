@@ -129,8 +129,6 @@ model CourseProgress {
   @@index([siteId])
 }
 
-
-
 model Page {
   id          String      @id @default(cuid())
   title       String

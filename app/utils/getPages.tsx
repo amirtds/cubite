@@ -46,6 +46,16 @@ export const getPages = async (userEmail: string) => {
             },
           },
         },
+        {
+          sites: {
+            none: {},
+          },
+          authors: {
+            some: {
+              userId: user.id,
+            },
+          },
+        },
       ],
     },
     include: {
