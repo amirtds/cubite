@@ -50,13 +50,21 @@ const DashboardCourseCard = () => {
                   <div
                     className="radial-progress text-base-300 text-xs"
                     style={{
-                      "--value": `${enrollment.course.CourseProgress[0].progressPercentage}`,
+                      "--value": `${
+                        enrollment.course.CourseProgress.length > 0
+                          ? enrollment.course.CourseProgress[0]
+                              .progressPercentage
+                          : 0
+                      }`,
                       "--size": "3rem",
                       "--thickness": "0.2rem",
                     }}
                     role="progressbar"
                   >
-                    {enrollment.course.CourseProgress[0].progressPercentage}%
+                    {enrollment.course.CourseProgress.length > 0
+                      ? enrollment.course.CourseProgress[0].progressPercentage
+                      : 0}
+                    %
                   </div>
                 </div>
               </div>

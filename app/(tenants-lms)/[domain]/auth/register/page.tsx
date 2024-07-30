@@ -116,6 +116,20 @@ const Register = ({ params: { domain } }: Props) => {
           });
           // Redirect to index or another page on successful sign-in
           window.location.href = "/dashboard";
+
+          // send welcome email
+          const emailResponse = await fetch("/api/send-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              site,
+              userFirstname: userObject.firstName,
+              to: userObject.email,
+              subject: `Welcome to ${site?.name}`,
+            }),
+          });
         }
       } catch (error) {
         setStatus(500);
