@@ -11,7 +11,7 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface WelcomeEmailProps {
+interface EnrollmentEmailProps {
   userFirstname: string;
   site: {
     name: string;
@@ -19,15 +19,20 @@ interface WelcomeEmailProps {
     domainName: string;
     themeName: string;
   };
+  course: {
+    name: "Demo course";
+    url: "/demo";
+  };
 }
 
-export const WelcomeEmailProps = ({
+export const EnrollmentEmail = ({
   userFirstname,
   site,
-}: WelcomeEmailProps) => (
+  course,
+}: EnrollmentEmailProps) => (
   <Html data-theme={site.themeName}>
     <Head />
-    <Preview>Welcome to {site.name}</Preview>
+    <Preview>You successfully enrolled into {course.name}</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
@@ -38,10 +43,12 @@ export const WelcomeEmailProps = ({
           style={logo}
         />
         <Text style={paragraph}>Hi {userFirstname},</Text>
-        <Text style={paragraph}>Welcome to {site.name} Learning Platform.</Text>
+        <Text style={paragraph}>
+          Exciting news! You've successfully enrolled into {course.name}
+        </Text>
         <Section style={btnContainer}>
-          <Button style={button} href={site.domainName}>
-            Get started
+          <Button style={button} href={course.url}>
+            Enter the course
           </Button>
         </Section>
       </Container>
@@ -49,7 +56,7 @@ export const WelcomeEmailProps = ({
   </Html>
 );
 
-WelcomeEmailProps.PreviewProps = {
+EnrollmentEmail.PreviewProps = {
   userFirstname: "Alan",
   site: {
     name: "Acme",
@@ -57,9 +64,9 @@ WelcomeEmailProps.PreviewProps = {
     domainName: "https://cubite.io",
     themeName: "lofi",
   },
-} as WelcomeEmailProps;
+} as EnrollmentEmailProps;
 
-export default WelcomeEmailProps;
+export default EnrollmentEmail;
 
 const main = {
   backgroundColor: "#ffffff",

@@ -21,10 +21,7 @@ interface WelcomeEmailProps {
   };
 }
 
-export const WelcomeEmailProps = ({
-  userFirstname,
-  site,
-}: WelcomeEmailProps) => (
+export const WelcomeEmail = ({ userFirstname, site }: WelcomeEmailProps) => (
   <Html data-theme={site.themeName}>
     <Head />
     <Preview>Welcome to {site.name}</Preview>
@@ -49,7 +46,7 @@ export const WelcomeEmailProps = ({
   </Html>
 );
 
-WelcomeEmailProps.PreviewProps = {
+WelcomeEmail.PreviewProps = {
   userFirstname: "Alan",
   site: {
     name: "Acme",
@@ -59,7 +56,7 @@ WelcomeEmailProps.PreviewProps = {
   },
 } as WelcomeEmailProps;
 
-export default WelcomeEmailProps;
+export default WelcomeEmail;
 
 const main = {
   backgroundColor: "#ffffff",

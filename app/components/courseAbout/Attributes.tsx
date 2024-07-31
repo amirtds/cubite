@@ -1,7 +1,7 @@
 import React from "react";
 import Enrollment from "../Enrollment";
 
-const Attributes = ({ courseId, siteId, level, topics, xp }) => {
+const Attributes = ({ courseId, siteId, level, topics, xp, course, site }) => {
   return (
     <div className="flex flex-row m-12 py-4">
       <div className="flex-1 justify-self-start">
@@ -26,7 +26,12 @@ const Attributes = ({ courseId, siteId, level, topics, xp }) => {
         )}
       </div>
       <div className="flex-none">
-        <Enrollment courseId={courseId} siteId={siteId} />
+        <Enrollment
+          courseId={courseId}
+          siteId={siteId}
+          course={course}
+          site={site}
+        />
       </div>
     </div>
   );

@@ -6,9 +6,11 @@ import { useSession } from "next-auth/react";
 interface Props {
   courseId: string;
   siteId: string;
+  course: {};
+  site: {};
 }
 
-const Enrollment = ({ courseId, siteId }: Props) => {
+const Enrollment = ({ courseId, siteId, course, site }: Props) => {
   const { status, data: session } = useSession();
   const [enrollments, setEnrollments] = useState([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
@@ -61,6 +63,21 @@ const Enrollment = ({ courseId, siteId }: Props) => {
           ]);
           setIsEnrolled(true);
           window.location.href = `/course/${courseId}/courseware/`;
+          // send enrollment email
+          const emailResponse = await fetch("/api/send-email", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              site,
+              course,
+              userFirstname: session?.user.name,
+              to: session?.user?.email,
+              subject: `You are enrolled into ${course?.name}`,
+              type: "enrollment",
+            }),
+          });
         }
       }
     } else {

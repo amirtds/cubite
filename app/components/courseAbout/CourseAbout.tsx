@@ -52,6 +52,8 @@ const CourseAbout = ({ courseId, site, courses }) => {
         level={course.level}
         topics={course.topics}
         xp={course.xp}
+        course={course}
+        site={site}
       />
       {course.contents.length > 0 && (
         <Syllabus blocks={course.contents[0].content.blocks} />

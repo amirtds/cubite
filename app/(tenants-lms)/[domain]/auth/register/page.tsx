@@ -128,6 +128,7 @@ const Register = ({ params: { domain } }: Props) => {
               userFirstname: userObject.firstName,
               to: userObject.email,
               subject: `Welcome to ${site?.name}`,
+              type: "welcome",
             }),
           });
         }

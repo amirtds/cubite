@@ -56,7 +56,12 @@ const CourseCard = ({ course, site }) => {
             Level <span className="font-medium">{course.level}</span>
           </p>
         ) : null}
-        <Enrollment siteId={site.id} courseId={course.id} />
+        <Enrollment
+          siteId={site.id}
+          courseId={course.id}
+          course={course}
+          site={site}
+        />
       </div>
     </div>
   );
