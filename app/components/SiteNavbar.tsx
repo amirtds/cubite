@@ -71,7 +71,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
                 width={100}
                 height={100}
-                alt="test"
+                alt={`${site.name} logo`}
                 sizes="100vw"
               />
             </Link>
@@ -103,12 +103,13 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             href={session?.user ? "/dashboard" : "/"}
             className="btn btn-ghost text-xl hover:bg-transparent"
           >
-            <Image
+            <CldImage
               src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
-              width={100}
-              height={100}
-              alt="test"
+              width={70}
+              height={70}
+              alt={`${site.name} logo`}
               sizes="100vw"
+              className="max-h-16"
             />
           </Link>
         </div>
