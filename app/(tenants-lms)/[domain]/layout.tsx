@@ -1,4 +1,3 @@
-// layout file (e.g., SitesLayout.tsx)
 import React, { ReactNode } from "react";
 import { Image } from "@/app/components/Image";
 import { FaFacebookF } from "react-icons/fa6";
@@ -9,6 +8,9 @@ import { BsTwitterX } from "react-icons/bs";
 import "../../globals.css";
 import AuthProvider from "./auth/Provider";
 import SiteNavbar from "@/app/components/SiteNavbar";
+
+import { NextIntlClientProvider } from "next-intl";
+import { getLocale, getMessages } from "next-intl/server";
 
 interface Props {
   children: ReactNode;
@@ -32,6 +34,10 @@ const SitesLayout = async ({ children, params }: Props) => {
   let footerColumns = [];
   let facebook, instagram, tiktok, youtube, x;
   let headerLinks = [];
+  const locale = await getLocale();
+  // Providing all messages to the client
+  const messages = await getMessages();
+
   if (result.status === 200) {
     site = result.sites.find(
       (s) =>
@@ -55,110 +61,115 @@ const SitesLayout = async ({ children, params }: Props) => {
   }
 
   return (
-    <html data-theme={site.themeName}>
+    <html data-theme={site.themeName} lang={locale}>
       <body className="">
-        <AuthProvider>
-          <div className="">
-            {site ? (
-              <div className="min-h-screen">
-                <SiteNavbar site={site} headerLinks={headerLinks} />
-                {/* page content */}
-                <div className="mx-auto max-w-7xl">{children}</div>
-                {/* Footer Content */}
-                <div className="bg-base-200 sticky top-[100vh]">
-                  <div className="mx-auto max-w-7xl">
-                    <footer className="footer p-10 text-base-content">
-                      <nav className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                        {footerColumns.map((column, index) => (
-                          <div key={index} className="flex flex-col space-y-2">
-                            {column.map((link) => (
-                              <a
-                                key={link.url}
-                                href={link.url}
-                                className="link link-hover"
-                              >
-                                {link.text}
-                              </a>
-                            ))}
-                          </div>
-                        ))}
-                      </nav>
-                      <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-                        <form>
-                          <fieldset className="form-control w-80">
-                            <label className="label">
-                              <span className="label-text">
-                                Enter your email address
-                              </span>
-                            </label>
-                            <div className="join">
-                              <input
-                                type="text"
-                                placeholder="username@site.com"
-                                className="input input-bordered join-item"
-                              />
-                              <button className="btn btn-outline btn-primary join-item">
-                                Subscribe
-                              </button>
+        <NextIntlClientProvider messages={messages}>
+          <AuthProvider>
+            <div className="">
+              {site ? (
+                <div className="min-h-screen">
+                  <SiteNavbar site={site} headerLinks={headerLinks} />
+                  {/* page content */}
+                  <div className="mx-auto max-w-7xl">{children}</div>
+                  {/* Footer Content */}
+                  <div className="bg-base-200 sticky top-[100vh]">
+                    <div className="mx-auto max-w-7xl">
+                      <footer className="footer p-10 text-base-content">
+                        <nav className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          {footerColumns.map((column, index) => (
+                            <div
+                              key={index}
+                              className="flex flex-col space-y-2"
+                            >
+                              {column.map((link) => (
+                                <a
+                                  key={link.url}
+                                  href={link.url}
+                                  className="link link-hover"
+                                >
+                                  {link.text}
+                                </a>
+                              ))}
                             </div>
-                          </fieldset>
-                        </form>
-                      </nav>
-                    </footer>
-                    <footer className="footer px-10 py-4 border-t text-base-content border-base-300">
-                      <aside className="items-center grid-flow-col">
-                        <Image
-                          src={
-                            site?.logo
-                              ? site.logo
-                              : "courseCovers/600x400_er61hk"
-                          }
-                          width={50}
-                          height={50}
-                          alt="test"
-                          sizes="100vw"
-                        />
-                        <p className="mx-2">
-                          {site?.layout?.footer?.copyrightText &&
-                            site.layout.footer.copyrightText}
-                        </p>
-                      </aside>
-                      <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
-                        {facebook && (
-                          <a href={facebook}>
-                            <FaFacebookF className="w-6 h-6" />
-                          </a>
-                        )}
-                        {instagram && (
-                          <a href={instagram}>
-                            <BsInstagram className="w-6 h-6" />
-                          </a>
-                        )}
-                        {tiktok && (
-                          <a href={tiktok}>
-                            <FaTiktok className="w-6 h-6" />
-                          </a>
-                        )}
-                        {youtube && (
-                          <a href={youtube}>
-                            <IoLogoYoutube className="w-8 h-8" />
-                          </a>
-                        )}
-                        {x && (
-                          <a href={x}>
-                            <BsTwitterX className="w-6 h-6" />
-                          </a>
-                        )}
-                      </nav>
-                    </footer>
+                          ))}
+                        </nav>
+                        <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+                          <form>
+                            <fieldset className="form-control w-80">
+                              <label className="label">
+                                <span className="label-text">
+                                  Enter your email address
+                                </span>
+                              </label>
+                              <div className="join">
+                                <input
+                                  type="text"
+                                  placeholder="username@site.com"
+                                  className="input input-bordered join-item"
+                                />
+                                <button className="btn btn-outline btn-primary join-item">
+                                  Subscribe
+                                </button>
+                              </div>
+                            </fieldset>
+                          </form>
+                        </nav>
+                      </footer>
+                      <footer className="footer px-10 py-4 border-t text-base-content border-base-300">
+                        <aside className="items-center grid-flow-col">
+                          <Image
+                            src={
+                              site?.logo
+                                ? site.logo
+                                : "courseCovers/600x400_er61hk"
+                            }
+                            width={50}
+                            height={50}
+                            alt="test"
+                            sizes="100vw"
+                          />
+                          <p className="mx-2">
+                            {site?.layout?.footer?.copyrightText &&
+                              site.layout.footer.copyrightText}
+                          </p>
+                        </aside>
+                        <nav className="grid-flow-col gap-4 md:place-self-center md:justify-self-end">
+                          {facebook && (
+                            <a href={facebook}>
+                              <FaFacebookF className="w-6 h-6" />
+                            </a>
+                          )}
+                          {instagram && (
+                            <a href={instagram}>
+                              <BsInstagram className="w-6 h-6" />
+                            </a>
+                          )}
+                          {tiktok && (
+                            <a href={tiktok}>
+                              <FaTiktok className="w-6 h-6" />
+                            </a>
+                          )}
+                          {youtube && (
+                            <a href={youtube}>
+                              <IoLogoYoutube className="w-8 h-8" />
+                            </a>
+                          )}
+                          {x && (
+                            <a href={x}>
+                              <BsTwitterX className="w-6 h-6" />
+                            </a>
+                          )}
+                        </nav>
+                      </footer>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ) : (
-              <p>Site not found</p>
-            )}
-          </div>
-        </AuthProvider>
+              ) : (
+                <p>Site not found</p>
+              )}
+            </div>
+          </AuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   );

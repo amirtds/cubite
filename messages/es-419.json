@@ -1,0 +1,9 @@
+{
+    "DashboardCourseCard": {
+        "resume_course_button": "Entrar al Curso"
+    },
+    "SiteNavbar": {
+        "signin": "Iniciar Session",
+        "getstarted": "Registerarte"
+    }
+}

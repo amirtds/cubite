@@ -6,11 +6,13 @@ import EmptyDashboard from "./EmptyDashboard";
 import { CldImage } from "next-cloudinary";
 import DashboardCourseCardLoader from "./DashboardCourseCardLoader";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 const DashboardCourseCard = () => {
   const { status, data: session } = useSession();
   const [enrollments, setEnrollments] = useState([]);
   const [loading, setLoading] = useState(true);
+  const t = useTranslations("DashboardCourseCard");
 
   useEffect(() => {
     const getEnrollments = async () => {
@@ -76,7 +78,7 @@ const DashboardCourseCard = () => {
                     href={`/course/${enrollment.course.id}/courseware/`}
                     className="btn btn-outline btn-secondary flex-none w-40 justify-self-end"
                   >
-                    Go to the Course
+                    {t("resume_course_button")}
                   </Link>
                 </div>
               </div>
