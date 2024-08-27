@@ -7,6 +7,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useTranslations } from "next-intl";
+import { useEffect, useState } from "react";
 
 interface Site {
   name: string;
@@ -27,6 +28,17 @@ interface Props {
 const SiteNavbar = ({ site, headerLinks }: Props) => {
   const { status, data: session } = useSession();
   const t = useTranslations("SiteNavbar");
+  const [selectedLanguage, setSelectedLanguage] = useState<string>("");
+
+  useEffect(() => {
+    const storedLanguage = localStorage.getItem("selectedLanguage");
+    if (storedLanguage) {
+      setSelectedLanguage(storedLanguage);
+    } else if (site.languages.length > 0) {
+      // Set default language if no stored language
+      setSelectedLanguage(site.languages[0].code);
+    }
+  }, [site.languages]);
 
   const handleSignout = () => {
     signOut({ redirect: false });
@@ -134,6 +146,22 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           </ul>
         </div>
         <div className="navbar-end">
+          <select
+            value={selectedLanguage}
+            onChange={(e) => {
+              const newSelectedLanguage = e.target.value;
+              setSelectedLanguage(newSelectedLanguage);
+              localStorage.setItem("selectedLanguage", newSelectedLanguage);
+              window.location.reload(); // Reload to apply the language change
+            }}
+            className="select select-bordered"
+          >
+            {site.languages.map((language) => (
+              <option key={language.id} value={language.code}>
+                {language.name}
+              </option>
+            ))}
+          </select>
           {headerLinks.map((link) => {
             if (
               (link.url === "/auth/signin" || link.url === "/auth/register") &&

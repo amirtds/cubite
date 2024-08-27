@@ -11,6 +11,7 @@ export const getSitesPublicData = async () => {
         logo: true,
         domainName: true,
         customDomain: true,
+        languages: true,
         themeName: true,
         courses: {
           include: {
