@@ -6,7 +6,6 @@ import { Image } from "@/app/components/Image";
 import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
-import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 
 interface Site {
@@ -27,7 +26,6 @@ interface Props {
 
 const SiteNavbar = ({ site, headerLinks }: Props) => {
   const { status, data: session } = useSession();
-  const t = useTranslations("SiteNavbar");
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
