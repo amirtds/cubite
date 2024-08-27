@@ -68,8 +68,18 @@ model Site {
   googleAnalytics   String?
   googleTagManager  String?
   extraRegistrationFields Json? 
+  languages             Language[] @relation("SiteLanguages")
 
   @@map("sites")
+}
+
+model Language {
+  id     String @id @default(cuid())
+  name   String
+  code   String @unique
+  siteId String
+  sites  Site[]  @relation("SiteLanguages")
+
 }
 
 model SiteRole {
