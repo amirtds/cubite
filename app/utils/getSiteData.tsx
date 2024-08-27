@@ -31,6 +31,7 @@ export const getSiteData = async (
       where: { domainName },
       include: {
         admins: true,
+        languages: true,
         siteRoles: {
           include: {
             user: true,

@@ -16,6 +16,7 @@ import { FaTiktok } from "react-icons/fa";
 import { IoLogoYoutube } from "react-icons/io";
 import { BsInstagram } from "react-icons/bs";
 import { BsTwitterX } from "react-icons/bs";
+import MultiSelect from "@/app/components/MultiSelect";
 
 interface Props {
   params: {
@@ -30,6 +31,7 @@ interface Site {
   domainName: string;
   customDomain?: string;
   isActive: boolean;
+  languages: string[];
   admins: {
     id: string;
     name: string;
@@ -69,6 +71,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
   const [siteName, setSiteName] = useState("");
   const [subDomain, setSubDomain] = useState("");
   const [customDomain, setCustomDomain] = useState("");
+  const [availabelLanguages, setAvailabelLanguages] = useState([]);
+  const [languages, setLanguages] = useState([]);
   const [theme, setTheme] = useState("");
   const [headerLinks, setHeaderLinks] = useState([
     { text: "", type: "internal", url: "" },
@@ -265,6 +269,10 @@ const SitePage = ({ params: { domainName } }: Props) => {
     setCustomDomain(e.target.value);
   };
 
+  const handleLanguagesChange = (selectedLanguages) => {
+    setLanguages(selectedLanguages);
+  };
+
   const handleThemeSelect = (e) => {
     setTheme(e.target.value);
   };
@@ -304,6 +312,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
       name: siteName,
       domainName: `${subDomain}.cubite.io`,
       customDomain,
+      languages,
       themeName: theme,
       layout,
       extraRegistrationFields,
@@ -425,17 +434,25 @@ const SitePage = ({ params: { domainName } }: Props) => {
   useEffect(() => {
     const roles = getRoles();
     setRoles(roles);
+    async function fetchAvailableLanguages() {
+      const response = await fetch("/api/i8n");
+      const data = await response.json();
+      setAvailabelLanguages(data.languages);
+    }
+    fetchAvailableLanguages();
     async function fetchSiteData() {
       try {
         const response = await fetch(`/api/site/${domainName}`);
         if (response.status === 200) {
           const site = await response.json();
+          console.log(site.data);
           setAdmins(site.data.admins);
           setSite(site.data);
           setLogo(site.data.logo);
           setSiteName(site.data.name);
           setSubDomain(site.data.domainName.split(".cubite.io")[0]);
           setCustomDomain(site.data.customDomain);
+          setLanguages(site.data.languages);
           setTheme(site.data.themeName);
           setIsActive(site.data.isActive);
           setExtraRegistrationFields(site.data.extraRegistrationFields);
@@ -665,6 +682,17 @@ const SitePage = ({ params: { domainName } }: Props) => {
                           Enter custom domain, if you have
                         </span>
                       </div>
+                    </label>
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="form-control w-full max-w-xs">
+                      <MultiSelect
+                        title="Languages"
+                        preSelectedOptions={languages}
+                        options={availabelLanguages}
+                        onChange={handleLanguagesChange}
+                        isRequired
+                      />
                     </label>
                   </div>
                 </div>
