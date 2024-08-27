@@ -7,6 +7,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
+import { setCookie } from "cookies-next";
 
 interface Site {
   name: string;
@@ -147,9 +148,11 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           <select
             value={selectedLanguage}
             onChange={(e) => {
-              const newSelectedLanguage = e.target.value;
-              setSelectedLanguage(newSelectedLanguage);
-              localStorage.setItem("selectedLanguage", newSelectedLanguage);
+              const selectedLanguage = e.target.value;
+              localStorage.setItem("selectedLanguage", selectedLanguage);
+              setCookie("selectedLanguage", selectedLanguage, {
+                maxAge: 30 * 24 * 60 * 60,
+              }); // 30 days
               window.location.reload(); // Reload to apply the language change
             }}
             className="select select-bordered"
