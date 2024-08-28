@@ -1,33 +1,37 @@
 import { getRequestConfig } from "next-intl/server";
-import { headers } from "next/headers";
+import { headers, cookies } from "next/headers";
 import Negotiator from "negotiator";
 import { match } from "@formatjs/intl-localematcher";
-import { cookies } from "next/headers";
+import { initializeTranslations } from "./utils/translate";
 
 export default getRequestConfig(async () => {
-  // Convert Headers object to plain object
   const headersList = Object.fromEntries(headers().entries());
+  const cookieStore = cookies();
 
-  // Use Negotiator to get languages
+  // Check for language in cookie
+  const cookieLanguage = cookieStore.get("selectedLanguage")?.value;
+
   const negotiator = new Negotiator({ headers: headersList });
   const languages = negotiator.languages();
 
-  // Define your locales and defaultLocale
-  const locales = ["en", "en-US", "es-419", "pt-BR"];
+  const locales = ["en", "en-US", "es-419", "pt-BR"] as const;
   const defaultLocale = "en-US";
 
-  // Try to get the language from the cookie
-  const cookieStore = cookies();
-  const storedLanguage = cookieStore.get("selectedLanguage")?.value;
+  let locale: (typeof locales)[number];
 
-  let locale;
-
-  if (storedLanguage && locales.includes(storedLanguage)) {
-    locale = storedLanguage;
+  if (cookieLanguage && locales.includes(cookieLanguage as any)) {
+    // Use cookie language if it's valid
+    locale = cookieLanguage as (typeof locales)[number];
   } else {
-    // Use match function to get the best matching locale if no stored language
-    locale = match(languages, locales, defaultLocale);
+    // Fall back to browser-negotiated language
+    locale = match(
+      languages,
+      locales,
+      defaultLocale
+    ) as (typeof locales)[number];
   }
+
+  await initializeTranslations(locale);
 
   return {
     locale,

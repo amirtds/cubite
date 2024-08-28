@@ -8,6 +8,7 @@ import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { setCookie } from "cookies-next";
+import { useTranslation } from "@/app/hooks/useTranslation";
 
 interface Site {
   name: string;
@@ -26,6 +27,8 @@ interface Props {
 }
 
 const SiteNavbar = ({ site, headerLinks }: Props) => {
+  const translate = useTranslation();
+
   const { status, data: session } = useSession();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
@@ -93,7 +96,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             <ul className="menu menu-horizontal px-1">
               {headerLinks.map((link) => (
                 <li key={link.url}>
-                  <a href={link.url}>{link.text}</a>
+                  <a href={link.url}>
+                    {translate(`headerLink.${link.text}`, link.text)}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -138,7 +143,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               }
               return link.type === "internal" || link.type === "external" ? (
                 <li key={link.url}>
-                  <a href={link.url}>{link.text}</a>
+                  <a href={link.url}>
+                    {translate(`headerLink.${link.text}`, link.text)}
+                  </a>
                 </li>
               ) : null;
             })}
@@ -176,7 +183,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 className="btn btn-ghost btn-outline mx-2"
                 href={link.url}
               >
-                {link.text}
+                {translate(`headerLink.${link.text}`, link.text)}
               </a>
             ) : link.type === "primary-button" ? (
               <a
@@ -184,7 +191,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 className="btn btn-outline btn-primary mx-2"
                 href={link.url}
               >
-                {link.text}
+                {translate(`headerLink.${link.text}`, link.text)}
               </a>
             ) : null;
           })}

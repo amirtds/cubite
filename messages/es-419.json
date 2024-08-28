@@ -5,5 +5,9 @@
     "SiteNavbar": {
         "signin": "Iniciar Session",
         "getstarted": "Registerarte"
+    },
+    "headerLink": {
+        "Login": "Inciar session",
+        "Register": "Registerte"
     }
 }
