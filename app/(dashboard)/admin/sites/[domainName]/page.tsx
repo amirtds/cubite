@@ -310,7 +310,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
       isActive,
       logo,
       name: siteName,
-      domainName: `${subDomain}.cubite.io`,
+      domainName: `${subDomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
       customDomain,
       languages,
       themeName: theme,
@@ -450,7 +450,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
           setSite(site.data);
           setLogo(site.data.logo);
           setSiteName(site.data.name);
-          setSubDomain(site.data.domainName.split(".cubite.io")[0]);
+          setSubDomain(site.data.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]);
           setCustomDomain(site.data.customDomain);
           setLanguages(site.data.languages);
           setTheme(site.data.themeName);
@@ -535,12 +535,12 @@ const SitePage = ({ params: { domainName } }: Props) => {
                 <a
                   className="text-sm text-ghost link"
                   href={`http://${
-                    site.domainName.split(".cubite.io")[0]
+                    site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]
                   }.localhost:3000`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${site.domainName.split(".cubite.io")[0]}.localhost:3000`}
+                  {`${site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]}.localhost:3000`}
                 </a>
               </div>
             )}
@@ -645,12 +645,12 @@ const SitePage = ({ params: { domainName } }: Props) => {
                             id="subDomain"
                             onChange={handleSubDomain}
                             defaultValue={
-                              site.domainName.split(".cubite.io")[0]
+                              site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]
                             }
                             className="input input-bordered w-full rounded-r-none"
                           />
                           <span className="inline-flex items-center px-3 bg-gray-200 text-gray-500 border border-l-0 border-gray-300 rounded-r-md">
-                            .cubite.io
+                            { process.env.NEXT_PUBLIC_MAIN_DOMAIN }
                           </span>
                         </div>
                         <div className="label">
