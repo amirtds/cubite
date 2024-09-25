@@ -20,7 +20,7 @@ const Attributes = ({ courseId, siteId, level, topics, xp, course, site }) => {
           <span className="text-md mx-2">
             Topics:{" "}
             {topics.map((topic) => (
-              <span className="font-semibold badge badge-lg">{topic.name}</span>
+              <span key={topic.name} className="font-semibold badge badge-lg">{topic.name}</span>
             ))}
           </span>
         )}

@@ -800,7 +800,7 @@ const Course = ({ params: { id } }: Props) => {
                           Add Students
                         </h2>
                         <p className="mt-1 text-sm ">
-                          This course doesn't have any students yet.
+                          This course doesn&apos;t have any students yet.
                         </p>
                         <button
                           type="button"

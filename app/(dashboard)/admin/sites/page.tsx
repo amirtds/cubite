@@ -214,7 +214,7 @@ const Sites = () => {
             </svg>
             <h3 className="mt-2 text-sm font-semibold">No projects</h3>
             <p className="mt-1 text-sm text-gray-500">
-              You don't have any site. Create new one.
+              You don&apos;t have any site. Create new one.
             </p>
             <div className="mt-6">
               <Link

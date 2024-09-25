@@ -1271,7 +1271,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
                   </form>
                   <h3 className="font-bold text-lg">Are you sure ?</h3>
                   <p className="py-4">
-                    Click on Delete to remove site completely. If you don't want
+                    Click on Delete to remove site completely. If you don&apos;t want
                     to delete the site press ESC key or click on ✕ button.
                   </p>
                   <button

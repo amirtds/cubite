@@ -100,7 +100,7 @@ const SignIn = () => {
             Sign in
           </button>
           <p>
-            You don't have account ? Register{" "}
+            You don&apos;t have account ? Register{" "}
             <Link className="underline" href="/auth/register">
               here
             </Link>

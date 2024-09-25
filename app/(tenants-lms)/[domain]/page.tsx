@@ -90,7 +90,7 @@ export default async function Home({ params }: Props) {
               );
             }
             if (block.type === "delimiter") {
-              return <div className="ce-delimiter cdx-block"></div>;
+              return <div className="ce-delimiter cdx-block" key={block.id}></div>;
             }
             if (block.type === "table") {
               return (
@@ -165,7 +165,7 @@ export default async function Home({ params }: Props) {
                 .slice(0, block.data.limitCourses || 3);
 
               return (
-                <div className="">
+                <div className="" key={block.id}>
                   <Link
                     href={"/courses"}
                     className="text-right my-4 font-semibold text-lg block hover:text-primary"
@@ -173,11 +173,10 @@ export default async function Home({ params }: Props) {
                     View All
                   </Link>
                   <div
-                    key={block.id}
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
                   >
                     {sortedCourses.map((course) => (
-                      <CourseCard course={course} site={site} />
+                      <CourseCard key={course.id} course={course} site={site} />
                     ))}
                   </div>
                 </div>
@@ -185,7 +184,7 @@ export default async function Home({ params }: Props) {
             }
             if (block.type === "cta") {
               return (
-                <div className="overflow-hidden py-12">
+                <div className="overflow-hidden py-12" key={block.id}>
                   <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                       <div className="flex flex-col justify-center">
@@ -221,6 +220,7 @@ export default async function Home({ params }: Props) {
                 </div>
               );
             }
+            return null;
           })
         ) : (
           <div>Welcome to {site.name}</div>

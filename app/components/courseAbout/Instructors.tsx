@@ -8,7 +8,7 @@ const Instructors = ({ instructors }) => {
       <h2 className="text-3xl font-semibold mb-8">Instructors</h2>
       <div className="grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-12">
         {instructors.map((instructor) => (
-          <div className="flex flex-col border-dashed border-2 px-12 py-6">
+          <div className="flex flex-col border-dashed border-2 px-12 py-6" key={instructor.id}>
             {instructor.user.image ? (
               <div className="avatar">
                 <div className="w-24 h-24 rounded-xl mx-auto">

@@ -14,7 +14,7 @@ interface Course {
   }[];
 }
 
-const page = () => {
+const Page = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   useEffect(() => {
     async function getCourses() {

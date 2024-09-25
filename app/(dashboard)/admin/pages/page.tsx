@@ -182,7 +182,7 @@ const Pages = () => {
                 No page found
               </h2>
               <p className="mt-1 text-sm ">
-                You don't have any pages, create one.
+                You don&apos;t have any pages, create one.
               </p>
               <Link
                 type="button"

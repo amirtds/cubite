@@ -8,6 +8,9 @@ import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
 import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
 import EditorImage from "@/app/components/editorjsToReact/EditorImage";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
+import CourseCard from "@/app/components/CourseCard";
+import Link from "next/link";
+import Image from "next/image";
 
 const Unit = ({ blocks }) => {
   return (

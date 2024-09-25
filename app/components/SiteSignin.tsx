@@ -121,7 +121,7 @@ function SiteSignin({ siteId }: Props) {
             Sign in
           </button>
           <p>
-            You don't have an account? Register{" "}
+            You don&apos;t have an account? Register{" "}
             <Link className="underline" href="/auth/register">
               here
             </Link>

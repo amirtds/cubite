@@ -242,7 +242,7 @@ const Courses = () => {
                 Create a Course
               </h2>
               <p className="mt-1 text-sm ">
-                You don't have any course, create one.
+                You don&apos;t have any course, create one.
               </p>
               <Link
                 type="button"
