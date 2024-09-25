@@ -12,6 +12,9 @@ import SiteNavbar from "@/app/components/SiteNavbar";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0
+
 interface Props {
   children: ReactNode;
   params: {
