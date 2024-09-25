@@ -9,6 +9,7 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { setCookie } from "cookies-next";
 import { useTranslation } from "@/app/hooks/useTranslation";
+import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 interface Site {
   name: string;
@@ -33,7 +34,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
   useEffect(() => {
-    const storedLanguage = localStorage.getItem("selectedLanguage");
+    const storedLanguage = getLocalStorage("selectedLanguage");
     if (storedLanguage) {
       setSelectedLanguage(storedLanguage);
     } else if (site.languages.length > 0) {
@@ -156,7 +157,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             value={selectedLanguage}
             onChange={(e) => {
               const selectedLanguage = e.target.value;
-              localStorage.setItem("selectedLanguage", selectedLanguage);
+              setLocalStorage("selectedLanguage", selectedLanguage);
               setCookie("selectedLanguage", selectedLanguage, {
                 maxAge: 30 * 24 * 60 * 60,
               }); // 30 days

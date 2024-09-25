@@ -3,13 +3,14 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
+import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 const Navbar = () => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(true);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [isLight, setIsLight] = useState(
-    JSON.parse(localStorage.getItem("isLight"))
+    JSON.parse(getLocalStorage("isLight") || "false")
   );
 
   const handleThemeChange = () => {
@@ -17,7 +18,7 @@ const Navbar = () => {
   };
 
   useEffect(() => {
-    localStorage.setItem("isLight", JSON.stringify(isLight));
+    setLocalStorage("isLight", JSON.stringify(isLight));
     if (status !== "loading") {
       setLoading(false);
     }
