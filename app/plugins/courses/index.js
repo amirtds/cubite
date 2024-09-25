@@ -28,7 +28,9 @@ class Courses {
 
       useEffect(() => {
         const getCourses = async () => {
-          const response = await fetch(`/api/courses`);
+          const response = await fetch(`/api/courses`, {
+            cache: "no-store",
+          });
           const result = await response.json();
           const fetchedCourses = result.courses.map((course) => {
             const existingCourse = initialData.courses?.find(

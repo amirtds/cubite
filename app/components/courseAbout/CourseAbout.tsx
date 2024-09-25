@@ -21,7 +21,9 @@ const CourseAbout = ({ courseId, site, courses }) => {
 
   useEffect(() => {
     async function getCourse(courseId) {
-      const response = await fetch(`/api/course/${courseId}`);
+      const response = await fetch(`/api/course/${courseId}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setCourse(result.course);

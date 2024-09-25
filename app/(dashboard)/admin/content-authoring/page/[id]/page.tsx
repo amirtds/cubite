@@ -58,7 +58,9 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
 
   useEffect(() => {
     const getPageContent = async (pageId: string) => {
-      const response = await fetch(`/api/content/page/${pageId}`);
+      const response = await fetch(`/api/content/page/${pageId}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       setStatus(result.status);
       setMessage(result.message);
@@ -72,7 +74,9 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
     };
 
     const getUserId = async () => {
-      const response = await fetch("/api/getUserById");
+      const response = await fetch("/api/getUserById", {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setUserId(result.id);
@@ -80,7 +84,9 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
     };
 
     const getPageContentVersions = async () => {
-      const response = await fetch(`/api/page-content-versions/${id}`);
+      const response = await fetch(`/api/page-content-versions/${id}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setPageContentVersions(result.changeLog);
@@ -88,7 +94,9 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
     };
 
     async function getPage() {
-      const response = await fetch(`/api/page/${id}`);
+      const response = await fetch(`/api/page/${id}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setPage(result.page);

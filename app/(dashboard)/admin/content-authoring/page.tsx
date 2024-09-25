@@ -18,7 +18,9 @@ const Page = () => {
   const [courses, setCourses] = useState<Course[]>([]);
   useEffect(() => {
     async function getCourses() {
-      const response = await fetch("/api/courses");
+      const response = await fetch("/api/courses", {
+        cache: "no-store",
+      });
       const result = await response.json();
 
       if (result.status === 200) {

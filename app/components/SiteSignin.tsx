@@ -50,7 +50,9 @@ function SiteSignin({ siteId }: Props) {
       setError(errorMessage);
     } else {
       // Check if the user is part of this site
-      const response = await fetch("/api/student");
+      const response = await fetch("/api/student", {
+        cache: "no-store",
+      });
       const result = await response.json();
 
       if (result.status === 200) {

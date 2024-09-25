@@ -53,7 +53,9 @@ const Pages = () => {
 
   useEffect(() => {
     async function getPages() {
-      const response = await fetch("/api/pages");
+      const response = await fetch("/api/pages", {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setPages(result.pages);

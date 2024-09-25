@@ -310,7 +310,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
       isActive,
       logo,
       name: siteName,
-      domainName: `${subDomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
+      domainName: `${subDomain}${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
       customDomain,
       languages,
       themeName: theme,
@@ -435,14 +435,18 @@ const SitePage = ({ params: { domainName } }: Props) => {
     const roles = getRoles();
     setRoles(roles);
     async function fetchAvailableLanguages() {
-      const response = await fetch("/api/i8n");
+      const response = await fetch("/api/i8n", {
+        cache: "no-store",
+      });
       const data = await response.json();
       setAvailabelLanguages(data.languages);
     }
     fetchAvailableLanguages();
     async function fetchSiteData() {
       try {
-        const response = await fetch(`/api/site/${domainName}`);
+        const response = await fetch(`/api/site/${domainName}`, {
+          cache: "no-store",
+        });
         if (response.status === 200) {
           const site = await response.json();
           console.log(site.data);

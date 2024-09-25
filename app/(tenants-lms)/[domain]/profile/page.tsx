@@ -108,7 +108,9 @@ const Profile = () => {
 
   useEffect(() => {
     const getStudentData = async () => {
-      const response = await fetch("/api/student");
+      const response = await fetch("/api/student", {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         setStudentData(result.student);

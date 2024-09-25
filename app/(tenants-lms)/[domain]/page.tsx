@@ -20,7 +20,8 @@ interface Props {
 async function pageContent(pageId: string) {
   try {
     const response = await fetch(
-      `${process.env.NEXTAUTH_URL}/api/content/page/${pageId}`
+      `${process.env.NEXTAUTH_URL}/api/content/page/${pageId}`,
+      { cache: "no-store" }
     );
     const result = await response.json();
     if (result.status === 200) {

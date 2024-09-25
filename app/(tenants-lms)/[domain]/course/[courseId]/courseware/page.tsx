@@ -26,7 +26,9 @@ const Courseware = ({ params: { courseId, domain } }: Props) => {
   useEffect(() => {
     if (status === "authenticated") {
       async function fetchCourseContent() {
-        const response = await fetch(`/api/course/${courseId}`);
+        const response = await fetch(`/api/course/${courseId}`, {
+          cache: "no-store",
+        });
         const result = await response.json();
         if (result.status === 200) {
           const latestContent =
@@ -52,14 +54,17 @@ const Courseware = ({ params: { courseId, domain } }: Props) => {
   }, [status, session, courseId, domain]);
 
   const fetchSiteId = async (domain) => {
-    const response = await fetch(`/api/getSiteId?domain=${domain}`);
+    const response = await fetch(`/api/getSiteId?domain=${domain}`, {
+      cache: "no-store",
+    });
     const result = await response.json();
     return result.siteId;
   };
 
   const fetchUserProgress = async (userId, courseId, siteId, latestContent) => {
     const response = await fetch(
-      `/api/progress?userId=${userId}&courseId=${courseId}&siteId=${siteId}`
+      `/api/progress?userId=${userId}&courseId=${courseId}&siteId=${siteId}`,
+      { cache: "no-store" }
     );
     const result = await response.json();
 
@@ -138,7 +143,8 @@ const Courseware = ({ params: { courseId, domain } }: Props) => {
 
     const siteId = await fetchSiteId(domain);
     const response = await fetch(
-      `/api/progress?userId=${session?.user?.id}&courseId=${courseId}&siteId=${siteId}`
+      `/api/progress?userId=${session?.user?.id}&courseId=${courseId}&siteId=${siteId}`,
+      { cache: "no-store" }
     );
     const result = await response.json();
 

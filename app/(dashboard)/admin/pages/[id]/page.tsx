@@ -37,7 +37,9 @@ const Page = ({ params: { id } }: Props) => {
 
   useEffect(() => {
     async function getPageData(id: string) {
-      const response = await fetch(`/api/page/${id}`);
+      const response = await fetch(`/api/page/${id}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status === 200) {
         const fetchedPage = result.page;
@@ -56,7 +58,9 @@ const Page = ({ params: { id } }: Props) => {
       }
     }
     async function getInstructor() {
-      const response = await fetch("/api/instructors");
+      const response = await fetch("/api/instructors", {
+        cache: "no-store",
+      });
       if (response.status === 200) {
         const result = await response.json();
         const possibleInstructors = await result.instructors;

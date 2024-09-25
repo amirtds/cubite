@@ -102,7 +102,9 @@ const PageNew = () => {
 
   useEffect(() => {
     async function getInstructor() {
-      const response = await fetch("/api/instructors");
+      const response = await fetch("/api/instructors", {
+        cache: "no-store",
+      });
       const result = await response.json();
       const instructors = result.instructors;
       setAuthors(instructors);

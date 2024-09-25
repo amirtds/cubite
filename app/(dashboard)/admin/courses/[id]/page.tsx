@@ -47,7 +47,9 @@ const Course = ({ params: { id } }: Props) => {
   useEffect(() => {
     if (!session) return;
     const getCourseData = async (id: string) => {
-      const response = await fetch(`/api/course/${id}`);
+      const response = await fetch(`/api/course/${id}`, {
+        cache: "no-store",
+      });
       if (response.status === 200) {
         const { course } = await response.json();
         const instructors = course.instructors.map((instructor) => ({
@@ -60,7 +62,9 @@ const Course = ({ params: { id } }: Props) => {
       }
     };
     async function getInstructor() {
-      const response = await fetch("/api/instructors");
+      const response = await fetch("/api/instructors", {
+        cache: "no-store",
+      });
       if (response.status === 200) {
         const result = await response.json();
         const possibleInstructors = await result.instructors;
@@ -87,7 +91,9 @@ const Course = ({ params: { id } }: Props) => {
       }
     }
     async function fetchEnrollments(courseId: string) {
-      const response = await fetch(`/api/enrollments/${courseId}`);
+      const response = await fetch(`/api/enrollments/${courseId}`, {
+        cache: "no-store",
+      });
       const result = await response.json();
       if (result.status == 200) {
         setEnrollments(result.enrollments);

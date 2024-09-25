@@ -18,7 +18,9 @@ const Enrollment = ({ courseId, siteId, course, site }: Props) => {
   useEffect(() => {
     const getEnrollments = async () => {
       if (session) {
-        const response = await fetch("/api/enrollments");
+        const response = await fetch("/api/enrollments", {
+          cache: "no-store",
+        });
         const result = await response.json();
         setEnrollments(result.enrollments);
       }
