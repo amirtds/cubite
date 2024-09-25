@@ -535,12 +535,12 @@ const SitePage = ({ params: { domainName } }: Props) => {
                 <a
                   className="text-sm text-ghost link"
                   href={`http://${
-                    site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]
+                    site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
                   }.localhost:3000`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]}.localhost:3000`}
+                  {`${site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]}.localhost:3000`}
                 </a>
               </div>
             )}
@@ -645,12 +645,12 @@ const SitePage = ({ params: { domainName } }: Props) => {
                             id="subDomain"
                             onChange={handleSubDomain}
                             defaultValue={
-                              site.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]
+                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
                             }
                             className="input input-bordered w-full rounded-r-none"
                           />
                           <span className="inline-flex items-center px-3 bg-gray-200 text-gray-500 border border-l-0 border-gray-300 rounded-r-md">
-                            { process.env.NEXT_PUBLIC_MAIN_DOMAIN }
+                            .{ process.env.NEXT_PUBLIC_MAIN_DOMAIN }
                           </span>
                         </div>
                         <div className="label">

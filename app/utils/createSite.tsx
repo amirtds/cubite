@@ -12,7 +12,7 @@ export const createSite = async (data: SiteData) => {
   // Check if the site with the specified subdomain exists
   const existingSite = await prisma.site.findUnique({
     where: {
-      domainName: `${data.subDomain}.cubite.io`,
+      domainName: `${data.subDomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
     },
   });
 
@@ -42,7 +42,7 @@ export const createSite = async (data: SiteData) => {
   const newSite = await prisma.site.create({
     data: {
       name: data.siteName,
-      domainName: `${data.subDomain}.cubite.io`,
+      domainName: `${data.subDomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
       customDomain: data.customDomain,
       themeName: data.theme,
       isActive: true,

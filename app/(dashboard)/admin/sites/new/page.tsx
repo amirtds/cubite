@@ -94,7 +94,7 @@ const SitesNew = () => {
                         required
                       />
                       <span className="inline-flex items-center px-3 bg-gray-200 text-gray-500 border border-l-0 border-gray-300 rounded-r-md">
-                        .cubite.io
+                        .{process.env.NEXT_PUBLIC_MAIN_DOMAIN}
                       </span>
                     </div>
                     <div className="label">
