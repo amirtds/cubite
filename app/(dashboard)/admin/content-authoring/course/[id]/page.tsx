@@ -114,7 +114,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
       <div className="flex-1 py-6 md:py-8">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">{course.name}</h1>
+            <h1 className="text-2xl font-bold">{course?.name}</h1>
             <p className="mt-2">Write and Edit the course content</p>
           </div>
           <div className="flex items-end">
