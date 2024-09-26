@@ -98,7 +98,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               {headerLinks.map((link) => (
                 <li key={link.url}>
                   <a href={link.url}>
-                    {translate(`headerLink.${link.text}`, link.text)}
+                    {translate(`${link.text}`, link.text)}
                   </a>
                 </li>
               ))}
@@ -145,7 +145,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               return link.type === "internal" || link.type === "external" ? (
                 <li key={link.url}>
                   <a href={link.url}>
-                    {translate(`headerLink.${link.text}`, link.text)}
+                    {translate(`${link.text}`, link.text)}
                   </a>
                 </li>
               ) : null;
@@ -184,7 +184,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 className="btn btn-ghost btn-outline mx-2"
                 href={link.url}
               >
-                {translate(`headerLink.${link.text}`, link.text)}
+                {translate(`${link.text}`, link.text)}
               </a>
             ) : link.type === "primary-button" ? (
               <a
@@ -192,7 +192,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
                 className="btn btn-outline btn-primary mx-2"
                 href={link.url}
               >
-                {translate(`headerLink.${link.text}`, link.text)}
+                {translate(`${link.text}`, link.text)}
               </a>
             ) : null;
           })}
