@@ -154,13 +154,13 @@ const Sites = () => {
                           <a
                             className="text-sm text-ghost link"
                             href={`http://${
-                              site.domainName.split(".cubite.io")[0]
+                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
                             }.localhost:3000`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             {`${
-                              site.domainName.split(".cubite.io")[0]
+                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
                             }.localhost:3000`}
                           </a>
                         </div>
