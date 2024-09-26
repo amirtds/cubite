@@ -28,9 +28,9 @@ const EditorMultipleChoice: React.FC<Props> = ({ data }) => {
   };
 
   return (
-    <div className="my-8 p-4 border rounded-lg shadow-sm">
+    <div className="my-8 p-8 border rounded-lg shadow-sm">
       <h3 className="text-lg font-semibold mb-4">{data.questionText}</h3>
-      <ul className="space-y-2">
+      <ul className="space-y-4">
         {data.options.map((option, index) => (
           <li key={index}>
             <label className="flex items-center space-x-2 cursor-pointer">
@@ -48,7 +48,7 @@ const EditorMultipleChoice: React.FC<Props> = ({ data }) => {
           </li>
         ))}
       </ul>
-      <div className="mt-4">
+      <div className="mt-8">
         <button 
           onClick={handleSubmit} 
           className="btn btn-primary"
