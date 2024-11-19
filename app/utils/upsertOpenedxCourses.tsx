@@ -55,7 +55,6 @@ export const upsertOpenedxCourses = async (openEdXURL: string, siteId: string) =
 
         const data = await response.json();
         const courses: OpenEdXCourse[] = data.results;
-        console.log(courses)
         // Process each course
         const results = await Promise.all(courses.map(async (openEdXCourse) => {
             try {
