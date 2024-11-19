@@ -17,7 +17,7 @@ import { IoLogoYoutube } from "react-icons/io";
 import { BsInstagram } from "react-icons/bs";
 import { BsTwitterX } from "react-icons/bs";
 import MultiSelect from "@/app/components/MultiSelect";
-
+import LiftedTab from "@/app/components/admin/sites/LiftedTab";
 interface Props {
   params: {
     domainName: string;
@@ -91,6 +91,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
   const [copyrightText, setCopyrightText] = useState("");
   const [googleTagManager, setGoogleTagManager] = useState("");
   const [googleAnalytics, setGoogleAnalytics] = useState("");
+  const [openEdXURL, setOpenEdXURL] = useState("");
+  const [openEdxCourses, setOpenEdxCourses] = useState([]);
 
   const {
     message: createAdminMessage,
@@ -127,6 +129,18 @@ const SitePage = ({ params: { domainName } }: Props) => {
     status: deleteSiteStatus,
     setMessage: setDeleteSiteMessage,
     setStatus: setDeleteSiteStatus,
+  } = useAlert();
+  const {
+    message: openEdXMessage,
+    status: openEdXStatus,
+    setMessage: setOpenEdXMessage,
+    setStatus: setOpenEdXStatus,
+  } = useAlert();
+  const {
+    message: syncCoursesMessage,
+    status: syncCoursesStatus,
+    setMessage: setSyncCoursesMessage,
+    setStatus: setSyncCoursesStatus,
   } = useAlert();
 
   const handleAddAdminSubmit = async (e) => {
@@ -431,6 +445,55 @@ const SitePage = ({ params: { domainName } }: Props) => {
     setCopyrightText(e.target.value);
   };
 
+  const handleOpenEdXURL = (e) => {
+    try {
+      const url = e.target.value;
+      if (!url) {
+        setOpenEdXMessage("URL is required");
+        setOpenEdXStatus(400);
+        return;
+      }
+
+      if (!url.includes("http://") && !url.includes("https://")) {
+        setOpenEdXURL("https://" + url);
+        setOpenEdXMessage("Protocol added to URL");
+        setOpenEdXStatus(200);
+      } else {
+        setOpenEdXURL(url);
+        setOpenEdXMessage("URL updated successfully");
+        setOpenEdXStatus(200);
+      }
+    } catch (error) {
+      setOpenEdXMessage("Invalid URL format");
+      setOpenEdXStatus(400);
+    }
+  };
+
+  const handleSyncCourses = async () => {
+    try {
+      if (!openEdXURL) {
+        setSyncCoursesMessage("OpenEdX URL is required");
+        setSyncCoursesStatus(400);
+        return;
+      }
+
+      const response = await fetch(`${openEdXURL}/api/courses/v1/courses/`);
+      const data = await response.json();
+      console.log(data);
+      if (response.status === 200) {
+        setOpenEdxCourses(data.results);
+        setSyncCoursesMessage("Courses synced successfully");
+        setSyncCoursesStatus(200);
+      } else {
+        setSyncCoursesMessage("Failed to sync courses: " + data.message);
+        setSyncCoursesStatus(response.status);
+      }
+    } catch (error) {
+      setSyncCoursesMessage("Error syncing courses: " + error.message);
+      setSyncCoursesStatus(500);
+    }
+  };
+
   useEffect(() => {
     const roles = getRoles();
     setRoles(roles);
@@ -454,7 +517,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
           setSite(site.data);
           setLogo(site.data.logo);
           setSiteName(site.data.name);
-          setSubDomain(site.data.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]);
+          setSubDomain(
+            site.data.domainName.split(process.env.NEXT_PUBLIC_MAIN_DOMAIN)[0]
+          );
           setCustomDomain(site.data.customDomain);
           setLanguages(site.data.languages);
           setTheme(site.data.themeName);
@@ -539,12 +604,18 @@ const SitePage = ({ params: { domainName } }: Props) => {
                 <a
                   className="text-sm text-ghost link"
                   href={`http://${
-                    site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
+                    site.domainName.split(
+                      `.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`
+                    )[0]
                   }.localhost:3000`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  {`${site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]}.localhost:3000`}
+                  {`${
+                    site.domainName.split(
+                      `.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`
+                    )[0]
+                  }.localhost:3000`}
                 </a>
               </div>
             )}
@@ -649,12 +720,14 @@ const SitePage = ({ params: { domainName } }: Props) => {
                             id="subDomain"
                             onChange={handleSubDomain}
                             defaultValue={
-                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
+                              site.domainName.split(
+                                `.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`
+                              )[0]
                             }
                             className="input input-bordered w-full rounded-r-none"
                           />
                           <span className="inline-flex items-center px-3 bg-gray-200 text-gray-500 border border-l-0 border-gray-300 rounded-r-md">
-                            .{ process.env.NEXT_PUBLIC_MAIN_DOMAIN }
+                            .{process.env.NEXT_PUBLIC_MAIN_DOMAIN}
                           </span>
                         </div>
                         <div className="label">
@@ -930,7 +1003,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
             name="sites_tabs"
             role="tab"
             className="tab"
-            aria-label="Features"
+            aria-label="Integrations"
           />
           <div role="tabpanel" className="tab-content py-10">
             <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
@@ -1243,6 +1316,41 @@ const SitePage = ({ params: { domainName } }: Props) => {
               </div>
             )}
           </div>
+          <LiftedTab tabName="Import and Export">
+            <h3 className="text-2xl font-bold uppercase">Open edX</h3>
+            <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
+              {/* Open edX URL: */}
+              <div className="sm:col-span-2">
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">
+                      What is your existing Open edX site URL?
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    placeholder="edx.org"
+                    className="input input-bordered w-full max-w-xs"
+                    name="openEdXURL"
+                    onChange={handleOpenEdXURL}
+                  />
+                  <div className="label">
+                    <span className="label-text-alt">
+                      Please make sure the site is accessible
+                    </span>
+                  </div>
+                </label>
+              </div>
+              <div className="sm:col-span-2 mt-5">
+                <button
+                  className="btn btn-outline btn-primary mt-4"
+                  onClick={handleSyncCourses}
+                >
+                  Sync Courses
+                </button>
+              </div>
+            </div>
+          </LiftedTab>
           <input
             type="radio"
             name="sites_tabs"
@@ -1255,7 +1363,7 @@ const SitePage = ({ params: { domainName } }: Props) => {
               Deleting a site will remove all the site related data and users.
               You can also deactivate a site instead of delete it.
             </p>
-            <div className="mt-6  gap-x-6">
+            <div className="mt-6 gap-x-6">
               <button
                 className="btn btn-outline btn-error mt-4"
                 onClick={() =>
@@ -1275,8 +1383,8 @@ const SitePage = ({ params: { domainName } }: Props) => {
                   </form>
                   <h3 className="font-bold text-lg">Are you sure ?</h3>
                   <p className="py-4">
-                    Click on Delete to remove site completely. If you don&apos;t want
-                    to delete the site press ESC key or click on ✕ button.
+                    Click on Delete to remove site completely. If you don&apos;t
+                    want to delete the site press ESC key or click on ✕ button.
                   </p>
                   <button
                     className="btn btn-outline btn-primary"

@@ -13,6 +13,9 @@ interface CourseData {
   instructors?: string[]; // array of user IDs
   sites?: string[]; // array of site IDs
   level?: string;
+  externalId?: string;
+  externalUrl?: string;
+  externalBlocksUrl?: string;
 }
 
 export const createCourse = async (courseData: CourseData) => {
@@ -30,6 +33,9 @@ export const createCourse = async (courseData: CourseData) => {
       instructors,
       sites,
       level,
+      externalId,
+      externalUrl,
+      externalBlocksUrl,
     } = courseData;
 
     // Extract name strings from subjects and topics
@@ -71,6 +77,9 @@ export const createCourse = async (courseData: CourseData) => {
         coverImage,
         introVideo,
         level,
+        externalId,
+        externalUrl,
+        externalBlocksUrl,
         subjects: {
           connect: subjectRecords.map((subject) => ({ id: subject.id })),
         },

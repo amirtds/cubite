@@ -117,6 +117,9 @@ model Course {
   certificateDescription String?
   certificateBackground  String?
   xp                     Int?
+  externalId             String?
+  externalUrl            String?
+  externalBlocksUrl      String?
   contents               CourseContent[]    @relation("CourseContents")
 }
 
