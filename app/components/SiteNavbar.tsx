@@ -153,8 +153,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           </ul>
         </div>
         <div className="navbar-end">
-          <select
-            value={selectedLanguage}
+          {site.languages.length > 0 && (
+            <select
+              value={selectedLanguage}
             onChange={(e) => {
               const selectedLanguage = e.target.value;
               setLocalStorage("selectedLanguage", selectedLanguage);
@@ -169,8 +170,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               <option key={language.id} value={language.code}>
                 {language.name}
               </option>
-            ))}
-          </select>
+              ))}
+            </select>
+          )}
           {headerLinks.map((link) => {
             if (
               (link.url === "/auth/signin" || link.url === "/auth/register") &&
