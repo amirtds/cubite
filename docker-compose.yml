@@ -1,0 +1,36 @@
+version: '3.8'
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=production
+    networks:
+      - cubite_network
+
+  db:
+    image: mysql:9.1.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=cubite
+      - MYSQL_USER=admin
+      - MYSQL_ROOT_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - cubite_network
+
+volumes:
+  mysql-data:
+
+networks:
+  cubite_network:
+    name: cubite_network
+    driver: bridge
