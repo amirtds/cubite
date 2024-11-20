@@ -42,7 +42,6 @@ interface Site {
   }[];
 }
 
-
 const SitePage = async ({ params: { domainName } }: Props) => {
   const getSiteData = async (domainName: string) => {
     const session = await getServerSession(authOptions);
@@ -69,16 +68,16 @@ const SitePage = async ({ params: { domainName } }: Props) => {
         <div role="tablist" className="tabs tabs-bordered tabs-lg">
           <ConfigsTab site={siteData} />
           <LayoutTab site={siteData} />
-        <AuthenticationTab />
-        <IntegrationsTab site={siteData} />
-        {/* <AdminsTab site={siteData} /> */}
-        {/* <MembersTab site={siteData} /> */}
-        <ImportExportTab />
-        <SiteDeletionTab
-          siteId={siteData.id}
-          domainName={domainName}
-          name={siteData.name}
-        />
+          <AuthenticationTab />
+          <IntegrationsTab site={siteData} />
+          {/* <AdminsTab site={siteData} /> */}
+          {/* <MembersTab site={siteData} /> */}
+          <ImportExportTab site={siteData} />
+          <SiteDeletionTab
+            siteId={siteData.id}
+            domainName={domainName}
+            name={siteData.name}
+          />
         </div>
       </div>
     </div>

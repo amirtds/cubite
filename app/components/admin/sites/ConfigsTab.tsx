@@ -33,7 +33,7 @@ interface Site {
 
 function ConfigsTab({ site }: { site: Site }) {
   return (
-    <div>
+    <>
       <input
         type="radio"
         name="sites_tabs"
@@ -67,12 +67,12 @@ function ConfigsTab({ site }: { site: Site }) {
                 siteId={site.id}
                 siteDomainName={site.domainName}
               />
-              
+
             </div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
