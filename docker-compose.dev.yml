@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
+    networks:
+      - cubite_network
+
+  db:
+    image: mysql:9.1.0
+    restart: always
+    environment:
+      - MYSQL_DATABASE=cubite
+      - MYSQL_USER=admin
+      - MYSQL_ROOT_USER=root
+      - MYSQL_PASSWORD=password
+      - MYSQL_ROOT_PASSWORD=rootpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - cubite_network
+
+  studio:
+    build: .
+    command: npx prisma studio
+    ports:
+      - "5555:5555"
+    depends_on:
+      - db
+    environment:
+      - DATABASE_URL=mysql://admin:password@db:3306/cubite
+    networks:
+      - cubite_network
+volumes:
+  mysql-data:
+
+networks:
+  cubite_network:
+    name: cubite_network
+    driver: bridge
