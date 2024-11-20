@@ -13,7 +13,7 @@ COPY . .
 
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 3000 5555
 
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
