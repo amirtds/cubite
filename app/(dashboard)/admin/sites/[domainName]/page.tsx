@@ -769,8 +769,9 @@ const SitePage = ({ params: { domainName } }: Props) => {
                         name="customDomain"
                         id="customDomain"
                         onChange={handleCustomDomain}
+                        placeholder={!site.customDomain ? "example.com" : ""}
                         defaultValue={
-                          site.customDomain ? site.customDomain : "example.com"
+                          site.customDomain ? site.customDomain : ""
                         }
                         className="input input-bordered w-full max-w-xs"
                       />
