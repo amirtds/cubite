@@ -1,6 +1,6 @@
 import React from "react";
 
-function LiftedTab({ tabName, children }: { tabName: string; children: React.ReactNode }) {
+function PageHeader({ tabName, children }: { tabName: string; children: React.ReactNode }) {
   return (
     <>
       <input
@@ -17,4 +17,4 @@ function LiftedTab({ tabName, children }: { tabName: string; children: React.Rea
   );
 }
 
-export default LiftedTab;
+export default PageHeader;

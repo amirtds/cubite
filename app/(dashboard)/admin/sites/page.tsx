@@ -4,7 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import { PlusIcon } from "@heroicons/react/20/solid";
+import EmptyState from "@/app/components/admin/EmptyState";
+import PageHeader from "@/app/components/admin/PageHeader";
 
 interface Site {
   createdAt: string;
@@ -107,29 +108,15 @@ const Sites = () => {
   }
 
   return (
-    <div>
-      <div className="flex-1 py-6 md:py-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold">Sites</h1>
-            <p className="mt-2">
-              In the following you can see all the sites you can manage.
-            </p>
-          </div>
-          {sites.length > 0 && (
-            <Link
-              href="/admin/sites/new"
-              className="h-10 w-auto btn btn-primary"
-            >
-              Create a Site
-            </Link>
-          )}
-        </div>
-      </div>
-      <div className="border-b mb-12">
-        <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"></div>
-      </div>
-
+    <>
+      <PageHeader
+        title="Sites"
+        description="In the following you can see all the sites you can manage."
+        showButton={sites.length > 0}
+        buttonText="Create a Site"
+        buttonLink="/admin/sites/new"
+        
+      />
       {!error ? (
         sites.length > 0 ? (
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
@@ -154,13 +141,17 @@ const Sites = () => {
                           <a
                             className="text-sm text-ghost link"
                             href={`http://${
-                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
+                              site.domainName.split(
+                                `.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`
+                              )[0]
                             }.localhost:3000`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
                             {`${
-                              site.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0]
+                              site.domainName.split(
+                                `.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`
+                              )[0]
                             }.localhost:3000`}
                           </a>
                         </div>
@@ -196,45 +187,17 @@ const Sites = () => {
             ))}
           </div>
         ) : (
-          <div className="text-center">
-            <svg
-              className="mx-auto h-12 w-12"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-              aria-hidden="true"
-            >
-              <path
-                vectorEffect="non-scaling-stroke"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 13h6m-3-3v6m-9 1V7a2 2 0 012-2h6l2 2h6a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2z"
-              />
-            </svg>
-            <h3 className="mt-2 text-sm font-semibold">No projects</h3>
-            <p className="mt-1 text-sm text-gray-500">
-              You don&apos;t have any site. Create new one.
-            </p>
-            <div className="mt-6">
-              <Link
-                href={"/admin/sites/new"}
-                type="button"
-                className="inline-flex items-center btn btn-primary"
-              >
-                <PlusIcon
-                  className="-ml-0.5 mr-1.5 h-5 w-5"
-                  aria-hidden="true"
-                />
-                New Project
-              </Link>
-            </div>
-          </div>
+          <EmptyState
+            title="No sites found"
+            description="You don't have any site that you can manage."
+            buttonText="Create a Site"
+            buttonLink="/admin/sites/new"
+          />
         )
       ) : (
         "No site"
       )}
-    </div>
+    </>
   );
 };
 

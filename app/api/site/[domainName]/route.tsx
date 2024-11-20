@@ -2,6 +2,7 @@ import { NextResponse, NextRequest } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/app/api/auth/authOptions";
 import { getSiteData } from "@/app/utils/getSiteData";
+import { createSite } from "@/app/utils/createSite";
 import { updateSite } from "@/app/utils/updateSite";
 import { deleteSite } from "@/app/utils/deleteSite";
 
@@ -14,6 +15,12 @@ export async function GET(request: NextRequest, { params }: Props) {
   const site = await getSiteData(params.domainName, session?.user.email);
 
   return NextResponse.json(site);
+}
+
+export async function POST(request: NextRequest) {
+  const session = await getServerSession(authOptions);
+  const result = await createSite(request, session?.user.email);
+  return NextResponse.json(result, { status: result.status });
 }
 
 export async function PUT(request: NextRequest) {
