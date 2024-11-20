@@ -11,8 +11,14 @@ interface Props {
 }
 
 export async function GET(request: NextRequest, { params }: Props) {
-  const session = await getServerSession(authOptions);
-  const site = await getSiteData(params.domainName, session?.user.email);
+  let email;
+  if (request.headers.get("Authorization")) {
+    email = request.headers.get("Authorization");
+  } else {
+    const session = await getServerSession(authOptions);
+    email = session?.user.email;
+  }
+  const site = await getSiteData(params.domainName, email);
 
   return NextResponse.json(site);
 }

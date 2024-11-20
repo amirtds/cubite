@@ -1,3 +1,5 @@
+"use client";
+
 import { useState, useEffect } from "react";
 
 export const useAlert = (initialMessage = "", initialStatus = 0) => {
