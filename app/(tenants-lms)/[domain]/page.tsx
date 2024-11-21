@@ -169,7 +169,7 @@ export default async function Home({ params }: Props) {
                 <div className="" key={block.id}>
                   <Link
                     href={"/courses"}
-                    className="text-right my-4 font-semibold text-lg block hover:text-primary"
+                    className="text-right my-4 font-semibold text-xl block hover:text-primary"
                   >
                     View All
                   </Link>

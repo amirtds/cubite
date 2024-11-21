@@ -75,7 +75,7 @@ export const upsertOpenedxCourses = async (openEdXURL: string, siteId: string) =
                     externalId: openEdXCourse.course_id,
                     externalUrl: `${formattedURL}/courses/${openEdXCourse.course_id}/about`,
                     externalBlocksUrl: openEdXCourse.blocks_url,
-                    externalImageUrl: `${formattedURL}${openEdXCourse.media?.course_image?.uri}`
+                    externalImageUrl: `${openEdXCourse.media?.image?.raw}`
                 };
 
                 if (existingCourse) {

@@ -3,28 +3,21 @@
 import React from "react";
 import Enrollment from "@/app/components/Enrollment";
 import Link from "next/link";
-import { Image } from "@/app/components/Image";
 import { CldImage } from "next-cloudinary";
+import Image from "next/image";
 
 const CourseCard = ({ course, site }) => {
   return (
-    <div className="flex flex-col border border-base-200">
-      <Link
-        key={course.id}
-        className=""
-        href={`/course/${course.id}/about/`}
-      >
+    <div className="flex flex-col border border-primary-200 shadow-md rounded-sm">
+      <Link key={course.id} className="" href={`/course/${course.id}/about/`}>
         <div className="relative h-52 w-42">
-          {
-            course.externalImageUrl ? (
-              <Image
-                src={course.externalImageUrl}
-                width={100}
-                height={100}
-                alt={`${course.name} cover`}
-                sizes="100vw"
-              />
-            ) :
+          {course.externalImageUrl ? (
+            <Image
+              src={course.externalImageUrl}
+              fill
+              alt={`${course.name} cover`}
+            />
+          ) : (
             <CldImage
               src={
                 course.coverImage
@@ -36,7 +29,7 @@ const CourseCard = ({ course, site }) => {
               sizes="100vw"
               className=""
             />
-          }
+          )}
           <div className="absolute bottom-0 left-0 m-4">
             <div className="">
               {course.topics?.map((topic) => (
@@ -46,9 +39,6 @@ const CourseCard = ({ course, site }) => {
               ))}
             </div>
             <div className="">
-              <span className="text-lg font-semibold text-base-200">
-                {course.name}
-              </span>
               {course.featured && (
                 <span className="badge badge-secondary mx-2">FEATURED</span>
               )}
@@ -56,7 +46,10 @@ const CourseCard = ({ course, site }) => {
           </div>
         </div>
         <div className="px-4 py-8 border-b">
-          <p className="text-md">
+          <span className="text-lg font-semibold text-accent-content">
+            {course.name}
+          </span>
+          <p className="text-md text-base-content">
             {course.description
               ? course.description
               : "Click on enroll now to see the course"}

@@ -10,6 +10,7 @@ import RelatedCourses from "./RelatedCourses";
 const CourseAbout = ({ courseId, site, courses }) => {
   const [course, setCourse] = useState({
     coverImage: "",
+    externalImageUrl: "",
     description: "",
     name: "",
     contents: [],
@@ -45,6 +46,7 @@ const CourseAbout = ({ courseId, site, courses }) => {
     <>
       <Hero
         coverImage={course.coverImage}
+        externalImageUrl={course.externalImageUrl}
         description={course.description}
         name={course.name}
       />
