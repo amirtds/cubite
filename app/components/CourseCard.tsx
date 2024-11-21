@@ -15,17 +15,28 @@ const CourseCard = ({ course, site }) => {
         href={`/course/${course.id}/about/`}
       >
         <div className="relative h-52 w-42">
-          <CldImage
-            src={
-              course.coverImage
-                ? course.coverImage
-                : "photo-1715967635831-f5a1f9658880_mhlqwu"
-            }
-            fill
-            alt="Course cover"
-            sizes="100vw"
-            className=""
-          />
+          {
+            course.externalImageUrl ? (
+              <Image
+                src={course.externalImageUrl}
+                width={100}
+                height={100}
+                alt={`${course.name} cover`}
+                sizes="100vw"
+              />
+            ) :
+            <CldImage
+              src={
+                course.coverImage
+                  ? course.coverImage
+                  : "photo-1715967635831-f5a1f9658880_mhlqwu"
+              }
+              fill
+              alt="Course cover"
+              sizes="100vw"
+              className=""
+            />
+          }
           <div className="absolute bottom-0 left-0 m-4">
             <div className="">
               {course.topics?.map((topic) => (

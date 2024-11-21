@@ -16,7 +16,7 @@ RUN npx prisma generate
 # No need to copy all files here since we're using volumes
 # No need to build since we're running in dev mode
 
-EXPOSE 3000 5555
+EXPOSE 3000 5555 3306
 
 COPY docker-entrypoint.dev.sh /usr/local/bin/docker-entrypoint.sh
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh

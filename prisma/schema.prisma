@@ -120,6 +120,7 @@ model Course {
   externalId             String?
   externalUrl            String?
   externalBlocksUrl      String?
+  externalImageUrl       String?
   contents               CourseContent[]    @relation("CourseContents")
 }
 

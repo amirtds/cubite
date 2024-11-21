@@ -70,12 +70,12 @@ export const upsertOpenedxCourses = async (openEdXURL: string, siteId: string) =
                     description: openEdXCourse.short_description || null,
                     startDate: openEdXCourse.start ? new Date(openEdXCourse.start) : null,
                     endDate: openEdXCourse.end ? new Date(openEdXCourse.end) : null,
-                    coverImage: openEdXCourse.media?.course_image?.uri,
                     introVideo: openEdXCourse.media?.course_video?.uri,
                     sites: [siteId],
                     externalId: openEdXCourse.course_id,
                     externalUrl: `${formattedURL}/courses/${openEdXCourse.course_id}/about`,
                     externalBlocksUrl: openEdXCourse.blocks_url,
+                    externalImageUrl: `${formattedURL}${openEdXCourse.media?.course_image?.uri}`
                 };
 
                 if (existingCourse) {
