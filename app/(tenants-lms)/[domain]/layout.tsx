@@ -25,7 +25,7 @@ interface Props {
 async function getSites() {
   const response = await fetch(
     `${process.env.NEXTAUTH_URL}/api/getSitesPublicData`,
-    { cache: "no-store", next: { revalidate: 0 } }
+    { cache: "no-store" }
   );
   const result = await response.json();
   return result;
