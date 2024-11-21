@@ -26,18 +26,6 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - cubite_network
-
-  studio:
-    build: .
-    command: npx prisma studio
-    ports:
-      - "5555:5555"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=mysql://admin:password@db:3306/cubite
-    networks:
-      - cubite_network
 volumes:
   mysql-data:
 
