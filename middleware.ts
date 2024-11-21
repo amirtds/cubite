@@ -17,12 +17,12 @@ export async function middleware(request: NextRequest) {
 
   // Find hostname, if the hostname is main domain or subdomain
   const hostname = request.headers.get("host");
-  const mainDomain = process.env.ROOT_URL;
+  const mainDomain = process.env.ROOT_URL_WITHOUT_PROTOCOL;
   const isMainDomain = hostname === mainDomain;
   const isSubDomain = !isMainDomain && hostname?.endsWith(mainDomain!);
   const subDomain =
-    isSubDomain && hostname?.split(`.${process.env.ROOT_URL}`)[0];
-
+    isSubDomain && hostname?.split(`.${process.env.ROOT_URL_WITHOUT_PROTOCOL}`)[0];
+  console.log(hostname, mainDomain, isMainDomain);
   // If it is a subdomain rewrite the request to send it to the domain dynamic route
   if (isSubDomain) {
     let path = request.nextUrl.pathname;
