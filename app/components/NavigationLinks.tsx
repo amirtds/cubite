@@ -3,7 +3,11 @@
 import { PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React, { useState, useEffect } from "react";
 
-const NavigationLinks = ({ onLinksChange, title, existingLink }) => {
+const NavigationLinks = ({
+  onLinksChange,
+  title,
+  existingLink,
+}) => {
   const [links, setLinks] = useState(
     existingLink ? existingLink : [{ text: "", type: "internal", url: "" }]
   );
