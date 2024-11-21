@@ -66,11 +66,11 @@ function SiteLayoutHeader({ site }: { site: Site }) {
           body: JSON.stringify({
             siteId: site.id,
             updateData: {
+              logo: imageSrc,
               layout: {
                 ...site.layout,
                 header: {
                   ...site.layout?.header,
-                  logo: imageSrc,
                 },
               },
             },
