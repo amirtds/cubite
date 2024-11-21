@@ -1,6 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getSitesPublicData } from "@/app/utils/getSitesPublicData";
 
+export const dynamic = 'force-dynamic';
+
 interface Props {
   params: { domainName: string };
 }
