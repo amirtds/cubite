@@ -15,6 +15,12 @@ const Enrollment = ({ courseId, siteId, course, site }: Props) => {
   const [enrollments, setEnrollments] = useState([]);
   const [isEnrolled, setIsEnrolled] = useState(false);
 
+  const constructEnrollmentUrl = (externalUrl: string, externalId: string) => {
+    // Get the base domain from externalUrl
+    const domain = new URL(externalUrl).origin;
+    // Construct enrollment URL
+    return `${domain}/account/finish_auth?course_id=${externalId}&enrollment_action=enroll`;
+  };
   useEffect(() => {
     const getEnrollments = async () => {
       if (session) {
@@ -89,9 +95,18 @@ const Enrollment = ({ courseId, siteId, course, site }: Props) => {
 
   return (
     <div className="flex-none justify-self-end">
-      <button onClick={handleEnrollment} className="btn btn-primary">
-        {isEnrolled ? "Continue" : "Enroll Now"}
-      </button>
+      {course.externalId ? (
+        <a
+          href={constructEnrollmentUrl(course.externalUrl, course.externalId)}
+          className="btn btn-primary"
+        >
+          Access Course
+        </a>
+      ) : (
+        <button onClick={handleEnrollment} className="btn btn-primary">
+          {isEnrolled ? "Continue" : "Enroll Now"}
+        </button>
+      )}
     </div>
   );
 };

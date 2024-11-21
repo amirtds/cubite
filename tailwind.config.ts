@@ -22,11 +22,16 @@ const config: Config = {
   ],
   daisyui: {
     themes: [
+      {
+        "rmu": {
+          ...require("daisyui/src/theming/themes")["fantasy"],
+          primary: "#013120",
+        },
+      },
       "light",
       "dark",
       "cupcake",
       "bumblebee",
-      "emerald",
       "corporate",
       "synthwave",
       "retro",

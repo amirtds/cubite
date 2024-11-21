@@ -126,8 +126,8 @@ const SitesLayout = async ({ children, params }: Props) => {
                                 ? site.logo
                                 : "courseCovers/600x400_er61hk"
                             }
-                            width={50}
-                            height={50}
+                            width={70}
+                            height={70}
                             alt="test"
                             sizes="100vw"
                           />

@@ -9,7 +9,11 @@ import { CldImage } from "next-cloudinary";
 const CourseCard = ({ course, site }) => {
   return (
     <div className="flex flex-col border border-base-200">
-      <Link key={course.id} className="" href={`/course/${course.id}/about/`}>
+      <Link
+        key={course.id}
+        className=""
+        href={`/course/${course.id}/about/`}
+      >
         <div className="relative h-52 w-42">
           <CldImage
             src={

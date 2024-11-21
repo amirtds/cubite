@@ -191,7 +191,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             ) : link.type === "primary-button" ? (
               <a
                 key={link.url}
-                className="btn btn-outline btn-primary mx-2"
+                className="btn btn-primary mx-2"
                 href={link.url}
               >
                 {translate(`${link.text}`, link.text)}
