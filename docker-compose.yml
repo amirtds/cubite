@@ -28,6 +28,7 @@ services:
       - cubite_network
 volumes:
   mysql-data:
+    name: cubite_mysql_data
 
 networks:
   cubite_network:
