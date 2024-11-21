@@ -63,11 +63,6 @@ function SiteLanguagesInput({ siteDomainName, siteId, siteLanguages }: SiteLangu
             <span className="label-text-alt text-green-600">{status.message}</span>
           </div>
         )}
-        {!status.type && (
-          <div className="label">
-          <span className="label-text-alt">Name to show in Dashboard</span>
-          </div>
-        )}
     </div>
   );
 }

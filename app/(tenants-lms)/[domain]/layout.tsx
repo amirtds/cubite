@@ -13,7 +13,7 @@ import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
 
 export const dynamic = "force-dynamic";
-export const revalidate = 0
+export const revalidate = 0;
 
 interface Props {
   children: ReactNode;
@@ -25,7 +25,7 @@ interface Props {
 async function getSites() {
   const response = await fetch(
     `${process.env.NEXTAUTH_URL}/api/getSitesPublicData`,
-    { cache: "no-store" }
+    { cache: "no-store", next: { revalidate: 0 } }
   );
   const result = await response.json();
   return result;
