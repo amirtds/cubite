@@ -26,6 +26,8 @@ const config: Config = {
         "rmu": {
           ...require("daisyui/src/theming/themes")["fantasy"],
           primary: "#013120",
+          "base-200": "#e6e7d8",
+          accent: "#9D9B63",
         },
       },
       "light",
