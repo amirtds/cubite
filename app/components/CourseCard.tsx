@@ -40,7 +40,7 @@ const CourseCard = ({ course, site }) => {
             </div>
             <div className="">
               {course.featured && (
-                <span className="badge badge-secondary mx-2">FEATURED</span>
+                <span className="badge badge-base-200 mx-2">FEATURED</span>
               )}
             </div>
           </div>
