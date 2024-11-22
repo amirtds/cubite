@@ -75,60 +75,21 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
     }
   };
 
-  if (status === "loading") {
-    return (
-      <div className="bg-base-200">
-        <div className="navbar mx-auto max-w-7xl p-6 lg:px-8">
-          <div className="navbar-start">
-            <Link
-              href="/"
-              className="btn btn-ghost text-xl hover:bg-transparent"
-            >
-              <Image
-                src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
-                width={100}
-                height={100}
-                alt={`${site.name} logo`}
-                sizes="100vw"
-              />
-            </Link>
-          </div>
-          <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal px-1">
-              {headerLinks.map((link) => (
-                <li key={link.url}>
-                  <a href={link.url}>
-                    {translate(`${link.text}`, link.text)}
-                  </a>
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div className="navbar-end">
-            <div className="flex items-center justify-center">
-              <div className="w-10 h-10 rounded-full bg-gray-300"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="bg-base-200">
       <div className="navbar mx-auto max-w-7xl p-6 lg:px-8">
         <div className="navbar-start">
           <Link
             href={session?.user ? "/dashboard" : "/"}
-            className="btn btn-ghost text-xl hover:bg-transparent"
+            className=""
           >
             <CldImage
               src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
-              width={70}
-              height={70}
+              width={120}
+              height={80}
               alt={`${site.name} logo`}
               sizes="100vw"
-              className="max-h-16"
+              className="max-h-42"
             />
           </Link>
         </div>

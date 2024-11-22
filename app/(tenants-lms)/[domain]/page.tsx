@@ -1,4 +1,3 @@
-import { Image } from "@/app/components/Image";
 import EditorHeader from "@/app/components/editorjsToReact/EditorHeader";
 import EditorParagraph from "@/app/components/editorjsToReact/EditorParagraph";
 import EditorList from "@/app/components/editorjsToReact/EditorList";
@@ -10,7 +9,7 @@ import EditorImage from "@/app/components/editorjsToReact/EditorImage";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
 import CourseCard from "@/app/components/CourseCard";
 import Link from "next/link";
-
+import CtaRender from "@/app/components/CtaRender";
 interface Props {
   params: {
     domain: string;
@@ -167,6 +166,12 @@ export default async function Home({ params }: Props) {
 
               return (
                 <div className="" key={block.id}>
+                  <h2 className="text-3xl font-bold tracking-tight sm:text-4xl !mt-3 !mb-0">
+                    {block.data.title}
+                  </h2>
+                  <p className="mt-6 text-base leading-7">
+                    {block.data.description}
+                  </p>
                   <Link
                     href={"/courses"}
                     className="text-right my-4 font-semibold text-xl block hover:text-primary"
@@ -185,40 +190,7 @@ export default async function Home({ params }: Props) {
             }
             if (block.type === "cta") {
               return (
-                <div className="overflow-hidden py-12" key={block.id}>
-                  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                      <div className="flex flex-col justify-center">
-                        <h2 className="text-3xl font-bold tracking-tight sm:text-4xl !mt-3 !mb-0">
-                          {block.data.title}
-                        </h2>
-                        <p className="mt-6 text-base leading-7">
-                          {block.data.description}
-                        </p>
-                        <div className="mt-4 flex">
-                          <a
-                            className="btn btn-outline btn-ghost"
-                            href={block.data.buttonUrl}
-                          >
-                            {block.data.buttonText}
-                          </a>
-                        </div>
-                      </div>
-                      <div className="text-center">
-                        <div className="mt-4 flex text-sm leading-6">
-                          <Image
-                            src={block.data.image}
-                            width={500}
-                            height={500}
-                            alt="test"
-                            sizes="100vw"
-                            className="rounded-md"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <CtaRender block={block} />
               );
             }
             return null;

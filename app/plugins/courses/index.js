@@ -20,6 +20,10 @@ class Courses {
     const root = createRoot(wrapper);
 
     const CoursesComponent = ({ initialData }) => {
+      const [title, setTitle] = useState(initialData.title || "");
+      const [description, setDescription] = useState(
+        initialData.description || ""
+      );
       const [courses, setCourses] = useState(initialData.courses || []);
       const [sortBy, setSortBy] = useState(initialData.sortBy || "name_asc");
       const [limitCourses, setLimitCourses] = useState(
@@ -151,6 +155,30 @@ class Courses {
                 <div className="sm:col-span-2">
                   <label className="form-control w-full max-w-xs">
                     <div className="label">
+                      <span className="label-text">Section Title</span>
+                    </div>
+                    <input
+                      className="input input-bordered"
+                      onChange={(e) => setTitle(e.target.value)}
+                      value={title}
+                    />
+                  </label>
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="form-control w-full max-w-xs">
+                    <div className="label">
+                      <span className="label-text">Section Description</span>
+                    </div>
+                    <input
+                      className="input input-bordered"
+                      onChange={(e) => setDescription(e.target.value)}
+                      value={description}
+                    />
+                  </label>
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="form-control w-full max-w-xs">
+                    <div className="label">
                       <span className="label-text">Sort By</span>
                     </div>
                     <select
@@ -197,6 +225,8 @@ class Courses {
 
   save(blockContent) {
     return {
+      title: this.data.title,
+      description: this.data.description,
       courses: this.data.courses,
       sortBy: this.data.sortBy,
       limitCourses: this.data.limitCourses,
