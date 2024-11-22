@@ -8,8 +8,8 @@ interface OpenEdXCourse {
   org: string;
   short_description: string;
   media: {
-    course_image?: {
-      uri: string;
+    image: {
+      raw: string;
     };
     course_video?: {
       uri: string;
@@ -75,7 +75,7 @@ export const upsertOpenedxCourses = async (openEdXURL: string, siteId: string) =
                     externalId: openEdXCourse.course_id,
                     externalUrl: `${formattedURL}/courses/${openEdXCourse.course_id}/about`,
                     externalBlocksUrl: openEdXCourse.blocks_url,
-                    externalImageUrl: `${openEdXCourse.media?.image?.raw}`
+                    externalImageUrl: `${openEdXCourse.media.image.raw}`
                 };
 
                 if (existingCourse) {

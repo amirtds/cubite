@@ -16,6 +16,7 @@ interface CourseData {
   externalId?: string;
   externalUrl?: string;
   externalBlocksUrl?: string;
+  externalImageUrl?: string;
 }
 
 export const createCourse = async (courseData: CourseData) => {
@@ -36,6 +37,7 @@ export const createCourse = async (courseData: CourseData) => {
       externalId,
       externalUrl,
       externalBlocksUrl,
+      externalImageUrl,
     } = courseData;
 
     // Extract name strings from subjects and topics
@@ -80,6 +82,7 @@ export const createCourse = async (courseData: CourseData) => {
         externalId,
         externalUrl,
         externalBlocksUrl,
+        externalImageUrl,
         subjects: {
           connect: subjectRecords.map((subject) => ({ id: subject.id })),
         },
