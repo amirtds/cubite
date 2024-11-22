@@ -8,7 +8,7 @@ import Image from "next/image";
 
 const CourseCard = ({ course, site }) => {
   return (
-    <div className="flex flex-col border border-primary-200 shadow-md rounded-sm">
+    <div className="flex flex-col border border-primary-200 shadow-md rounded-sm bg-base-200">
       <Link key={course.id} className="" href={`/course/${course.id}/about/`}>
         <div className="relative h-52 w-42">
           {course.externalImageUrl ? (

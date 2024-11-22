@@ -165,19 +165,13 @@ export default async function Home({ params }: Props) {
                 .slice(0, block.data.limitCourses || 3);
 
               return (
-                <div className="" key={block.id}>
+                <div className="border-t border-primary-200 p-4" key={block.id}>
                   <h2 className="text-3xl font-bold tracking-tight sm:text-4xl !mt-3 !mb-0">
                     {block.data.title}
                   </h2>
                   <p className="mt-6 text-base leading-7">
                     {block.data.description}
                   </p>
-                  <Link
-                    href={"/courses"}
-                    className="text-right my-4 font-semibold text-xl block hover:text-primary"
-                  >
-                    View All
-                  </Link>
                   <div
                     className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-3"
                   >
@@ -185,6 +179,12 @@ export default async function Home({ params }: Props) {
                       <CourseCard key={course.id} course={course} site={site} />
                     ))}
                   </div>
+                  <Link
+                    href={"/courses"}
+                    className="text-center my-6 font-semibold text-xl block border border-primary-200 rounded-md p-2 hover:bg-primary hover:text-white"
+                  >
+                    View All
+                  </Link>
                 </div>
               );
             }

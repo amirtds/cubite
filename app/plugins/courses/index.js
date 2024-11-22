@@ -12,7 +12,13 @@ class Courses {
   }
 
   constructor({ data }) {
-    this.data = data || { courses: [], sortBy: "name_asc", limitCourses: 3 };
+    this.data = data || {
+      title: "Our Courses",
+      description: "Here are our courses",
+      courses: [],
+      sortBy: "name_asc",
+      limitCourses: 3,
+    };
   }
 
   render() {
@@ -77,6 +83,16 @@ class Courses {
         );
         setCourses(updatedCourses);
         this.data.courses = updatedCourses;
+      };
+
+      const handleTitle = (e) => {
+        setTitle(e.target.value);
+        this.data.title = e.target.value;
+      };
+
+      const handleDescription = (e) => {
+        setDescription(e.target.value);
+        this.data.description = e.target.value;
       };
 
       return (
@@ -159,7 +175,7 @@ class Courses {
                     </div>
                     <input
                       className="input input-bordered"
-                      onChange={(e) => setTitle(e.target.value)}
+                      onChange={handleTitle}
                       value={title}
                     />
                   </label>
@@ -171,7 +187,7 @@ class Courses {
                     </div>
                     <input
                       className="input input-bordered"
-                      onChange={(e) => setDescription(e.target.value)}
+                      onChange={handleDescription}
                       value={description}
                     />
                   </label>
