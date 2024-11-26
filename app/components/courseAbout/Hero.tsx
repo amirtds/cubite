@@ -5,7 +5,7 @@ import { CldImage } from "next-cloudinary";
 import Image from "next/image";
 const Hero = ({ coverImage, externalImageUrl, description, name }) => {
   return (
-    <div className="min-h-48 relative isolate overflow-hidden">
+    <div className="min-h-48 relative isolate overflow-hidden mx-12">
       {externalImageUrl ? (
         <Image src={externalImageUrl} alt={name} fill className="absolute inset-0 -z-10 h-full w-full object-cover"/>
       ) : (
