@@ -7,14 +7,16 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - "3000:3000"
+      - "5555:5555"
     depends_on:
       - db
     environment:
       - NODE_ENV=development
+      - DATABASE_URL=mysql://admin:password@db:3306/cubite
     volumes:
       - .:/app
       - /app/node_modules
-    command: npm run dev
+    command: /usr/local/bin/docker-entrypoint.sh
     networks:
       - cubite_network
 
@@ -34,17 +36,6 @@ services:
     networks:
       - cubite_network
 
-  studio:
-    build: .
-    command: npx prisma studio
-    ports:
-      - "5555:5555"
-    depends_on:
-      - db
-    environment:
-      - DATABASE_URL=mysql://admin:password@db:3306/cubite
-    networks:
-      - cubite_network
 volumes:
   mysql-data:
     name: cubite_mysql_data
