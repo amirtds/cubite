@@ -65,6 +65,13 @@ const SitesLayout = async ({ children, params }: Props) => {
 
   return (
     <html data-theme={site.themeName} lang={locale}>
+      <head>
+        <link
+          rel="icon"
+          type="image/x-icon"
+          href={site.favicon ? `https://res.cloudinary.com/dn3cywkpn/image/upload/c_limit,w_3840/f_auto/q_auto/v1/${site.favicon}` : '/favicon.ico'}
+        />
+      </head>
       <body className="">
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>

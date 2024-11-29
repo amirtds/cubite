@@ -10,6 +10,7 @@ interface Site {
   createdAt: string;
   updatedAt: string;
   logo?: string;
+  favicon?: string;
   headerLinks?: { text: string; type: string; url: string }[];
   name: string;
   domainName: string;
@@ -36,10 +37,15 @@ interface Site {
 
 function SiteLayoutHeader({ site }: { site: Site }) {
   const [logo, setLogo] = useState(site.logo || "");
+  const [favicon, setFavicon] = useState(site.favicon || "");
   const [headerLinks, setHeaderLinks] = useState(
     site.layout?.header?.headerLinks || [{ text: "", type: "internal", url: "" }]
   );
-  const [status, setStatus] = useState<{
+  const [logoStatus, setLogoStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
+  const [FaviconStatus, setFaviconStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
@@ -47,13 +53,14 @@ function SiteLayoutHeader({ site }: { site: Site }) {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
-  const [isUpdating, setIsUpdating] = useState(false);
+  const [isFaviconUpdating, setIsFaviconUpdating] = useState(false);
+  const [isLogoUpdating, setIsLogoUpdating] = useState(false);
 
   const handleSiteLogo = async (imageSrc: string) => {
-    if (isUpdating) return;
+    if (isLogoUpdating) return;
     
     try {
-      setIsUpdating(true);
+      setIsLogoUpdating(true);
       setLogo(imageSrc);
       
       const response = await fetch(
@@ -79,26 +86,80 @@ function SiteLayoutHeader({ site }: { site: Site }) {
       );
 
       if (response.ok) {
-        setStatus({
+        setLogoStatus({
           type: "success",
           message: "Logo updated successfully",
         });
       } else {
-        setStatus({
+        setLogoStatus({
           type: "error",
           message: "Failed to update logo",
         });
       }
     } catch (error) {
-      setStatus({
+      setLogoStatus({
         type: "error",
         message: "Error updating logo",
       });
     } finally {
-      setIsUpdating(false);
+      setIsLogoUpdating(false);
       // Clear status message after 3 seconds
       setTimeout(() => {
-        setStatus({ type: null, message: "" });
+        setLogoStatus({ type: null, message: "" });
+      }, 3000);
+    }
+  };
+
+  const handleSiteFavicon = async (imageSrc: string) => {
+    if (isFaviconUpdating) return;
+    
+    try {
+      setIsFaviconUpdating(true);
+      setFavicon(imageSrc);
+      
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            siteId: site.id,
+            updateData: {
+              favicon: imageSrc,
+              layout: {
+                ...site.layout,
+                header: {
+                  ...site.layout?.header,
+                },
+              },
+            },
+          }),
+        }
+      );
+
+      if (response.ok) {
+        setFaviconStatus({
+          type: "success",
+          message: "Logo updated successfully",
+        });
+      } else {
+        setFaviconStatus({
+          type: "error",
+          message: "Failed to update logo",
+        });
+      }
+    } catch (error) {
+      setFaviconStatus({
+        type: "error",
+        message: "Error updating logo",
+      });
+    } finally {
+      setIsFaviconUpdating(false);
+      // Clear status message after 3 seconds
+      setTimeout(() => {
+        setFaviconStatus({ type: null, message: "" });
       }, 3000);
     }
   };
@@ -135,49 +196,96 @@ function SiteLayoutHeader({ site }: { site: Site }) {
       <input type="radio" name="my-accordion-2" defaultChecked />
       <div className="collapse-title text-xl font-semibold">Header</div>
       <div className="collapse-content mx-4">
-        <div className="">
-          <h3 className="font-medium my-2 mb-8">
-            Logo
-            {status.type === "success" && (
-              <span className="text-xs text-green-600 ml-4">
-                Logo updated successfully
-              </span>
-            )}
-            {status.type === "error" && (
-              <span className="text-xs text-red-600 ml-4">
-                Error updating logo
-              </span>
-            )}
-          </h3>
-          <div className="mx-4">
-            <CldUploadWidget
-              uploadPreset="dtskghsx"
-              options={{
-                multiple: false,
-                cropping: true,
-              }}
-              onSuccess={(results: any) => {
-                if (results?.info?.public_id) {
-                  handleSiteLogo(results.info.public_id);
-                }
-              }}
-            >
-              {({ open }) => (
-                <div className="w-16">
-                  <CldImage
-                    width={250}
-                    height={250}
-                    className={`rounded-md ${isUpdating ? 'opacity-50' : ''}`}
-                    src={logo ? logo : "courseCovers/600x400_er61hk"}
-                    onClick={() => !isUpdating && open()}
-                    alt="Site logo"
-                  />
-                  {isUpdating && (
-                    <div className="text-xs text-gray-500 mt-1">Updating...</div>
-                  )}
-                </div>
+        <div className="flex gap-x-32">
+          <div>
+            <h3 className="font-medium my-2 mb-8">
+              Logo
+              {logoStatus.type === "success" && (
+                <span className="text-xs text-green-600 ml-4">
+                  Logo updated successfully
+                </span>
               )}
-            </CldUploadWidget>
+              {logoStatus.type === "error" && (
+                <span className="text-xs text-red-600 ml-4">
+                  Error updating logo
+                </span>
+              )}
+            </h3>
+            <div className="mx-4">
+              <CldUploadWidget
+                uploadPreset="dtskghsx"
+                options={{
+                  multiple: false,
+                  cropping: true
+                }}
+                onSuccess={(results: any) => {
+                  if (results?.info?.public_id) {
+                    handleSiteLogo(results.info.public_id);
+                  }
+                }}
+              >
+                {({ open }) => (
+                  <div className="w-16">
+                    <CldImage
+                      width={250}
+                      height={250}
+                      className={`rounded-md ${isLogoUpdating ? 'opacity-50' : ''}`}
+                      src={logo ? logo : "courseCovers/600x400_er61hk"}
+                      onClick={() => !isLogoUpdating && open()}
+                      alt="Site logo"
+                    />
+                    {isLogoUpdating && (
+                      <div className="text-xs text-gray-500 mt-1">Updating...</div>
+                    )}
+                  </div>
+                )}
+              </CldUploadWidget>
+            </div>
+          </div>
+          <div>
+            <h3 className="font-medium my-2 mb-8">
+              Favicon
+              {FaviconStatus.type === "success" && (
+                <span className="text-xs text-green-600 ml-4">
+                  Favicon updated successfully
+                </span>
+              )}
+              {FaviconStatus.type === "error" && (
+                <span className="text-xs text-red-600 ml-4">
+                  Error updating Favicon
+                </span>
+              )}
+            </h3>
+            <div className="mx-4">
+              <CldUploadWidget
+                uploadPreset="dtskghsx"
+                options={{
+                  multiple: false,
+                  cropping: true,
+                }}
+                onSuccess={(results: any) => {
+                  if (results?.info?.public_id) {
+                    handleSiteFavicon(results.info.public_id);
+                  }
+                }}
+              >
+                {({ open }) => (
+                  <div className="w-16">
+                    <CldImage
+                      width={250}
+                      height={250}
+                      className={`rounded-md ${isFaviconUpdating ? 'opacity-50' : ''}`}
+                      src={favicon ? favicon : "courseCovers/600x400_er61hk"}
+                      onClick={() => !isFaviconUpdating && open()}
+                      alt="Site favicon"
+                    />
+                    {isFaviconUpdating && (
+                      <div className="text-xs text-gray-500 mt-1">Updating...</div>
+                    )}
+                  </div>
+                )}
+              </CldUploadWidget>
+            </div>
           </div>
         </div>
         <div className="divider"></div>

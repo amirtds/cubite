@@ -50,6 +50,7 @@ model Site {
   id                String             @id @default(cuid())
   name              String
   logo              String?
+  favicon           String?
   domainName        String             @unique
   customDomain      String?            @unique
   admins            User[]             @relation("SiteAdmins")

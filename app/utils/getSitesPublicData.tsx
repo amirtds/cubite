@@ -9,6 +9,7 @@ export const getSitesPublicData = async () => {
         id: true,
         name: true,
         logo: true,
+        favicon: true,
         domainName: true,
         customDomain: true,
         languages: true,
