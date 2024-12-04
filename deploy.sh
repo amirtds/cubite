@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Env Vars
-ROOT_URL="localhost:3000"
-MAIN_DOMAIN="cubite.dev"
-NEXT_PUBLIC_MAIN_DOMAIN="cubite.dev"
-NEXTAUTH_URL="http://localhost:3000"
+ROOT_URL="cubite.io"
+MAIN_DOMAIN="cubite.io"
+NEXT_PUBLIC_MAIN_DOMAIN="cubite.io"
+NEXTAUTH_URL="http://cubite.io"
 MYSQL_USER="admin"
 MYSQL_PASSWORD=$(openssl rand -base64 12)  # Generate a random 12-character password
 MYSQL_DB="cubite"
@@ -16,16 +16,16 @@ CLOUDINARY_API_SECRET="cSN7VdjzMjaR3cABHfQ_lgsQ8Gw"
 RESEND_API_KEY="re_CHbqijnL_82kVC2maTtW4KRUTkcWHmAAa"
 
 # Script Vars
-REPO_URL="https://github.com/amirtds/cubite.git"
-APP_DIR=~/cubite
-SWAP_SIZE="4G"
+export REPO_URL="https://github.com/amirtds/cubite.git"
+export APP_DIR=~/cubite
+export SWAP_SIZE="4G"
 
 # Update package list and upgrade existing packages
 sudo apt update && sudo apt upgrade -y
 
 # Add Swap Space
 echo "Adding swap space..."
-sudo fallocate -l $SWAP_SIZE /swapfile
+sudo fallocate -l 4G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
@@ -135,7 +135,7 @@ limit_req_zone \$binary_remote_addr zone=mylimit:10m rate=10r/s;
 
 server {
     listen 80;
-    server_name $DOMAIN_NAME;
+    server_name cubite.io www.cubite.io *.cubite.io;
 
     # Redirect all HTTP requests to HTTPS
     return 301 https://\$host\$request_uri;
@@ -143,10 +143,10 @@ server {
 
 server {
     listen 443 ssl;
-    server_name $DOMAIN_NAME;
+    server_name cubite.io www.cubite.io *.cubite.io;
 
-    ssl_certificate /etc/letsencrypt/live/$DOMAIN_NAME/fullchain.pem;
-    ssl_certificate_key /etc/letsencrypt/live/$DOMAIN_NAME/privkey.pem;
+    ssl_certificate /etc/letsencrypt/live/cubite.io/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/cubite.io/privkey.pem;
     include /etc/letsencrypt/options-ssl-nginx.conf;
     ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
@@ -176,7 +176,7 @@ sudo systemctl restart nginx
 
 # Build and run the Docker containers from the app directory (~/cubite)
 cd $APP_DIR
-sudo docker-compose up --build -d
+sudo dockercompose up --build -d
 
 # Check if Docker Compose started correctly
 if ! sudo docker-compose ps | grep "Up"; then
