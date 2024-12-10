@@ -71,6 +71,7 @@ model Site {
   googleTagManager  String?
   extraRegistrationFields Json? 
   languages             Language[] @relation("SiteLanguages")
+  isOpenedxSite         Boolean    @default(false)
 
   @@map("sites")
 }
