@@ -1,9 +1,10 @@
-FROM node:18-alpine
+FROM node:23-alpine
 
 WORKDIR /app
 
 # Add nodemon for development
 RUN npm install -g nodemon
+RUN apk add openssl3
 
 # Only copy package files initially
 COPY package*.json ./
