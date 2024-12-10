@@ -72,6 +72,7 @@ model Site {
   extraRegistrationFields Json? 
   languages             Language[] @relation("SiteLanguages")
   isOpenedxSite         Boolean    @default(false)
+  openedxSiteUrl        String?    @default("")
 
   @@map("sites")
 }

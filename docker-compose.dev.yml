@@ -12,7 +12,7 @@ services:
       - db
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=mysql://admin:password@db:3306/cubite
+      - DATABASE_URL=mysql://root:rootpassword@db:3306/cubite
     volumes:
       - .:/app
       - /app/node_modules
