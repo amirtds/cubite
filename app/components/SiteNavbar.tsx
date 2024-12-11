@@ -158,7 +158,12 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               ))}
             </select>
           )}
-          {headerLinks.map((link) => {
+          {headerLinks
+          .filter(link => !(
+            (link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register") && 
+            (site.isOpenedxSite && isUserLoggedInOpenedx)
+          ))
+          .map((link) => {
             if (
               (link.url === "/auth/signin" || link.url === "/auth/register") &&
               session
