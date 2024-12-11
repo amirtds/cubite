@@ -2,6 +2,8 @@ FROM node:18-alpine
 
 WORKDIR /app
 
+RUN apk add openssl3
+
 COPY package*.json ./
 COPY prisma ./prisma/
 COPY .env .env
