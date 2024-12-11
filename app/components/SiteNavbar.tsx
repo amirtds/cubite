@@ -190,12 +190,20 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             ) : null;
           })}
           {site.isOpenedxSite && isUserLoggedInOpenedx && (
-            <a
-              className="btn btn-primary mx-2"
-              href={`${site.openedxSiteUrl.replace('https://', 'https://apps.')}/learner-dashboard/`}
-            >
-              Dashboard
-            </a>
+            <>
+              <a
+                className="btn btn-primary mx-2"
+                href={`${site.openedxSiteUrl.replace('https://', 'https://apps.')}/learner-dashboard/`}
+              >
+                Dashboard
+              </a>
+              <a 
+                className="btn btn-ghost btn-outline mx-2"
+                href={`${site.openedxSiteUrl}/logout`}
+              >
+                Logout
+              </a>
+            </>
           )}
           {session && status === "authenticated" && (
             <>
