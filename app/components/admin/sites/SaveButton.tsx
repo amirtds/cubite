@@ -30,7 +30,6 @@ interface Site {
 }
 
 function SaveButton({ site }: { site: Site }) {
-    console.log(site)
   return (
     <div className="self-center mb-2">
       <button  className="btn btn-secondary px-8">Save</button>

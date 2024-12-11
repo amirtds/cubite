@@ -22,7 +22,6 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   const session = await getServerSession(authOptions);
   const updateData = await request.json();
-  console.log(updateData);
   const studentIdResponse = await getUserId(session?.user.email);
   const studentId = await studentIdResponse.id;
   const result = await updateStudent(studentId, updateData);

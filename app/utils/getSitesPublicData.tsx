@@ -28,6 +28,8 @@ export const getSitesPublicData = async () => {
         frontendConfig: true,
         layout: true,
         extraRegistrationFields: true,
+        isOpenedxSite: true,
+        openedxSiteUrl: true,
       },
     });
 

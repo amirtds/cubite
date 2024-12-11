@@ -7,13 +7,15 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { setCookie } from "cookies-next";
+import { setCookie, getCookies } from "cookies-next";
 import { useTranslation } from "@/app/hooks/useTranslation";
 import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
 interface Site {
   name: string;
   logo: string;
+  isOpenedxSite: boolean;
+  openedxSiteUrl: string;
 }
 
 interface HeaderLinks {
@@ -33,6 +35,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
   const { status, data: session } = useSession();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
 
+
   useEffect(() => {
     const storedLanguage = getLocalStorage("selectedLanguage");
     if (storedLanguage) {
@@ -41,6 +44,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       // Set default language if no stored language
       setSelectedLanguage(site.languages[0].code);
     }
+    console.log(getCookies())
   }, [site.languages]);
 
   const handleSignout = () => {
@@ -103,6 +107,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               ) {
                 return null;
               }
+
               return link.type === "internal" || link.type === "external" ? (
                 <li key={link.url}>
                   <a href={link.url}>

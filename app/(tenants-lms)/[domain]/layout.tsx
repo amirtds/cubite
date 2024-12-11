@@ -40,7 +40,6 @@ const SitesLayout = async ({ children, params }: Props) => {
   const locale = await getLocale();
   // Providing all messages to the client
   const messages = await getMessages();
-
   if (result.status === 200) {
     site = result.sites.find(
       (s) =>
@@ -48,6 +47,7 @@ const SitesLayout = async ({ children, params }: Props) => {
     );
   }
 
+  const isOpenedxSite = site?.isOpenedxSite || false;
   if (site?.layout?.header?.headerLinks) {
     headerLinks = site.layout.header.headerLinks;
   }
@@ -78,7 +78,10 @@ const SitesLayout = async ({ children, params }: Props) => {
             <div className="">
               {site ? (
                 <div className="min-h-screen">
-                  <SiteNavbar site={site} headerLinks={headerLinks} />
+                  <SiteNavbar 
+                    site={site} 
+                    headerLinks={headerLinks} 
+                  />
                   {/* page content */}
                   <div className="mx-auto max-w-7xl">{children}</div>
                   {/* Footer Content */}
