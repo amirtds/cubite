@@ -60,11 +60,6 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
         }
       }
     }
-
-    // remove login/register buttons if on OpenedX site and user is logged in
-    if (site.isOpenedxSite && isUserLoggedInOpenedx) {
-      headerLinks = headerLinks.filter(link => !(link.text.toLowerCase() === "login" || link.text.toLowerCase() === "register"));
-    }
   }, [site.languages, site.isOpenedxSite]);
 
   const handleSignout = () => {
@@ -119,7 +114,12 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
         </div>
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
-            {headerLinks.map((link) => {
+            {headerLinks
+              .filter(link => !(
+                (link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register") && 
+                (site.isOpenedxSite && isUserLoggedInOpenedx)
+              ))
+              .map((link) => {
               if (
                 (link.url === "/auth/signin" ||
                   link.url === "/auth/register") &&
