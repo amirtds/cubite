@@ -7,7 +7,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { setCookie, getCookies } from "cookies-next";
+import { setCookie, getCookies, getCookie } from "cookies-next";
 import { useTranslation } from "@/app/hooks/useTranslation";
 import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
 
@@ -34,7 +34,8 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
 
   const { status, data: session } = useSession();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-
+  const [isUserLoggedInOpenedx, setIsUserLoggedInOpenedx] = useState<boolean>(false);
+  const [openedxUserInfo, setOpenedxUserInfo] = useState<any>(null);
 
   useEffect(() => {
     const storedLanguage = getLocalStorage("selectedLanguage");
@@ -44,8 +45,21 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       // Set default language if no stored language
       setSelectedLanguage(site.languages[0].code);
     }
-    console.log(getCookies())
-  }, [site.languages]);
+    if(site.isOpenedxSite) {
+      setIsUserLoggedInOpenedx(getCookie('edxloggedin') === 'true');
+
+      const userInfoValue = getCookie('edxuserinfo');
+      if (userInfoValue) {
+        try {
+          const parsedUserInfo = JSON.parse(decodeURIComponent(userInfoValue));
+          setOpenedxUserInfo(parsedUserInfo);
+        } catch (error) {
+          console.error('Failed to parse edxuserinfo:', error);
+          setOpenedxUserInfo(null);
+        }
+      }
+    }
+  }, [site.languages, site.isOpenedxSite]);
 
   const handleSignout = () => {
     signOut({ redirect: false });
@@ -146,6 +160,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             ) {
               return null;
             }
+            if(site.isOpenedxSite && isUserLoggedInOpenedx) {
+              link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register" ? null : null
+            }
             return link.type === "neutral-button" ? (
               <a
                 key={link.url}
@@ -164,6 +181,14 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               </a>
             ) : null;
           })}
+          {site.isOpenedxSite && isUserLoggedInOpenedx && (
+            <a
+              className="btn btn-primary mx-2"
+              href={`${site.openedxSiteUrl}/learner-dashboard`}
+            >
+              Dashboard
+            </a>
+          )}
           {session && status === "authenticated" && (
             <>
               <button className="btn btn-ghost btn-circle mx-2">
