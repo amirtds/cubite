@@ -46,11 +46,11 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       setSelectedLanguage(site.languages[0].code);
     }
     console.log(getCookie('edxloggedin'))
-    console.log(getCookie('edxuserinfo'))
+    console.log(getCookie('edx-user-info'))
     if(site.isOpenedxSite) {
-      setIsUserLoggedInOpenedx(getCookie('edxloggedin') === 'true');
+      setIsUserLoggedInOpenedx(getCookie('edxloggedin') == 'true');
 
-      const userInfoValue = getCookie('edxuserinfo');
+      const userInfoValue = getCookie('edx-user-info');
       if (userInfoValue) {
         try {
           const parsedUserInfo = JSON.parse(decodeURIComponent(userInfoValue));
