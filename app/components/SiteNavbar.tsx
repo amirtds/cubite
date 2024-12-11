@@ -60,6 +60,11 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
         }
       }
     }
+
+    // remove login/register buttons if on OpenedX site and user is logged in
+    if (site.isOpenedxSite && isUserLoggedInOpenedx) {
+      headerLinks = headerLinks.filter(link => !(link.text.toLowerCase() === "login" || link.text.toLowerCase() === "register"));
+    }
   }, [site.languages, site.isOpenedxSite]);
 
   const handleSignout = () => {
@@ -154,19 +159,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             </select>
           )}
           {headerLinks.map((link) => {
-            // Skip login/register buttons if user is authenticated
             if (
               (link.url === "/auth/signin" || link.url === "/auth/register") &&
               session
-            ) {
-              return null;
-            }
-            
-            // Skip login/register buttons if on OpenedX site and user is logged in
-            if (
-              site.isOpenedxSite && 
-              isUserLoggedInOpenedx &&
-              (link.text.toLowerCase() === "login" || link.text.toLowerCase() === "register")
             ) {
               return null;
             }
@@ -192,7 +187,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           {site.isOpenedxSite && isUserLoggedInOpenedx && (
             <a
               className="btn btn-primary mx-2"
-              href={`apps.${site.openedxSiteUrl}/learner-dashboard/`}
+              href={`${site.openedxSiteUrl.replace('https://', 'https://apps.')}/learner-dashboard/`}
             >
               Dashboard
             </a>
