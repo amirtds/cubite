@@ -36,7 +36,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
   const [isUserLoggedInOpenedx, setIsUserLoggedInOpenedx] = useState<boolean>(false);
   const [openedxUserInfo, setOpenedxUserInfo] = useState<any>(null);
-
+  
   useEffect(() => {
     const storedLanguage = getLocalStorage("selectedLanguage");
     if (storedLanguage) {
@@ -45,8 +45,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       // Set default language if no stored language
       setSelectedLanguage(site.languages[0].code);
     }
-    console.log(getCookie('edxloggedin'))
-    console.log(getCookie('edx-user-info'))
+
     if(site.isOpenedxSite) {
       setIsUserLoggedInOpenedx(getCookie('edxloggedin') == 'true');
 
@@ -123,9 +122,6 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               ) {
                 return null;
               }
-              if(site.isOpenedxSite && isUserLoggedInOpenedx) {
-                link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register" ? null : null
-              }
               return link.type === "internal" || link.type === "external" ? (
                 <li key={link.url}>
                   <a href={link.url}>
@@ -158,15 +154,23 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
             </select>
           )}
           {headerLinks.map((link) => {
+            // Skip login/register buttons if user is authenticated
             if (
               (link.url === "/auth/signin" || link.url === "/auth/register") &&
               session
             ) {
               return null;
             }
-            if(site.isOpenedxSite && isUserLoggedInOpenedx) {
-              link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register" ? null : null
+            
+            // Skip login/register buttons if on OpenedX site and user is logged in
+            if (
+              site.isOpenedxSite && 
+              isUserLoggedInOpenedx &&
+              (link.text.toLowerCase() === "login" || link.text.toLowerCase() === "register")
+            ) {
+              return null;
             }
+
             return link.type === "neutral-button" ? (
               <a
                 key={link.url}
@@ -188,7 +192,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           {site.isOpenedxSite && isUserLoggedInOpenedx && (
             <a
               className="btn btn-primary mx-2"
-              href={`${site.openedxSiteUrl}/learner-dashboard`}
+              href={`apps.${site.openedxSiteUrl}/learner-dashboard/`}
             >
               Dashboard
             </a>
