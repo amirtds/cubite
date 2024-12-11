@@ -45,6 +45,8 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       // Set default language if no stored language
       setSelectedLanguage(site.languages[0].code);
     }
+    console.log(getCookie('edxloggedin'))
+    console.log(getCookie('edxuserinfo'))
     if(site.isOpenedxSite) {
       setIsUserLoggedInOpenedx(getCookie('edxloggedin') === 'true');
 
@@ -121,7 +123,9 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               ) {
                 return null;
               }
-
+              if(site.isOpenedxSite && isUserLoggedInOpenedx) {
+                link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register" ? null : null
+              }
               return link.type === "internal" || link.type === "external" ? (
                 <li key={link.url}>
                   <a href={link.url}>
