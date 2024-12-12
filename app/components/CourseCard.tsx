@@ -59,11 +59,14 @@ const CourseCard = ({ course, site }) => {
 
       <div className="flex flex-row  px-4 py-8 gap-2 place-items-center">
         {course.xp ? <p className="w-1/3">XP {course.xp}</p> : null}
-        {course.level ? (
-          <p className="w-2/3">
-            Level <span className="font-medium">{course.level}</span>
-          </p>
-        ) : null}
+        
+        <p className="w-2/3">
+          {course.level ? (
+            <>
+              Level <span className="font-medium">{course.level}</span>
+            </>
+          ) : null}
+        </p>
         <Enrollment
           siteId={site.id}
           courseId={course.id}
