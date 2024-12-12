@@ -9,6 +9,9 @@ export const createSiteAction = async (prevState: any, formData: FormData) =>{
     const customDomain = formData.get("customDomain")?.toString() || '';
     const theme = formData.get("theme")?.toString() || 'business';
     const userEmail = formData.get("userEmail")?.toString() || '';
+    const isOpenedxSite = formData.get("isOpenedxSite") === "on";
+    const isNewOpenedxSite = formData.get("isNewOpenedxSite") === "on";
+    const openedxSiteUrl = formData.get("openedxSiteUrl")?.toString() || '';
 
     // Ensure userEmail is provided
     if (!userEmail) {
@@ -34,6 +37,9 @@ export const createSiteAction = async (prevState: any, formData: FormData) =>{
         customDomain,
         theme,
         userEmail,
+        isOpenedxSite,
+        isNewOpenedxSite,
+        openedxSiteUrl,
     };
 
     const newSite = await createSite(siteObject)

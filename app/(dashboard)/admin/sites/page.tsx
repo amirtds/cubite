@@ -14,6 +14,7 @@ interface Site {
   domainName: string;
   customDomain?: string;
   isActive: boolean;
+  isOpenedxSite: boolean;
   admins: {
     id: string;
     name: string;
@@ -125,8 +126,8 @@ const Sites = () => {
                 <div className="p-4">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-lg font-medium capitalize">
-                        {site.name}
+                      <h3 className="text-lg font-medium capitalize mb-2">
+                        {site.name} <span className="text-xs text-info normal-case">{site.isOpenedxSite ? " | Open edX Site" : ""}</span>
                       </h3>
                       <a
                         className="text-sm text-secondary link"

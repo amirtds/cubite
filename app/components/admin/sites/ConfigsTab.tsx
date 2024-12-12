@@ -3,7 +3,6 @@ import SiteNameInput from "./SiteNameInput";
 import SiteSubdomainInput from "./SiteSubdomainInput";
 import SiteCustomDomainInput from "./SiteCustomDomainInput";
 import SiteLanguagesInput from "./SiteLanguagesInput";
-import SiteIsOpenedxSite  from "./SiteIsOpenedxSite";
 interface Site {
   id: string;
   createdAt: string;
@@ -14,6 +13,7 @@ interface Site {
   isActive: boolean;
   languages: string[];
   isOpenedxSite: boolean;
+  isNewOpenedxSite: boolean;
   openedxSiteUrl: string;
   admins: {
     id: string;
@@ -68,12 +68,6 @@ function ConfigsTab({ site }: { site: Site }) {
                 siteLanguages={site.languages}
                 siteId={site.id}
                 siteDomainName={site.domainName}
-              />
-              <SiteIsOpenedxSite 
-                siteId={site.id}
-                siteDomainName={site.domainName}
-                isOpenedxSite={site.isOpenedxSite}
-                openedxSiteUrl={site.openedxSiteUrl}
               />
             </div>
           </div>

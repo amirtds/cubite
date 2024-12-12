@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 
 import { createSiteAction } from "./actions";
 import InputText from "@/app/components/InputText";
+import SiteIsOpenedxSite from "@/app/components/admin/sites/SiteIsOpenedxSite";
 import Alert from "@/app/components/Alert";
 
 const initialState = {
@@ -18,6 +19,9 @@ const initialState = {
         customDomain: "",
         theme: "",
         userEmail: "",
+        isOpenedxSite: false,
+        isNewOpenedxSite: false,
+        openedxSiteUrl: "",
     },
   };
 
@@ -105,7 +109,8 @@ export default function CreateSiteForm() {
           </select>
         </label>
       </div>
-      <div className="mt-6 flex items-center justify-end gap-x-6">
+      <SiteIsOpenedxSite />
+      <div className="col-span-full">
         <button type="submit" className="btn btn-primary px-8">
           Save
         </button>

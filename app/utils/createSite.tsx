@@ -6,6 +6,9 @@ interface SiteData {
   customDomain: string;
   theme: string;
   userEmail: string;
+  isOpenedxSite: boolean;
+  isNewOpenedxSite: boolean;
+  openedxSiteUrl: string;
 }
 
 export const createSite = async (data: SiteData) => {
@@ -47,6 +50,9 @@ export const createSite = async (data: SiteData) => {
       themeName: data.theme,
       isActive: true,
       frontendConfig: {},
+      isOpenedxSite: data.isOpenedxSite,
+      isNewOpenedxSite: data.isNewOpenedxSite,
+      openedxSiteUrl: data.openedxSiteUrl,
       admins: {
         connect: {
           id: user.id,

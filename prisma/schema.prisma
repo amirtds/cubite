@@ -73,7 +73,7 @@ model Site {
   languages             Language[] @relation("SiteLanguages")
   isOpenedxSite         Boolean    @default(false)
   openedxSiteUrl        String?    @default("")
-  isNewOpenedxSite     Boolean    @default(false)
+  isNewOpenedxSite      Boolean    @default(false)
 
   @@map("sites")
 }
