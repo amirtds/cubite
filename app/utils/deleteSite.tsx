@@ -32,6 +32,16 @@ export const deleteSite = async (domainName: string) => {
       },
     });
 
+    // if the serverid is not empty, delete the server
+    if (site.serverId !== "") {
+      const response = await fetch(`https://api.hetzner.cloud/v1/servers/${site.serverId}`, {
+        method: "DELETE",
+        headers: {
+          "Authorization": `Bearer ${process.env.cubite_hetzner_api_key}`,
+        },
+      })
+    }
+
     return {
       status: 200,
       message: "Site deleted successfully",

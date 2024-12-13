@@ -1,6 +1,8 @@
 "use server";
 
 import { createSite } from "@/app/utils/createSite"
+import { createOpenedxSite } from "@/app/utils/createOpenedxSite"
+import { prisma } from "@/prisma/client";
 
 export const createSiteAction = async (prevState: any, formData: FormData) =>{
     // Extract relevant form data fields
@@ -43,5 +45,20 @@ export const createSiteAction = async (prevState: any, formData: FormData) =>{
     };
 
     const newSite = await createSite(siteObject)
+    if (isNewOpenedxSite) {
+        const openedxSiteResponse = await createOpenedxSite()
+        if (openedxSiteResponse.status === 201) {
+            const openedxServer = openedxSiteResponse.data
+            console.log(openedxServer)
+            await prisma.site.update({
+                where: {
+                    id: newSite.site?.id
+                },
+                data: {
+                    serverId: openedxServer.server.id.toString()
+                }
+            })
+        }
+    }
     return newSite
 }

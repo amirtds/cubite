@@ -74,6 +74,7 @@ model Site {
   isOpenedxSite         Boolean    @default(false)
   openedxSiteUrl        String?    @default("")
   isNewOpenedxSite      Boolean    @default(false)
+  serverId              String?    @default("")
 
   @@map("sites")
 }
