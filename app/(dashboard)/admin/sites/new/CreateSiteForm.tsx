@@ -3,11 +3,11 @@ import React, { useEffect, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Rocket } from 'lucide-react';
 
 import { createSiteAction } from "./actions";
 import InputText from "@/app/components/InputText";
 import SiteIsOpenedxSite from "@/app/components/admin/sites/SiteIsOpenedxSite";
-import Alert from "@/app/components/Alert";
 
 const initialState = {
     status: 0,
@@ -47,6 +47,16 @@ export default function CreateSiteForm() {
       action={handleSubmit}
       className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
     >
+      {
+        isPending && (
+          <div className="col-span-full">
+            <div className="alert alert-info">
+              <Rocket className="w-6 h-6" />
+              <span>You're Open edX site is being created, it will be ready approximately in 5 minutes.</span>
+            </div>
+          </div>
+        )
+      }
       <InputText
         label="Site Name"
         description="Name to show in Dashboard"

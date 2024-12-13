@@ -16,8 +16,8 @@ write_files:
         --set CMS_HOST="${studioDomain}" \
         --set LMS_HOST="${domain}" \
         --set ENABLE_HTTPS=true \
-        --set ACTIVATE_HTTPS=true
-        --set PLATFORM_NAME=${siteName}
+        --set ACTIVATE_HTTPS=true \
+        --set PLATFORM_NAME="${siteName}"
       tutor local launch -I
     permissions: '0755'
 runcmd:
