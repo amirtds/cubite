@@ -39,6 +39,7 @@
     "editorjs-header-with-alignment": "^1.0.1",
     "editorjs-paragraph-with-alignment": "^3.0.0",
     "html-react-parser": "^5.1.10",
+    "lucide-react": "^0.468.0",
     "negotiator": "^0.6.3",
     "next": "14.2.3",
     "next-auth": "^4.24.7",

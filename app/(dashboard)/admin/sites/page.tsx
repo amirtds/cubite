@@ -6,6 +6,9 @@ import { useSession } from "next-auth/react";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import EmptyState from "@/app/components/admin/EmptyState";
 import PageHeader from "@/app/components/admin/PageHeader";
+import { Presentation } from 'lucide-react';
+import { Pencil } from 'lucide-react';
+import Image from "next/image";
 
 interface Site {
   createdAt: string;
@@ -122,15 +125,34 @@ const Sites = () => {
         sites.length > 0 ? (
           <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 p-6 md:p-8">
             {sites.map((site) => (
-              <div key={site.id} className="border-2">
+              <div key={site.id} className="border-2 relative">
+                {site.isOpenedxSite && (
+                  <div className="absolute -top-2 -left-2 bg-white rounded-full p-1 shadow-md">
+                    <Image
+                      src="/openedx-logo.png"
+                      alt="OpenedX Site"
+                      width={24}
+                      height={24}
+                      className="w-8 h-8"
+                    />
+                  </div>
+                )}
                 <div className="p-4">
                   <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-medium capitalize mb-2">
-                        {site.name} <span className="text-xs text-info normal-case">{site.isOpenedxSite ? " | Open edX Site" : ""}</span>
-                      </h3>
+                    <div className="">
+                        <h3 className="text-lg font-medium capitalize my-4">
+                          {site.name}
+                        </h3>
+                          {
+                            site.isOpenedxSite && (
+                            <div className="flex flex-row gap-4 mb-2">
+                              <a className="text-sm text-ghost flex flex-row gap-2 text-accent underline" href={`https://learn.${site.domainName}`} target="_blank" rel="noopener noreferrer"><Presentation className="h-5 w-5" />LMS</a>
+                              <hr className="h-5 border-l border-accent" />
+                              <a className="text-sm text-ghost flex flex-row gap-2 text-accent underline" href={`https://studio.learn.${site.domainName}`} target="_blank" rel="noopener noreferrer"><Pencil className="h-5 w-5" />Studio</a>
+                            </div>
+                          )}
                       <a
-                        className="text-sm text-secondary link"
+                        className="text-sm text-accent link"
                         href={`https://${site.domainName}`}
                         target="_blank"
                         rel="noopener noreferrer"

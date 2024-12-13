@@ -1,4 +1,27 @@
 export const createOpenedxSite = async ({siteName, siteDomain}: {siteName: string, siteDomain: string}) => {
+    const domain = `learn.${siteDomain}.${process.env.MAIN_DOMAIN}`;
+    const studioDomain = `studio.${domain}`;
+
+    const user_data = `#cloud-config
+write_files:
+  - path: /root/wait-for-setup
+    content: |
+      #!/bin/bash
+      while ! host ${domain}; do
+        echo "Waiting for DNS propagation..."
+        sleep 10
+      done
+      source /root/venv/bin/activate
+      tutor config save \
+        --set CMS_HOST="${studioDomain}" \
+        --set LMS_HOST="${domain}" \
+        --set ENABLE_HTTPS=true \
+        --set ACTIVATE_HTTPS=true
+        --set PLATFORM_NAME=${siteName}
+      tutor local launch -I
+    permissions: '0755'
+runcmd:
+  - /root/wait-for-setup`;
 
     const serverSpecification = {
         name: siteDomain,
@@ -8,8 +31,10 @@ export const createOpenedxSite = async ({siteName, siteDomain}: {siteName: strin
         image: "204826692",
         server_type: "cax31",
         datacenter: "nbg1-dc3",
-        ssh_keys: ["Amir"]
+        ssh_keys: ["Amir"],
+        user_data: user_data
     }
+
     const response = await fetch(`https://api.hetzner.cloud/v1/servers`, {
         method: "POST",
         headers: {
@@ -19,6 +44,7 @@ export const createOpenedxSite = async ({siteName, siteDomain}: {siteName: strin
         body: JSON.stringify(serverSpecification),
     })
     const data = await response.json()
+    console.log(data)
     let serverStatus = data.server.status
     let serverResponse;
     
