@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useTransition } from "react";
 import { useFormState } from "react-dom";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -27,6 +27,7 @@ const initialState = {
 
 export default function CreateSiteForm() {
   const [state, formAction] = useFormState(createSiteAction, initialState);
+  const [isPending, startTransition] = useTransition();
   const { status, data: session } = useSession();
   const router = useRouter();
   useEffect(() => {
@@ -35,9 +36,15 @@ export default function CreateSiteForm() {
     }
   }, [state, router]);
 
+  const handleSubmit = (formData: FormData) => {
+    startTransition(() => {
+      formAction(formData);
+    });
+  };
+
   return (
     <form
-      action={formAction}
+      action={handleSubmit}
       className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6"
     >
       <InputText
@@ -111,8 +118,19 @@ export default function CreateSiteForm() {
       </div>
       <SiteIsOpenedxSite />
       <div className="col-span-full">
-        <button type="submit" className="btn btn-primary px-8">
-          Save
+        <button 
+          type="submit" 
+          className="btn btn-primary px-8" 
+          disabled={isPending}
+        >
+          {isPending ? (
+            <>
+              <span className="loading loading-spinner"></span>
+              Creating...
+            </>
+          ) : (
+            'Save'
+          )}
         </button>
       </div>
     </form>

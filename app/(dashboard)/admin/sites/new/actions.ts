@@ -45,19 +45,24 @@ export const createSiteAction = async (prevState: any, formData: FormData) =>{
     };
 
     const newSite = await createSite(siteObject)
-    if (isNewOpenedxSite) {
-        const openedxSiteResponse = await createOpenedxSite()
+    if (isNewOpenedxSite && newSite.status === 201) {
+        const openedxSiteResponse = await createOpenedxSite({siteName: siteName, siteDomain: subDomain})
         if (openedxSiteResponse.status === 201) {
             const openedxServer = openedxSiteResponse.data
-            console.log(openedxServer)
             await prisma.site.update({
                 where: {
                     id: newSite.site?.id
                 },
                 data: {
-                    serverId: openedxServer.server.id.toString()
+                    serverId: openedxServer?.serverId,
+                    serverIp: openedxServer?.serverIp
                 }
             })
+        } else {
+            return {
+                status: 500,
+                message: "Failed to create openedx site"
+            }
         }
     }
     return newSite
