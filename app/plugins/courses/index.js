@@ -11,7 +11,7 @@ class Courses {
     };
   }
 
-  constructor({ data }) {
+  constructor({ data, config }) {
     this.data = data || {
       title: "Our Courses",
       description: "Here are our courses",
@@ -19,6 +19,7 @@ class Courses {
       sortBy: "name_asc",
       limitCourses: 3,
     };
+    this.siteId = config.siteId;
   }
 
   render() {
@@ -38,8 +39,12 @@ class Courses {
 
       useEffect(() => {
         const getCourses = async () => {
-          const response = await fetch(`/api/courses`, {
+          const response = await fetch(`/api/getSiteCourses?siteId=${this.siteId}`, {
             cache: "no-store",
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            }
           });
           const result = await response.json();
           const fetchedCourses = result.courses.map((course) => {
@@ -241,6 +246,7 @@ class Courses {
 
   save(blockContent) {
     return {
+      siteId: this.data.siteId,
       title: this.data.title,
       description: this.data.description,
       courses: this.data.courses,

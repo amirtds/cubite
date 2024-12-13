@@ -29,16 +29,16 @@ interface Content {
 
 interface EditorProps {
   savedContent: Content | null;
+  siteId?: string;
   onChange: (content: Content) => void;
 }
 
-const Editor = ({ savedContent, onChange }: EditorProps) => {
+const Editor = ({ savedContent, siteId, onChange }: EditorProps) => {
   const editorRef = useRef<EditorJS | null>(null);
   const editorHolderRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     if (editorRef.current || !editorHolderRef.current) return;
-
     const initialContent = savedContent || {
       time: Date.now(),
       blocks: [],
@@ -76,7 +76,12 @@ const Editor = ({ savedContent, onChange }: EditorProps) => {
         multipleChoice: MultipleChoice,
         poll: Poll,
         youtube: Youtube,
-        courses: Courses,
+        courses: {
+          class: Courses,
+          config: {
+            siteId: siteId || "",
+          },
+        },
         cta: CTA,
       },
       onReady: () => {

@@ -28,6 +28,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
   const [userId, setUserId] = useState<string>("");
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
   const [page, setPage] = useState([]);
+  const [siteId, setSiteId] = useState<string>("");
 
   const handleContentChange = useCallback((content: Content) => {
     setChangedContent(content);
@@ -100,6 +101,9 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
       const result = await response.json();
       if (result.status === 200) {
         setPage(result.page);
+        result.page.title === "Index"
+          ? setSiteId(result.page.sites[0].id)
+          : setSiteId("");
       }
     }
 
@@ -107,7 +111,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
     getUserId();
     getPageContentVersions();
     getPage();
-  }, [id]);
+  }, [id, siteId]);
 
   useEffect(() => {
     const autosaveInterval = setInterval(() => {
@@ -197,7 +201,11 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
           setStatus(0), setMessage("");
         }}
       />
-      <Editor savedContent={content} onChange={handleContentChange} />
+      <Editor
+        savedContent={content}
+        onChange={handleContentChange}
+        siteId={siteId}
+      />
     </>
   );
 };
