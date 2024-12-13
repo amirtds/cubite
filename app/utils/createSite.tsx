@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma/client";
+import { upsertOpenedxCourses } from "./upsertOpenedxCourses";
 
 interface SiteData {
   siteName: string;
@@ -75,6 +76,11 @@ export const createSite = async (data: SiteData) => {
       },
     },
   });
+
+  // if it is an existing Open edX site, we need to sync the courses
+  if (data.isOpenedxSite && !data.isNewOpenedxSite) {
+    await upsertOpenedxCourses(data.openedxSiteUrl, newSite.id);
+  }
 
   return {
     status: 201,
