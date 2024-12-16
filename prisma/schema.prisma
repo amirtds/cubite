@@ -76,6 +76,13 @@ model Site {
   isNewOpenedxSite      Boolean    @default(false)
   serverId              String?    @default("")
   serverIp              String?    @default("")
+  smtpEmailHost          String?    @default("")
+  smtpEmailPort          Int?       @default(0)
+  smtpEmailUseSsl        Boolean?   @default(false)
+  smtpEmailUseTls         Boolean?   @default(false)
+  smtpEmailUsername      String?    @default("")
+  smtpEmailPassword      String?    @default("")
+  smtpDefaultFromEmail   String?    @default("")
 
   @@map("sites")
 }
