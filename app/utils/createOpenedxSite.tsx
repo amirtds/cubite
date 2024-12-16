@@ -15,7 +15,7 @@ write_files:
       source /root/venv/bin/activate
 
       # Create Tutor plugin for cookie settings
-      cat > /root/customizations.py << EOL
+      cat > /root/customizations.py << 'EOL'
 from tutor import hooks
 
 hooks.Filters.ENV_PATCHES.add_items([
@@ -45,6 +45,9 @@ SESSION_COOKIE_DOMAIN: ".${SiteFrontendDomain}"
     ),
 ])
 EOL
+
+# Replace placeholder with actual domain
+sed -i "s/\${SiteFrontendDomain}/${SiteFrontendDomain}/g" /root/customizations.py
 
       # Install and enable the plugin
       tutor plugins install /root/customizations.py
