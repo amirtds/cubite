@@ -1,7 +1,7 @@
 export const createOpenedxSite = async ({siteName, siteDomain, userEmail}: {siteName: string, siteDomain: string, userEmail: string}) => {
     const domain = `learn.${siteDomain}.${process.env.MAIN_DOMAIN}`;
     const studioDomain = `studio.${domain}`;
-    const SiteFrontendDomain = `${siteDomain}.${process.env.MAIN_DOMAIN}`;
+    const SiteFrontendDomain = process.env.NODE_ENV === 'development' ? 'localhost:3000' : `${siteDomain}.${process.env.MAIN_DOMAIN}`;
 
     const user_data = `#cloud-config
 write_files:
@@ -13,13 +13,50 @@ write_files:
         sleep 10
       done
       source /root/venv/bin/activate
+
+      # Create Tutor plugin for cookie settings
+      cat > /root/customizations.py << EOL
+from tutor import hooks
+
+hooks.Filters.ENV_PATCHES.add_items([
+    (
+        "openedx-lms-production-settings",
+        """
+SESSION_COOKIE_DOMAIN = ".${SiteFrontendDomain}"
+        """
+    ),
+    (
+        "openedx-cms-production-settings",
+        """
+SESSION_COOKIE_DOMAIN = ".${SiteFrontendDomain}"
+        """
+    ),
+    (
+        "lms-env",
+        """
+SESSION_COOKIE_DOMAIN: ".${SiteFrontendDomain}"
+        """
+    ),
+    (
+        "cms-env",
+        """
+SESSION_COOKIE_DOMAIN: ".${SiteFrontendDomain}"
+        """
+    ),
+])
+EOL
+
+      # Install and enable the plugin
+      tutor plugins install /root/customizations.py
+      tutor plugins enable customizations
+      tutor images build openedx
+
       tutor config save \
         --set CMS_HOST="${studioDomain}" \
         --set LMS_HOST="${domain}" \
         --set ENABLE_HTTPS=true \
         --set ACTIVATE_HTTPS=true \
         --set PLATFORM_NAME="${siteName}" \
-        --set SESSION_COOKIE_DOMAIN=".${SiteFrontendDomain}" \
         --set SMTP_HOST=smtp.resend.com \
         --set SMTP_PORT=587 \
         --set SMTP_USE_SSL=false \
@@ -35,6 +72,9 @@ write_files:
       USERNAME=$(echo ${userEmail} | cut -d@ -f1)
       tutor local do createuser --staff --superuser $USERNAME ${userEmail} --password $PASSWORD
       tutor local do createuser --staff --superuser devops devops@cubite.io --password $PASSWORD
+
+      # Create redirects with specific site
+      docker exec -i tutor_local-lms-1 sh -c "echo 'from django.contrib.sites.models import Site; from django.contrib.redirects.models import Redirect; site = Site.objects.get(domain=\\\"${domain}\\\"); Redirect.objects.create(site=site, old_path=\\\"/\\\", new_path=\\\"https://${SiteFrontendDomain}\\\"); Redirect.objects.create(site=site, old_path=\\\"/courses\\\", new_path=\\\"https://${SiteFrontendDomain}/courses\\\")' | ./manage.py lms shell"
     permissions: '0755'
 runcmd:
   - /root/wait-for-setup`;
