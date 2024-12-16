@@ -1,4 +1,4 @@
-export const createOpenedxSite = async ({siteName, siteDomain}: {siteName: string, siteDomain: string}) => {
+export const createOpenedxSite = async ({siteName, siteDomain, userEmail}: {siteName: string, siteDomain: string, userEmail: string}) => {
     const domain = `learn.${siteDomain}.${process.env.MAIN_DOMAIN}`;
     const studioDomain = `studio.${domain}`;
     const SiteFrontendDomain = `${siteDomain}.${process.env.MAIN_DOMAIN}`;
@@ -19,16 +19,22 @@ write_files:
         --set ENABLE_HTTPS=true \
         --set ACTIVATE_HTTPS=true \
         --set PLATFORM_NAME="${siteName}" \
-        --set SESSION_COOKIE_DOMAIN="${SiteFrontendDomain}" \
+        --set SESSION_COOKIE_DOMAIN=".${SiteFrontendDomain}" \
         --set SMTP_HOST=smtp.resend.com \
         --set SMTP_PORT=587 \
         --set SMTP_USE_SSL=false \
         --set SMTP_USE_TLS=true \
         --set SMTP_USERNAME="resend" \
         --set SMTP_PASSWORD="${process.env.RESEND_API_KEY}" \
-        --set DEFAULT_FROM_EMAIL="${process.env.SERVER_EMAIL}"
+        --set DEFAULT_FROM_EMAIL="${process.env.SERVER_EMAIL}" \
+        --set CONTACT_EMAIL="${process.env.SERVER_EMAIL}"
       
       tutor local launch -I
+      # Generate random 16 character password with letters, numbers and symbols
+      PASSWORD=$(openssl rand -base64 12)
+      USERNAME=$(echo ${userEmail} | cut -d@ -f1)
+      tutor local do createuser --staff --superuser $USERNAME ${userEmail} --password $PASSWORD
+      tutor local do createuser --staff --superuser devops devops@cubite.io --password $PASSWORD
     permissions: '0755'
 runcmd:
   - /root/wait-for-setup`;

@@ -46,7 +46,7 @@ export const createSiteAction = async (prevState: any, formData: FormData) =>{
 
     const newSite = await createSite(siteObject)
     if (isNewOpenedxSite && newSite.status === 201) {
-        const openedxSiteResponse = await createOpenedxSite({siteName: siteName, siteDomain: subDomain})
+        const openedxSiteResponse = await createOpenedxSite({siteName: siteName, siteDomain: subDomain, userEmail: userEmail})
         if (openedxSiteResponse.status === 201) {
             const openedxServer = openedxSiteResponse.data
             await prisma.site.update({
