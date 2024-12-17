@@ -18,7 +18,7 @@ function SiteNameInput({ siteName, siteId, siteDomainName }: SiteNameInputProps)
 
   const handleNameUpdate = async (e: React.FocusEvent<HTMLInputElement>) => {
     try {
-      console.log(e.target.value.length)
+
       if (e.target.value.length == 0) {
         setStatus({ type: 'error', message: 'Site name is required' });
         return;
