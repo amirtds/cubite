@@ -10,7 +10,7 @@ import { useEffect, useState } from "react";
 import { setCookie, getCookies, getCookie } from "cookies-next";
 import { useTranslation } from "@/app/hooks/useTranslation";
 import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
-
+import HamburgerMenu from "@/app/components/HamburgerMenu";
 interface Site {
   name: string;
   logo: string;
@@ -98,6 +98,7 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
     <div className="bg-base-200">
       <div className="navbar mx-auto max-w-7xl p-6 lg:px-8">
         <div className="navbar-start">
+          <HamburgerMenu menuItems={headerLinks.filter(item => item.type === "internal" || item.type === "external")} />
           <Link
             href={session?.user ? "/dashboard" : "/"}
             className=""
