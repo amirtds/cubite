@@ -117,12 +117,14 @@ export default function CreateSiteForm() {
             className="select select-bordered"
             defaultValue="winter"
           >
-            <option value="lofi">Lofi</option>
-            <option value="winter">Winter</option>
-            <option value="dark">Dark</option>
-            <option value="luxury">Luxury</option>
-            <option value="forest">Forest</option>
-            <option value="autumn">Autumn</option>
+              <option value="lofi">Lofi</option>
+              <option value="winter">Winter</option>
+              <option value="dark">Dark</option>
+              <option value="luxury">Luxury</option>
+              <option value="forest">Forest</option>
+              <option value="autumn">Autumn</option>
+              <option value="rmu">Rmu</option>
+              <option value="ocean">Ocean</option>
           </select>
         </label>
       </div>

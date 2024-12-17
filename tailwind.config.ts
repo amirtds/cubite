@@ -32,7 +32,8 @@ const config: Config = {
         "ocean": {
           ...require("daisyui/src/theming/themes")["winter"],
           primary: "#2980b9",
-          secondary: "#4bbad3",
+          "primary-content": "#ffffff",
+          "secondary": "#4bbad3",
           "base-200": "#ebf5f7",
         },
       },
