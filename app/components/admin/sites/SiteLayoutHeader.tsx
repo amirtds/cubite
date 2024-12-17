@@ -177,7 +177,7 @@ function SiteLayoutHeader({ site }: { site: Site }) {
         },
         body: JSON.stringify({
           siteId: site.id,
-          headerLinks,
+          headerLinks: links,
         }),
       }
     );
