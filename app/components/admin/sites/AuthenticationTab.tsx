@@ -42,11 +42,14 @@ function AuthenticationTab({ site }: { site: Site }) {
 
   const handleExtraRegistrationFields = async (fields: Field[], domainName: string) => {
     setExtraRegistrationFields(fields);
+    // cleanup the fields in case text is empty
+    const cleanedFields = fields.filter(field => field.text.trim() !== "");
+
     const response = await fetch(`/api/site/${site.domainName}/extraRegistrationFields`, {
       method: "PUT",
       body: JSON.stringify({
         siteId: site.id,
-        extraRegistrationFields: fields
+        extraRegistrationFields: cleanedFields
       }),
       headers: {
         "Content-Type": "application/json"

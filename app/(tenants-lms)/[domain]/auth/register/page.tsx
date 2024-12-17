@@ -81,11 +81,15 @@ const Register = ({ params: { domain } }: Props) => {
   };
 
   const handleExtraInfo = (e) => {
+    const value = e.target.type === 'select-one' ? 
+      e.target.options[e.target.selectedIndex].value : 
+      e.target.value;
+
     setUserObject({
       ...userObject,
       extraInfo: {
         ...userObject.extraInfo,
-        [e.target.id]: e.target.value,
+        [e.target.id]: value,
       },
     });
   };
@@ -226,17 +230,33 @@ const Register = ({ params: { domain } }: Props) => {
           site.extraRegistrationFields.map((field) => (
             <label
               key={field.text}
-              className="input input-bordered flex items-center gap-2 col-span-2 w-full"
+              className={`${field.type != 'dropdown' ? 'input input-bordered flex items-center gap-2 col-span-2 w-full' : 'flex items-center gap-2 col-span-2 w-full'}`}
             >
-              <input
-                type={field.type}
-                className="grow"
-                placeholder={field.text}
-                name={field.text}
-                id={field.text}
-                required={field.required}
-                onChange={handleExtraInfo}
-              />
+              {field.type === 'dropdown' ? (
+                <select
+                  className="select select-bordered w-full"
+                  id={field.text}
+                  required={field.required}
+                  onChange={handleExtraInfo}
+                >
+                  <option value="">Select {field.text}</option>
+                  {field.options?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
+                  type={field.type}
+                  className="grow"
+                  placeholder={field.text}
+                  name={field.text}
+                  id={field.text}
+                  required={field.required}
+                  onChange={handleExtraInfo}
+                />
+              )}
             </label>
           ))}
         <button
