@@ -82,7 +82,7 @@ function SiteSubdomainInput({
     <div className="sm:col-span-2">
       <label className="form-control w-full max-w-xs">
         <div className="label">
-          <span className="label-text">Site Name</span>
+          <span className="label-text">Site Subdomain</span>
         </div>
         <div className="relative flex">
           <input
