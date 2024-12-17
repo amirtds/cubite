@@ -169,7 +169,7 @@ function SiteLayoutHeader({ site }: { site: Site }) {
   ) => {
     setHeaderLinks(links);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}`,
+      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}/layout/header/links`,
       {
         method: "PUT",
         headers: {
@@ -177,15 +177,7 @@ function SiteLayoutHeader({ site }: { site: Site }) {
         },
         body: JSON.stringify({
           siteId: site.id,
-          updateData: {
-            layout: {
-              ...site.layout,
-              header: {
-                ...site.layout?.header,
-                headerLinks: links,
-              },
-            },
-          },
+          headerLinks,
         }),
       }
     );

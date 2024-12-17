@@ -59,10 +59,10 @@ function SiteLayoutFooter({ site }: { site: Site }) {
   );
 
 
-  const handleFooterLinks = async (links) => {
+  const handleFooterLinks = React.useCallback(async (links: FooterLink[]) => {
     setFooterLinks(links);
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}`,
+      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}/layout/footer/links`,
       {
         method: "PUT",
         headers: {
@@ -70,19 +70,11 @@ function SiteLayoutFooter({ site }: { site: Site }) {
         },
         body: JSON.stringify({
           siteId: site.id,
-          updateData: {
-            layout: {
-              ...site.layout,
-              footer: {
-                ...site.layout?.footer,
-                footerLinks: links,
-              },
-            },
-          },
+          footerLinks: links,
         }),
       }
     );
-  };
+  }, [site.domainName, site.id]);
 
   const handleFacebookURL = (e) => {
     setFacebookUrl(e.target.value);
@@ -109,7 +101,7 @@ function SiteLayoutFooter({ site }: { site: Site }) {
   };
   const handleCopyrightUpdate = async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}`,
+      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}/layout/footer/copyright`,
       {
         method: "PUT",
         headers: {
@@ -117,15 +109,7 @@ function SiteLayoutFooter({ site }: { site: Site }) {
         },
         body: JSON.stringify({
           siteId: site.id,
-          updateData: {
-            layout: {
-              ...site.layout,
-              footer: {
-                ...site.layout?.footer,
-                copyrightText,
-              },
-            },
-          },
+          copyrightText,
         }),
       }
     );
@@ -133,7 +117,7 @@ function SiteLayoutFooter({ site }: { site: Site }) {
 
   const handleSocialMediaUpdate = async () => {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}`,
+      `${process.env.NEXT_PUBLIC_ROOT_URL}/api/site/${site.domainName}/layout/footer/socialmedia`,
       {
         method: "PUT",
         headers: {
@@ -141,22 +125,12 @@ function SiteLayoutFooter({ site }: { site: Site }) {
         },
         body: JSON.stringify({
           siteId: site.id,
-          updateData: {
-            layout: {
-              ...site.layout,
-              footer: {
-                ...site.layout?.footer,
-                socialMedia: {
-                  ...site.layout?.footer?.socialMedia,
-                  facebook: facebookUrl,
-                  tiktok: tiktokUrl,
-                  youtube: youtubeUrl,
-                  instagram: instagramUrl,
-                  x: xUrl,
-                },
-                copyrightText: copyrightText,
-              },
-            },
+          socialMedias: {
+            facebook: facebookUrl,
+            tiktok: tiktokUrl,
+            youtube: youtubeUrl,
+            instagram: instagramUrl,
+            x: xUrl,
           },
         }),
       }

@@ -13,8 +13,10 @@ const NavigationLinks = ({
   );
 
   useEffect(() => {
-    onLinksChange(links);
-  }, [links, onLinksChange]);
+    if (JSON.stringify(links) !== JSON.stringify(existingLink)) {
+      onLinksChange(links);
+    }
+  }, [links, onLinksChange, existingLink]);
 
   const handleAddLink = () => {
     setLinks([...links, { text: "", type: "internal", url: "" }]);

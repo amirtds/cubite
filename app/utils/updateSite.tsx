@@ -8,6 +8,8 @@ export const updateSite = async (siteId, updateData) => {
       where: { id: siteId },
     });
 
+    console.log(updateData)
+
     // Merge the update data with existing data
     const mergedData = {
       ...currentSite,
@@ -20,6 +22,7 @@ export const updateSite = async (siteId, updateData) => {
       },
     };
 
+    // console.log(mergedData)
     const updatedSite = await prisma.site.update({
       where: {
         id: siteId,
