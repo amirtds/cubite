@@ -105,8 +105,8 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
           >
             <CldImage
               src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
-              width={120}
-              height={80}
+              width={140}
+              height={100}
               alt={`${site.name} logo`}
               sizes="100vw"
               className="max-h-42"
