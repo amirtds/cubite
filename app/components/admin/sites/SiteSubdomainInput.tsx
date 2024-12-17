@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface SiteSubdomainInputProps {
   siteSubdomain: string;
@@ -13,6 +14,7 @@ function SiteSubdomainInput({
   siteId,
   siteDomainName,
 }: SiteSubdomainInputProps) {
+  const router = useRouter();
   const [subdomain, setSubdomain] = useState(siteSubdomain);
   const [status, setStatus] = useState<{
     type: "success" | "error" | null;
@@ -20,7 +22,7 @@ function SiteSubdomainInput({
   }>({ type: null, message: "" });
 
   const handleSubdomainChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSubdomain(e.target.value);
+    setSubdomain(`${e.target.value}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`);
   };
 
   const handleSubdomainUpdate = async (
@@ -30,7 +32,7 @@ function SiteSubdomainInput({
       const siteObject = {
         siteId,
         updateData: {
-          domainName: e.target.value,
+          domainName: `${e.target.value}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
         },
       };
 
@@ -50,6 +52,7 @@ function SiteSubdomainInput({
           type: "success",
           message: "Site name updated successfully!",
         });
+        router.push(`/admin/sites/${e.target.value}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`);
       } else {
         const errorData = await response.json();
         setStatus({
