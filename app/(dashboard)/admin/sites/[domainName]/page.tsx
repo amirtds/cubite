@@ -68,7 +68,7 @@ const SitePage = async ({ params: { domainName } }: Props) => {
         <div role="tablist" className="tabs tabs-bordered tabs-lg">
           <ConfigsTab site={siteData} />
           <LayoutTab site={siteData} />
-          <AuthenticationTab />
+          <AuthenticationTab site={siteData} />
           <IntegrationsTab site={siteData} />
           {/* <AdminsTab site={siteData} /> */}
           {/* <MembersTab site={siteData} /> */}

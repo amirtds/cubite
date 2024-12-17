@@ -3,13 +3,56 @@
 import React, { useState } from "react";
 import RegistrationFields from "@/app/components/RegistrationFields";
 
-function AuthenticationTab() {
-  const [extraRegistrationFields, setExtraRegistrationFields] = useState([
+interface Field {
+  text: string;
+  type: string;
+  required: boolean;
+}
+
+interface Site {
+  createdAt: string;
+  updatedAt: string;
+  name: string;
+  domainName: string;
+  customDomain?: string;
+  isActive: boolean;
+  languages: string[];
+  admins: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+    createdAt: Date;
+    image?: string;
+  }[];
+  siteRoles?: {
+    id: string;
+    name: string;
+    email: string;
+    username: string;
+    createdAt: Date;
+    image?: string;
+  }[];
+}
+
+function AuthenticationTab({ site }: { site: Site }) {
+  const [extraRegistrationFields, setExtraRegistrationFields] = useState<Field[]>([
     { text: "", type: "text", required: false },
   ]);
 
-  const handleExtraRegistrationFields = (fields) => {
+  const handleExtraRegistrationFields = async (fields: Field[], domainName: string) => {
     setExtraRegistrationFields(fields);
+    const response = await fetch(`/api/site/${site.domainName}/extraRegistrationFields`, {
+      method: "PUT",
+      body: JSON.stringify({
+        siteId: site.id,
+        extraRegistrationFields: fields
+      }),
+      headers: {
+        "Content-Type": "application/json"
+      }
+
+    });
   };
 
   return (
