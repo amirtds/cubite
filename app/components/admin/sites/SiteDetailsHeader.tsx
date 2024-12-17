@@ -29,7 +29,7 @@ function SiteDetailsHeader({site} : SiteDetailsHeaderProps) {
             <div className="flex items-center gap-x-4 mt-2">
               <a
                 className="text-sm text-secondary link block"
-                href={`https:preview//${site.domainName}`}
+                href={`https://preview.${site.domainName}`}
                 target="_blank"
                 rel="noopener noreferrer"
               >{`preview.${site.domainName}`}</a>
