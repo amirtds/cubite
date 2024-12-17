@@ -8,8 +8,6 @@ export const updateSite = async (siteId, updateData) => {
       where: { id: siteId },
     });
 
-    console.log(updateData)
-
     // Merge the update data with existing data
     const mergedData = {
       ...currentSite,

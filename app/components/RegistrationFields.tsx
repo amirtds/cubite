@@ -94,6 +94,7 @@ const RegistrationFields = ({ onFieldChange, title, existingFields }) => {
                 value={field.type}
                 onChange={(e) => handleFieldChange(index, "type", e.target.value)}
               >
+                <option disabled>Select Field Type</option>
                 <option value="text">Text</option>
                 <option value="number">Number</option>
                 <option value="dropdown">Dropdown</option>
@@ -106,6 +107,7 @@ const RegistrationFields = ({ onFieldChange, title, existingFields }) => {
                   handleFieldChange(index, "required", e.target.value === "true")
                 }
               >
+                <option disabled>Required</option>
                 <option value="true">True</option>
                 <option value="false">False</option>
               </select>

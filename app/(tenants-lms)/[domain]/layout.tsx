@@ -8,6 +8,13 @@ import { BsTwitterX } from "react-icons/bs";
 import "../../globals.css";
 import AuthProvider from "./auth/Provider";
 import SiteNavbar from "@/app/components/SiteNavbar";
+import { Inter } from "next/font/google";
+import { Roboto } from "next/font/google";
+import { Poppins } from "next/font/google";
+import { Montserrat } from "next/font/google";
+import { Lato } from "next/font/google";
+import { Nunito } from "next/font/google";
+import { Open_Sans } from "next/font/google";
 
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getMessages } from "next-intl/server";
@@ -30,6 +37,14 @@ async function getSites() {
   const result = await response.json();
   return result;
 }
+
+const inter = Inter({ subsets: ["latin"] });
+const roboto = Roboto({ subsets: ["latin"], weight: ["100", "300", "400", "500", "700", "900"] });
+const poppins = Poppins({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+const lato = Lato({ subsets: ["latin"], weight: ["100", "300", "400", "700", "900"] });
+const montserrat = Montserrat({ subsets: ["latin"], weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"] });
+const openSans = Open_Sans({ subsets: ["latin"] });
+const nunito = Nunito({ subsets: ["latin"] });
 
 const SitesLayout = async ({ children, params }: Props) => {
   const result = await getSites();
@@ -62,6 +77,20 @@ const SitesLayout = async ({ children, params }: Props) => {
       footerLinks.slice(index * 3, index * 3 + 3)
     );
   }
+  const fontFamily = site?.fontFamily || "Inter";
+  const fontClass = fontFamily === "Inter"
+    ? inter
+    : fontFamily === "Roboto"
+    ? roboto
+    : fontFamily === "Poppins"
+    ? poppins
+    : fontFamily === "Lato"
+    ? lato
+    : fontFamily === "Montserrat"
+    ? montserrat
+    : fontFamily === "Open Sans"
+    ? openSans
+    : nunito;
 
   return (
     <html data-theme={site.themeName} lang={locale}>
@@ -69,19 +98,20 @@ const SitesLayout = async ({ children, params }: Props) => {
         <link
           rel="icon"
           type="image/x-icon"
-          href={site.favicon ? `https://res.cloudinary.com/dn3cywkpn/image/upload/c_limit,w_3840/f_auto/q_auto/v1/${site.favicon}` : '/favicon.ico'}
+          href={
+            site.favicon
+              ? `https://res.cloudinary.com/dn3cywkpn/image/upload/c_limit,w_3840/f_auto/q_auto/v1/${site.favicon}`
+              : "/favicon.ico"
+          }
         />
       </head>
-      <body className="">
+      <body className={fontClass.className}>
         <NextIntlClientProvider messages={messages}>
           <AuthProvider>
             <div className="">
               {site ? (
                 <div className="min-h-screen">
-                  <SiteNavbar 
-                    site={site} 
-                    headerLinks={headerLinks} 
-                  />
+                  <SiteNavbar site={site} headerLinks={headerLinks} />
                   {/* page content */}
                   <div className="mx-auto max-w-7xl">{children}</div>
                   {/* Footer Content */}
