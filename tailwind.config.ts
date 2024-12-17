@@ -29,6 +29,12 @@ const config: Config = {
           "base-200": "#e6e7d8",
           accent: "#9D9B63",
         },
+        "ocean": {
+          ...require("daisyui/src/theming/themes")["winter"],
+          primary: "#2980b9",
+          secondary: "#4bbad3",
+          "base-200": "#ebf5f7",
+        },
       },
       "light",
       "dark",
