@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Alert from "@/app/components/Alert";
 import { z } from "zod";
 import { signIn } from "next-auth/react";
-
+import Link from "next/link";
 interface Props {
   params: {
     domain: string;
@@ -265,6 +265,12 @@ const Register = ({ params: { domain } }: Props) => {
         >
           Register
         </button>
+        <p className="text-left text-sm text-gray-500 col-span-full justify-self-start">
+            You already have an account? Sign in{" "}
+            <Link className="underline" href="/auth/signin">
+              here
+            </Link>
+        </p>
       </div>
     </>
   );
