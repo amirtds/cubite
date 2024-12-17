@@ -18,6 +18,12 @@ function SiteNameInput({ siteName, siteId, siteDomainName }: SiteNameInputProps)
 
   const handleNameUpdate = async (e: React.FocusEvent<HTMLInputElement>) => {
     try {
+      console.log(e.target.value.length)
+      if (e.target.value.length == 0) {
+        setStatus({ type: 'error', message: 'Site name is required' });
+        return;
+      }
+
       const siteObject = {
         siteId,
         updateData: {
@@ -70,7 +76,7 @@ function SiteNameInput({ siteName, siteId, siteDomainName }: SiteNameInputProps)
         />
         {status.type && (
           <div className={`label ${status.type === 'success' ? 'text-success' : 'text-error'}`}>
-            <span className="label-text-alt text-green-600">{status.message}</span>
+            <span className={`label-text-alt ${status.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>{status.message}</span>
           </div>
         )}
         {!status.type && (

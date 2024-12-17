@@ -29,10 +29,15 @@ function SiteSubdomainInput({
     e: React.FocusEvent<HTMLInputElement>
   ) => {
     try {
+      if (e.target.value.length == 0) {
+        setStatus({ type: 'error', message: 'Subdomain is required' });
+        return;
+      }
+      const cleanedSubdomain = e.target.value.replace(/^(https?:\/\/|http:\/\/|https:\/\/)/, '');
       const siteObject = {
         siteId,
         updateData: {
-          domainName: `${e.target.value}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
+          domainName: `${cleanedSubdomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`,
         },
       };
 
@@ -52,7 +57,7 @@ function SiteSubdomainInput({
           type: "success",
           message: "Site name updated successfully!",
         });
-        router.push(`/admin/sites/${e.target.value}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`);
+        router.push(`/admin/sites/${cleanedSubdomain}.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`);
       } else {
         const errorData = await response.json();
         setStatus({
@@ -101,7 +106,7 @@ function SiteSubdomainInput({
               status.type === "success" ? "text-success" : "text-error"
             }`}
           >
-            <span className="label-text-alt text-green-600">
+            <span className={`label-text-alt ${status.type === 'success' ? 'text-green-600' : 'text-red-600'}`}>
               {status.message}
             </span>
           </div>
