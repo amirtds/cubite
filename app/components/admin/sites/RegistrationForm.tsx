@@ -39,7 +39,7 @@ function RegistrationForm({ site }: { site: Site }) {
   };
 
   return (
-    <div className="w-full space-y-4 mb-8">
+    <div className="w-full space-y-4 mb-8 border-2 border-dashed border-gray-100 p-4">
       <h3 className="font-medium">Registration Form</h3>
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-1">

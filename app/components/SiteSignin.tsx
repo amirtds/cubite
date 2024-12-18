@@ -7,23 +7,41 @@ import Alert from "./Alert";
 
 interface Props {
   siteId: string;
+  site: {
+    id: string;
+    domainName: string;
+    loginForm?: {
+      title?: string;
+      description?: string;
+      buttonText?: string;
+    };
+  };
 }
 
-function SiteSignin({ siteId }: Props) {
+function SiteSignin({ siteId, site }: Props) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [providers, setProviders] = useState<any>({});
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<number | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchProviders = async () => {
-      const providers = await getProviders();
-      setProviders(providers);
+      try {
+        const providers = await getProviders();
+        setProviders(providers);
+      } catch (error) {
+        console.error("Error fetching providers:", error);
+      } finally {
+        if (site) {
+          setIsLoading(false);
+        }
+      }
     };
 
     fetchProviders();
-  }, []);
+  }, [site]);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -80,55 +98,77 @@ function SiteSignin({ siteId }: Props) {
   };
 
   return (
-    <div className="flex justify-center min-h-screen my-32">
-      <div className="p-8 rounded w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-6 text-center">Sign In</h2>
-        <p className="mb-6 text-center">
-          Please enter your credentials to sign in.
-        </p>
-        <Alert status={status} message={error} />
-        <div className="space-y-6">
-          <div className="mb-4">
-            <label htmlFor="email" className="block text-sm font-medium">
-              Email
-            </label>
-            <input
-              type="email"
-              name="email"
-              id="email"
-              placeholder="Email"
-              className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm"
-              required
-              onChange={handleEmail}
-            />
+    <div className="mx-auto max-w-lg grid grid-cols-4 justify-items-center gap-4 my-32">
+      <div className="p-8 rounded w-full max-w-md col-span-full space-y-4">
+        {isLoading ? (
+          <div className="flex w-full flex-col gap-4 col-span-full">
+            <div className="skeleton h-48 w-full"></div>
+            <div className="flex flex-row gap-2">
+              <div className="skeleton h-4 w-1/2"></div>
+              <div className="skeleton h-4 w-1/2"></div>
+            </div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
+            <div className="skeleton h-4 w-full"></div>
           </div>
-          <div className="mb-4">
-            <label htmlFor="password" className="block text-sm font-medium">
-              Password
-            </label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              placeholder="Password"
-              className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm"
-              required
-              onChange={handlePassword}
-            />
-          </div>
-          <button
-            onClick={handleSignIn}
-            className="w-full py-2 px-4 btn btn-primary"
-          >
-            Sign in
-          </button>
-          <p className="text-left text-sm text-gray-500">
-            You don&apos;t have an account? Register{" "}
-            <Link className="underline" href="/auth/register">
-              here
-            </Link>
-          </p>
-        </div>
+        ) : (
+          <>
+          <div className="col-span-full space-y-4 mb-4">
+            <h2 className="text-2xl font-bold mb-6 text-center">
+              {site.loginForm?.title || "Sign In"}
+            </h2>
+            <p className="mb-6 text-center">
+              {site.loginForm?.description ||
+                "Please enter your credentials to sign in."}
+            </p>
+            <Alert status={status} message={error} />
+            </div>
+            <div className="space-y-6 col-span-full w-full">
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="Email"
+                  className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm"
+                  required
+                  onChange={handleEmail}
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="password" className="block text-sm font-medium">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="Password"
+                  className="mt-1 block w-full px-3 py-2 border rounded-md focus:outline-none sm:text-sm"
+                  required
+                  onChange={handlePassword}
+                />
+              </div>
+              <button
+                onClick={handleSignIn}
+                className="w-full py-2 px-4 btn btn-primary"
+              >
+                {site.loginForm?.buttonText || "Sign in"}
+              </button>
+              <p className="text-left text-sm text-gray-500">
+                You don&apos;t have an account? Register{" "}
+                <Link className="underline" href="/auth/register">
+                  here
+                </Link>
+              </p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

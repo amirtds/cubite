@@ -9,8 +9,9 @@ import { BellIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { setCookie, getCookies, getCookie } from "cookies-next";
 import { useTranslation } from "@/app/hooks/useTranslation";
-import { getLocalStorage, setLocalStorage } from '../utils/localStorage';
+import { getLocalStorage, setLocalStorage } from "../utils/localStorage";
 import HamburgerMenu from "@/app/components/HamburgerMenu";
+
 interface Site {
   name: string;
   logo: string;
@@ -31,12 +32,12 @@ interface Props {
 
 const SiteNavbar = ({ site, headerLinks }: Props) => {
   const translate = useTranslation();
-
   const { status, data: session } = useSession();
   const [selectedLanguage, setSelectedLanguage] = useState<string>("");
-  const [isUserLoggedInOpenedx, setIsUserLoggedInOpenedx] = useState<boolean>(false);
+  const [isUserLoggedInOpenedx, setIsUserLoggedInOpenedx] =
+    useState<boolean>(false);
   const [openedxUserInfo, setOpenedxUserInfo] = useState<any>(null);
-  
+
   useEffect(() => {
     const storedLanguage = getLocalStorage("selectedLanguage");
     if (storedLanguage) {
@@ -46,16 +47,16 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       setSelectedLanguage(site.languages[0].code);
     }
 
-    if(site.isOpenedxSite) {
-      setIsUserLoggedInOpenedx(getCookie('edxloggedin') == 'true');
+    if (site.isOpenedxSite) {
+      setIsUserLoggedInOpenedx(getCookie("edxloggedin") == "true");
 
-      const userInfoValue = getCookie('edx-user-info');
+      const userInfoValue = getCookie("edx-user-info");
       if (userInfoValue) {
         try {
           const parsedUserInfo = JSON.parse(decodeURIComponent(userInfoValue));
           setOpenedxUserInfo(parsedUserInfo);
         } catch (error) {
-          console.error('Failed to parse edxuserinfo:', error);
+          console.error("Failed to parse edxuserinfo:", error);
           setOpenedxUserInfo(null);
         }
       }
@@ -93,16 +94,16 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
       return <div className="w-10 h-10 rounded-full bg-gray-300"></div>;
     }
   };
-
   return (
     <div className="bg-base-200">
       <div className="navbar mx-auto max-w-7xl p-6 lg:px-8">
         <div className="navbar-start">
-          <HamburgerMenu menuItems={headerLinks.filter(item => item.type === "internal" || item.type === "external")} />
-          <Link
-            href={session?.user ? "/dashboard" : "/"}
-            className=""
-          >
+          <HamburgerMenu
+            menuItems={headerLinks.filter(
+              (item) => item.type === "internal" || item.type === "external"
+            )}
+          />
+          <Link href={session?.user ? "/dashboard" : "/"} className="">
             <CldImage
               src={site.logo ? site.logo : "courseCovers/600x400_er61hk"}
               width={140}
@@ -116,11 +117,65 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
         <div className="navbar-center hidden lg:flex">
           <ul className="menu menu-horizontal px-1">
             {headerLinks
-              .filter(link => !(
-                (link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register") && 
-                (site.isOpenedxSite && isUserLoggedInOpenedx)
-              ))
+              .filter(
+                (link) =>
+                  !(
+                    (link.text.toLocaleLowerCase() === "login" ||
+                      link.text.toLocaleLowerCase() === "register") &&
+                    site.isOpenedxSite &&
+                    isUserLoggedInOpenedx
+                  )
+              )
               .map((link) => {
+                if (
+                  (link.url === "/auth/signin" ||
+                    link.url === "/auth/register") &&
+                  session
+                ) {
+                  return null;
+                }
+                return link.type === "internal" || link.type === "external" ? (
+                  <li key={link.url}>
+                    <a href={link.url}>
+                      {translate(`${link.text}`, link.text)}
+                    </a>
+                  </li>
+                ) : null;
+              })}
+          </ul>
+        </div>
+        <div className="navbar-end">
+          {site.languages.length > 0 && (
+            <select
+              value={selectedLanguage}
+              onChange={(e) => {
+                const selectedLanguage = e.target.value;
+                setLocalStorage("selectedLanguage", selectedLanguage);
+                setCookie("selectedLanguage", selectedLanguage, {
+                  maxAge: 30 * 24 * 60 * 60,
+                }); // 30 days
+                window.location.reload(); // Reload to apply the language change
+              }}
+              className="select select-bordered"
+            >
+              {site.languages.map((language) => (
+                <option key={language.id} value={language.code}>
+                  {language.name}
+                </option>
+              ))}
+            </select>
+          )}
+          {headerLinks
+            .filter(
+              (link) =>
+                !(
+                  (link.text.toLocaleLowerCase() === "login" ||
+                    link.text.toLocaleLowerCase() === "register") &&
+                  site.isOpenedxSite &&
+                  isUserLoggedInOpenedx
+                )
+            )
+            .map((link) => {
               if (
                 (link.url === "/auth/signin" ||
                   link.url === "/auth/register") &&
@@ -128,77 +183,37 @@ const SiteNavbar = ({ site, headerLinks }: Props) => {
               ) {
                 return null;
               }
-              return link.type === "internal" || link.type === "external" ? (
-                <li key={link.url}>
-                  <a href={link.url}>
-                    {translate(`${link.text}`, link.text)}
-                  </a>
-                </li>
+
+              return link.type === "neutral-button" ? (
+                <a
+                  key={link.url}
+                  className="btn btn-ghost btn-outline mx-2"
+                  href={link.url}
+                >
+                  {translate(`${link.text}`, link.text)}
+                </a>
+              ) : link.type === "primary-button" ? (
+                <a
+                  key={link.url}
+                  className="btn btn-primary mx-2"
+                  href={link.url}
+                >
+                  {translate(`${link.text}`, link.text)}
+                </a>
               ) : null;
             })}
-          </ul>
-        </div>
-        <div className="navbar-end">
-          {site.languages.length > 0 && (
-            <select
-              value={selectedLanguage}
-            onChange={(e) => {
-              const selectedLanguage = e.target.value;
-              setLocalStorage("selectedLanguage", selectedLanguage);
-              setCookie("selectedLanguage", selectedLanguage, {
-                maxAge: 30 * 24 * 60 * 60,
-              }); // 30 days
-              window.location.reload(); // Reload to apply the language change
-            }}
-            className="select select-bordered"
-          >
-            {site.languages.map((language) => (
-              <option key={language.id} value={language.code}>
-                {language.name}
-              </option>
-              ))}
-            </select>
-          )}
-          {headerLinks
-          .filter(link => !(
-            (link.text.toLocaleLowerCase() === "login" || link.text.toLocaleLowerCase() === "register") && 
-            (site.isOpenedxSite && isUserLoggedInOpenedx)
-          ))
-          .map((link) => {
-            if (
-              (link.url === "/auth/signin" || link.url === "/auth/register") &&
-              session
-            ) {
-              return null;
-            }
-
-            return link.type === "neutral-button" ? (
-              <a
-                key={link.url}
-                className="btn btn-ghost btn-outline mx-2"
-                href={link.url}
-              >
-                {translate(`${link.text}`, link.text)}
-              </a>
-            ) : link.type === "primary-button" ? (
-              <a
-                key={link.url}
-                className="btn btn-primary mx-2"
-                href={link.url}
-              >
-                {translate(`${link.text}`, link.text)}
-              </a>
-            ) : null;
-          })}
           {site.isOpenedxSite && isUserLoggedInOpenedx && (
             <>
               <a
                 className="btn btn-primary mx-2"
-                href={`${site.openedxSiteUrl.replace('https://', 'https://apps.')}/learner-dashboard/`}
+                href={`${site.openedxSiteUrl.replace(
+                  "https://",
+                  "https://apps."
+                )}/learner-dashboard/`}
               >
                 Dashboard
               </a>
-              <a 
+              <a
                 className="btn btn-ghost btn-outline mx-2"
                 href={`${site.openedxSiteUrl}/logout`}
               >

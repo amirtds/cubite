@@ -72,7 +72,7 @@ const RegistrationFields = ({ onFieldChange, title, existingFields }) => {
   };
 
   return (
-    <div className="w-full">
+    <div className="w-full border-2 border-dashed border-gray-100 p-4">
       <h3 className="font-medium">{title}</h3>
       <ul>
         {fields.map((field, index) => (

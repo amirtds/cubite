@@ -71,7 +71,7 @@ function AuthenticationTab({ site }: { site: Site }) {
       <div role="tabpanel" className="tab-content py-10">
         <div className="sm:col-span-6">
           <RegistrationForm site={site} />
-          <LoginForm />
+          <LoginForm site={site} />
           <RegistrationFields
             title={"Extra Registration Fields"}
             onFieldChange={handleExtraRegistrationFields}

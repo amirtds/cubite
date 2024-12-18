@@ -28,7 +28,7 @@ const SignIn = ({ params: { domain } }: Props) => {
     }
     getSites();
   }, [domain]);
-  return <SiteSignin siteId={site.id} />;
+  return <SiteSignin siteId={site.id} site={site} />;
 };
 
 export default SignIn;
