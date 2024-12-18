@@ -12,34 +12,34 @@ write_files:
 
       # Create Tutor plugin for cookie settings
       cat > /root/customizations.py << 'EOL'
-        from tutor import hooks
-        
-        hooks.Filters.ENV_PATCHES.add_items([
-            (
-                "openedx-lms-production-settings",
-                """
-        SESSION_COOKIE_DOMAIN = ".{{siteFrontendDomain}}"
-                """
-            ),
-            (
-                "openedx-cms-production-settings",
-                """
-        SESSION_COOKIE_DOMAIN = ".{{siteFrontendDomain}}"
-                """
-            ),
-            (
-                "lms-env",
-                """
-        SESSION_COOKIE_DOMAIN: ".{{siteFrontendDomain}}"
-                """
-            ),
-            (
-                "cms-env",
-                """
-        SESSION_COOKIE_DOMAIN: ".{{siteFrontendDomain}}"
-                """
-            ),
-        ])
+      from tutor import hooks
+      
+      hooks.Filters.ENV_PATCHES.add_items([
+          (
+              "openedx-lms-production-settings",
+              """
+      SESSION_COOKIE_DOMAIN = ".{{siteFrontendDomain}}"
+              """
+          ),
+          (
+              "openedx-cms-production-settings",
+              """
+      SESSION_COOKIE_DOMAIN = ".{{siteFrontendDomain}}"
+              """
+          ),
+          (
+              "lms-env",
+              """
+      SESSION_COOKIE_DOMAIN: ".{{siteFrontendDomain}}"
+              """
+          ),
+          (
+              "cms-env",
+              """
+      SESSION_COOKIE_DOMAIN: ".{{siteFrontendDomain}}"
+              """
+          ),
+      ])
       EOL
 
       # Replace placeholder with actual domain
