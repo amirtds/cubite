@@ -8,7 +8,7 @@ export const createOpenedxSite = async ({siteName, siteDomain, userEmail}: {site
 
     // Read the cloud-init template
     const cloudInitTemplate = fs.readFileSync(
-        path.join(process.cwd(), 'app/utils/cloud-init.yaml'),
+        path.join(process.cwd(), 'app', 'utils', 'cloud-init', 'cloud-init.yaml'),
         'utf8'
     );
 

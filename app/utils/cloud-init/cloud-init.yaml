@@ -1,6 +1,7 @@
 #cloud-config
 write_files:
   - path: /root/wait-for-setup
+    permissions: '0755'
     content: |
       #!/bin/bash
       while ! host {{domain}}; do
@@ -70,8 +71,30 @@ write_files:
       tutor local do createuser --staff --superuser $USERNAME {{userEmail}} --password $PASSWORD
       tutor local do createuser --staff --superuser devops devops@cubite.io --password $PASSWORD
 
-      # Create redirects with specific site
-      docker exec -i tutor_local-lms-1 sh -c "echo 'from django.contrib.sites.models import Site; from django.contrib.redirects.models import Redirect; site = Site.objects.get(domain=\\\"{{domain}}\\\"); Redirect.objects.create(site=site, old_path=\\\"/\\\", new_path=\\\"https://{{siteFrontendDomain}}\\\"); Redirect.objects.create(site=site, old_path=\\\"/courses\\\", new_path=\\\"https://{{siteFrontendDomain}}/courses\\\")' | ./manage.py lms shell"
+  - path: /root/create_redirects.py
     permissions: '0755'
+    content: |
+      from django.contrib.sites.models import Site
+      from django.contrib.redirects.models import Redirect
+
+      site = Site.objects.get(domain="{{domain}}")
+      Redirect.objects.create(
+          site=site,
+          old_path="/",
+          new_path="https://{{siteFrontendDomain}}"
+      )
+      Redirect.objects.create(
+          site=site,
+          old_path="/courses",
+          new_path="https://{{siteFrontendDomain}}/courses"
+      )
+
+  - path: /root/setup_redirects.sh
+    permissions: '0755'
+    content: |
+      #!/bin/bash
+      docker exec -i tutor_local-lms-1 ./manage.py lms shell < /root/create_redirects.py
+
 runcmd:
   - /root/wait-for-setup
+  - /root/setup_redirects.sh
