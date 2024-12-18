@@ -1,46 +1,26 @@
+import fs from 'fs';
+import path from 'path';
+
 export const createOpenedxSite = async ({siteName, siteDomain, userEmail}: {siteName: string, siteDomain: string, userEmail: string}) => {
     const domain = `learn.${siteDomain}.${process.env.MAIN_DOMAIN}`;
     const studioDomain = `studio.${domain}`;
     const SiteFrontendDomain = process.env.NODE_ENV === 'development' ? 'localhost:3000' : `${siteDomain}.${process.env.MAIN_DOMAIN}`;
 
-    const user_data = `#cloud-config
-write_files:
-  - path: /root/wait-for-setup
-    content: |
-      #!/bin/bash
-      while ! host ${domain}; do
-        echo "Waiting for DNS propagation..."
-        sleep 10
-      done
-      source /root/venv/bin/activate
+    // Read the cloud-init template
+    const cloudInitTemplate = fs.readFileSync(
+        path.join(process.cwd(), 'app/utils/cloud-init.yaml'),
+        'utf8'
+    );
 
-      tutor config save \
-        --set CMS_HOST="${studioDomain}" \
-        --set LMS_HOST="${domain}" \
-        --set ENABLE_HTTPS=true \
-        --set ACTIVATE_HTTPS=true \
-        --set PLATFORM_NAME="${siteName}" \
-        --set SMTP_HOST=smtp.resend.com \
-        --set SMTP_PORT=587 \
-        --set SMTP_USE_SSL=false \
-        --set SMTP_USE_TLS=true \
-        --set SMTP_USERNAME="resend" \
-        --set SMTP_PASSWORD="${process.env.RESEND_API_KEY}" \
-        --set DEFAULT_FROM_EMAIL="${process.env.SERVER_EMAIL}" \
-        --set CONTACT_EMAIL="${process.env.SERVER_EMAIL}"
-      
-      tutor local launch -I
-      # Generate random 16 character password with letters, numbers and symbols
-      PASSWORD=$(openssl rand -base64 12)
-      USERNAME=$(echo ${userEmail} | cut -d@ -f1)
-      tutor local do createuser --staff --superuser $USERNAME ${userEmail} --password $PASSWORD
-      tutor local do createuser --staff --superuser devops devops@cubite.io --password $PASSWORD
-
-      # Create redirects with specific site
-      docker exec -i tutor_local-lms-1 sh -c "echo 'from django.contrib.sites.models import Site; from django.contrib.redirects.models import Redirect; site = Site.objects.get(domain=\\\"${domain}\\\"); Redirect.objects.create(site=site, old_path=\\\"/\\\", new_path=\\\"https://${SiteFrontendDomain}\\\"); Redirect.objects.create(site=site, old_path=\\\"/courses\\\", new_path=\\\"https://${SiteFrontendDomain}/courses\\\")' | ./manage.py lms shell"
-    permissions: '0755'
-runcmd:
-  - /root/wait-for-setup`;
+    // Replace placeholders with actual values
+    const user_data = cloudInitTemplate
+        .replace(/{{domain}}/g, domain)
+        .replace(/{{studioDomain}}/g, studioDomain)
+        .replace(/{{siteFrontendDomain}}/g, SiteFrontendDomain)
+        .replace(/{{siteName}}/g, siteName)
+        .replace(/{{userEmail}}/g, userEmail)
+        .replace(/{{resendApiKey}}/g, process.env.RESEND_API_KEY || '')
+        .replace(/{{serverEmail}}/g, process.env.SERVER_EMAIL || '');
 
     const serverSpecification = {
         name: siteDomain,
