@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import RegistrationFields from "@/app/components/RegistrationFields";
-
+import RegistrationForm from "@/app/components/admin/sites/RegistrationForm";
+import LoginForm from "@/app/components/admin/sites/LoginForm";
 interface Field {
   text: string;
   type: string;
@@ -69,6 +70,8 @@ function AuthenticationTab({ site }: { site: Site }) {
       />
       <div role="tabpanel" className="tab-content py-10">
         <div className="sm:col-span-6">
+          <RegistrationForm site={site} />
+          <LoginForm />
           <RegistrationFields
             title={"Extra Registration Fields"}
             onFieldChange={handleExtraRegistrationFields}

@@ -12,6 +12,7 @@ interface Props {
 }
 
 const Register = ({ params: { domain } }: Props) => {
+  const [isLoading, setIsLoading] = useState(true);
   const [userObject, setUserObject] = useState({
     siteId: "",
     firstName: "",
@@ -24,22 +25,31 @@ const Register = ({ params: { domain } }: Props) => {
 
   const [status, setStatus] = useState(0);
   const [message, setMessage] = useState([]);
-  const [site, setSite] = useState({});
+  const [site, setSite] = useState(null);
   const [extraRegistrationFields, setExtraRegistrationFields] = useState([]);
+  const [registrationForm, setRegistrationForm] = useState({});
 
   useEffect(() => {
     async function getSites() {
-      const response = await fetch(`/api/getSitesPublicData`, {
-        cache: "no-store",
-      });
-      const result = await response.json();
-      if (result.status === 200) {
-        const siteData = result.sites.find(
-          (s) =>
-            s.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0] ===
-            domain
-        );
-        setSite(siteData);
+      try {
+        const response = await fetch(`/api/getSitesPublicData`, {
+          cache: "no-store",
+        });
+        const result = await response.json();
+        if (result.status === 200) {
+          const siteData = result.sites.find(
+            (s) =>
+              s.domainName.split(`.${process.env.NEXT_PUBLIC_MAIN_DOMAIN}`)[0] ===
+              domain
+          );
+          setSite(siteData);
+          setRegistrationForm(siteData.registrationForm || {});
+          setExtraRegistrationFields(siteData.extraRegistrationFields || []);
+        }
+      } catch (error) {
+        console.error("Error fetching site data:", error);
+      } finally {
+        setIsLoading(false);
       }
     }
     getSites();
@@ -161,117 +171,134 @@ const Register = ({ params: { domain } }: Props) => {
           }}
         />
       )}
-      <div className="mx-auto max-w-md grid grid-cols-2 justify-items-center gap-4 my-32">
-        <div className="col-span-2">
-          <p className="text-center text-2xl font-semibold">
-            Create an Account
+        <div className="mx-auto max-w-lg grid grid-cols-4 justify-items-center gap-4 my-32">
+          {isLoading ? (
+            <div className="flex w-full flex-col gap-4 col-span-full">
+              <div className="skeleton h-48 w-full"></div>
+              <div className="flex flex-row gap-2">
+                <div className="skeleton h-4 w-1/2"></div>
+                <div className="skeleton h-4 w-1/2"></div>
+              </div>
+              <div className="skeleton h-4 w-full"></div>
+              <div className="skeleton h-4 w-full"></div>
+              <div className="skeleton h-4 w-full"></div>
+              <div className="skeleton h-4 w-full"></div>
+              <div className="skeleton h-4 w-full"></div>
+            </div>
+          ) : (
+            <>
+          <div className="col-span-full space-y-4 mb-4">
+            <p className="text-left text-2xl font-semibold">
+              {registrationForm?.title || "Create an Account"}
+            </p>
+            <p className="text-left my-2 text-sm text-gray-500">
+              {registrationForm?.description || "Please fill this form to create your account"}
+            </p>
+          </div>
+          <label className="input input-bordered flex items-center gap-2 sm:col-span-full md:col-span-2 w-full">
+            <input
+              type="text"
+              className="grow"
+              placeholder="First Name"
+              name="firstName"
+              id="firstName"
+              value={userObject.firstName}
+              onChange={handleUserObject}
+            />
+          </label>
+          <label className="input input-bordered flex items-center gap-2 sm:col-span-full md:col-span-2 w-full">
+            <input
+              type="text"
+              className="grow"
+              placeholder="Last Name"
+              name="lastName"
+              id="lastName"
+              value={userObject.lastName}
+              onChange={handleUserObject}
+            />
+          </label>
+          <label className="input input-bordered flex items-center gap-2 col-span-full w-full">
+            <input
+              type="text"
+              className="grow"
+              placeholder="Username"
+              name="username"
+              id="username"
+              value={userObject.username}
+              onChange={handleUserObject}
+            />
+          </label>
+          <label className="input input-bordered flex items-center gap-2 col-span-full w-full">
+            <input
+              type="email"
+              className="grow"
+              placeholder="Email"
+              name="email"
+              id="email"
+              value={userObject.email}
+              onChange={handleUserObject}
+            />
+          </label>
+          <label className="input input-bordered flex items-center gap-2 col-span-full w-full">
+            <input
+              type="password"
+              className="grow"
+              placeholder="Password"
+              name="password"
+              id="password"
+              value={userObject.password}
+              onChange={handleUserObject}
+            />
+          </label>
+          {site &&
+            site.extraRegistrationFields &&
+            site.extraRegistrationFields.map((field) => (
+              <label
+                key={field.text}
+                className={`flex items-center gap-2 col-span-full w-full ${field.type != 'dropdown' && 'input input-bordered'}`}
+              >
+                {field.type === 'dropdown' ? (
+                  <select
+                    className="select select-bordered w-full"
+                    id={field.text}
+                    required={field.required}
+                    onChange={handleExtraInfo}
+                  >
+                    <option value="">Select {field.text}</option>
+                    {field.options?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </select>
+                ) : (
+                  <input
+                    type={field.type}
+                    className="grow"
+                    placeholder={field.text}
+                    name={field.text}
+                    id={field.text}
+                    required={field.required}
+                    onChange={handleExtraInfo}
+                  />
+                )}
+              </label>
+            ))}
+          <button
+            className="btn btn-primary col-span-full w-full"
+            onClick={handleCreateUser}
+          >
+            {registrationForm?.buttonText || "Register"}
+          </button>
+          <p className="text-left text-sm text-gray-500 col-span-full justify-self-start">
+              You already have an account? Sign in{" "}
+              <Link className="underline" href="/auth/signin">
+                here
+              </Link>
           </p>
-          <p className="text-center my-2">
-            Please fill this form to create your account
-          </p>
-        </div>
-        <label className="input input-bordered flex items-center gap-2 sm:col-span-2 md:col-span-1 w-full">
-          <input
-            type="text"
-            className="grow"
-            placeholder="First Name"
-            name="firstName"
-            id="firstName"
-            value={userObject.firstName}
-            onChange={handleUserObject}
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 sm:col-span-2 md:col-span-1 w-full">
-          <input
-            type="text"
-            className="grow"
-            placeholder="Last Name"
-            name="lastName"
-            id="lastName"
-            value={userObject.lastName}
-            onChange={handleUserObject}
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 col-span-2 w-full">
-          <input
-            type="text"
-            className="grow"
-            placeholder="Username"
-            name="username"
-            id="username"
-            value={userObject.username}
-            onChange={handleUserObject}
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 col-span-2 w-full">
-          <input
-            type="email"
-            className="grow"
-            placeholder="Email"
-            name="email"
-            id="email"
-            value={userObject.email}
-            onChange={handleUserObject}
-          />
-        </label>
-        <label className="input input-bordered flex items-center gap-2 col-span-2 w-full">
-          <input
-            type="password"
-            className="grow"
-            placeholder="Password"
-            name="password"
-            id="password"
-            value={userObject.password}
-            onChange={handleUserObject}
-          />
-        </label>
-        {site &&
-          site.extraRegistrationFields &&
-          site.extraRegistrationFields.map((field) => (
-            <label
-              key={field.text}
-              className={`${field.type != 'dropdown' ? 'input input-bordered flex items-center gap-2 col-span-2 w-full' : 'flex items-center gap-2 col-span-2 w-full'}`}
-            >
-              {field.type === 'dropdown' ? (
-                <select
-                  className="select select-bordered w-full"
-                  id={field.text}
-                  required={field.required}
-                  onChange={handleExtraInfo}
-                >
-                  <option value="">Select {field.text}</option>
-                  {field.options?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </select>
-              ) : (
-                <input
-                  type={field.type}
-                  className="grow"
-                  placeholder={field.text}
-                  name={field.text}
-                  id={field.text}
-                  required={field.required}
-                  onChange={handleExtraInfo}
-                />
-              )}
-            </label>
-          ))}
-        <button
-          className="btn btn-primary col-span-full w-full"
-          onClick={handleCreateUser}
-        >
-          Register
-        </button>
-        <p className="text-left text-sm text-gray-500 col-span-full justify-self-start">
-            You already have an account? Sign in{" "}
-            <Link className="underline" href="/auth/signin">
-              here
-            </Link>
-        </p>
-      </div>
+        </>
+      )}
+    </div>
     </>
   );
 };

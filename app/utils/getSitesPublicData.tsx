@@ -31,6 +31,8 @@ export const getSitesPublicData = async () => {
         extraRegistrationFields: true,
         isOpenedxSite: true,
         openedxSiteUrl: true,
+        registrationForm: true,
+        loginForm: true,
       },
     });
 

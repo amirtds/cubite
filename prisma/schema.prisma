@@ -84,6 +84,8 @@ model Site {
   smtpEmailPassword      String?    @default("")
   smtpDefaultFromEmail   String?    @default("")
   fontFamily             String?    @default("")
+  registrationForm      Json?    @default("{}")
+  loginForm              Json?    @default("{}")
   @@map("sites")
 }
 
