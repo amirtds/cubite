@@ -11,8 +11,6 @@ const EditorHero = ({ data }: Props) => {
             <div className="flex flex-col gap-4 p-8 py-32 relative z-10 col-span-full mx-auto max-w-7xl">
                 {data.title && <p className="text-5xl font-bold mb-4">{data.title}</p>}
                 {data.description && <p className="my-4 antialiased tracking-wide lg:w-1/2 w-full">{data.description}</p>}
-                <p className="text-2xl font-bold">Hello, Dream College.</p>
-                <p className="text-2xl font-bold">Hello, Dream Score.</p>
                 {data.buttonUrl && data.buttonText && <Link href={data.buttonUrl} className="btn btn-primary !no-underline w-36 mt-4">{data.buttonText}</Link>}
             </div>
         </div>
