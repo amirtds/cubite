@@ -61,7 +61,7 @@ export default async function Home({ params }: Props) {
   return (
     <div className="">
       {/* page content */}
-      <div className="mx-auto">
+      <div className="mx-auto px-8">
         {pageBlocks.length > 0 ? (
           pageBlocks.map((block) => {
             if (block.type === "header") {
