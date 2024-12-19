@@ -7,10 +7,12 @@ import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
 import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
 import EditorImage from "@/app/components/editorjsToReact/EditorImage";
 import EditorHero from "@/app/components/editorjsToReact/EditorHero";
+import EditorCTANoImage from "@/app/components/editorjsToReact/EditorCTANoImage";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
 import CourseCard from "@/app/components/CourseCard";
 import Link from "next/link";
 import CtaRender from "@/app/components/CtaRender";
+
 interface Props {
   params: {
     domain: string;
@@ -139,6 +141,14 @@ export default async function Home({ params }: Props) {
             if (block.type === "hero") {
               return (
                 <EditorHero
+                  key={block.id}
+                  data={block.data}
+                />
+              );
+            }
+            if (block.type === "callToActionNoImage") {
+              return (
+                <EditorCTANoImage
                   key={block.id}
                   data={block.data}
                 />

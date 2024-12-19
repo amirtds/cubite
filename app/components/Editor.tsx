@@ -21,7 +21,7 @@ import Youtube from "@/app/plugins/youtube/index";
 import Courses from "@/app/plugins/courses/index";
 import CTA from "@/app/plugins/call-to-action/index";
 import Hero from "@/app/plugins/hero/index";
-
+import CallToActionNoImage from "@/app/plugins/call-to-action-no-image/index";
 interface Content {
   time: number;
   blocks: any[];
@@ -89,6 +89,12 @@ const Editor = ({ savedContent, siteId, siteThemeName, onChange }: EditorProps) 
         },
         hero: {
           class: Hero,
+          config: {
+            siteThemeName: siteThemeName || "",
+          },
+        },
+        callToActionNoImage: {
+          class: CallToActionNoImage,
           config: {
             siteThemeName: siteThemeName || "",
           },
