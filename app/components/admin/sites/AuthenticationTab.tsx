@@ -18,6 +18,7 @@ interface Site {
   customDomain?: string;
   isActive: boolean;
   languages: string[];
+  extraRegistrationFields: Field[];
   admins: {
     id: string;
     name: string;
@@ -37,7 +38,7 @@ interface Site {
 }
 
 function AuthenticationTab({ site }: { site: Site }) {
-  const [extraRegistrationFields, setExtraRegistrationFields] = useState<Field[]>([
+  const [extraRegistrationFields, setExtraRegistrationFields] = useState<Field[]>(site.extraRegistrationFields || [
     { text: "", type: "text", required: false },
   ]);
 
