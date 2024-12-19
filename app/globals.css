@@ -16,6 +16,11 @@
   max-width: 800px;
 }
 
+.ce-block__content :where(p):not(:where([class~="not-prose"],[class~="not-prose"] *)) {
+  margin-top: 1em;
+  margin-bottom: 1em;
+}
+
 /* marker */
 
 .cdx-marker {

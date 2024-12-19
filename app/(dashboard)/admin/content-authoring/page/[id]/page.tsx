@@ -29,6 +29,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState<boolean>(false);
   const [page, setPage] = useState([]);
   const [siteId, setSiteId] = useState<string>("");
+  const [sitePublicData, setSitePublicData] = useState<any>(null);
 
   const handleContentChange = useCallback((content: Content) => {
     setChangedContent(content);
@@ -107,10 +108,23 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
       }
     }
 
+    async function getSitePublicData() {
+      const response = await fetch(`/api/getSitePublicData?siteId=${siteId}`);
+      const result = await response.json();
+      if (result.status === 200) {
+        setSitePublicData(result.site);
+      }
+      if (result.status === 404) {
+        setStatus(0);
+        setMessage("");
+      }
+    }
+
     getPageContent(id);
     getUserId();
     getPageContentVersions();
     getPage();
+    getSitePublicData();
   }, [id, siteId]);
 
   useEffect(() => {
@@ -205,6 +219,7 @@ const CourseAuthoring = ({ params: { id } }: Props) => {
         savedContent={content}
         onChange={handleContentChange}
         siteId={siteId}
+        siteThemeName={sitePublicData?.themeName}
       />
     </>
   );

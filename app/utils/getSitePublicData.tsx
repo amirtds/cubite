@@ -1,50 +1,29 @@
 import { prisma } from "@/prisma/client";
 
-interface SiteResponse {
-  status: number;
-  message: string;
-  site?: any;
-}
 
-export const getSitePublicData = async (
-  domainName: string
-): Promise<SiteResponse> => {
+export const getSitePublicData = async (siteId: string) => {
   try {
-    if (!domainName) {
-      return {
-        status: 400,
-        message: "Domain name is required.",
-      };
-    }
-
     const site = await prisma.site.findUnique({
-      where: { domainName },
-      include: {
+      where: { id: siteId },
+      select: {
+        id: true,
         name: true,
+        domainName: true,
         logo: true,
         themeName: true,
-        courses: true,
         pages: true,
+        courses: true
       },
     });
-
-    if (!site) {
-      return {
-        status: 404,
-        message: "Site not found.",
-      };
-    }
-
     return {
       status: 200,
-      message: "Site data retrieved successfully.",
       site,
     };
   } catch (error) {
-    console.error("Error fetching site data:", error);
+    console.error("Error fetching site public data:", error);
     return {
       status: 500,
-      message: "An error occurred while fetching the site data.",
+      message: "Error fetching site public data",
     };
   }
 };

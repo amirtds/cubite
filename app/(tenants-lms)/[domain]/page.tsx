@@ -6,6 +6,7 @@ import EditorChecklist from "@/app/components/editorjsToReact/EditorChecklist";
 import EditorAlert from "@/app/components/editorjsToReact/EditorAlert";
 import EditorQuote from "@/app/components/editorjsToReact/EditorQuote";
 import EditorImage from "@/app/components/editorjsToReact/EditorImage";
+import EditorHero from "@/app/components/editorjsToReact/EditorHero";
 import EditorYoutube from "@/app/components/editorjsToReact/EditorYoutube";
 import CourseCard from "@/app/components/CourseCard";
 import Link from "next/link";
@@ -58,7 +59,7 @@ export default async function Home({ params }: Props) {
   return (
     <div className="">
       {/* page content */}
-      <div className="mx-auto max-w-7xl p-6 lg:px-8">
+      <div className="mx-auto">
         {pageBlocks.length > 0 ? (
           pageBlocks.map((block) => {
             if (block.type === "header") {
@@ -132,6 +133,14 @@ export default async function Home({ params }: Props) {
                   key={block.id}
                   src={block.data.src}
                   caption={block.data.caption}
+                />
+              );
+            }
+            if (block.type === "hero") {
+              return (
+                <EditorHero
+                  key={block.id}
+                  data={block.data}
                 />
               );
             }

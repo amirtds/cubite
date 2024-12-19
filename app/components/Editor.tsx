@@ -20,6 +20,7 @@ import Poll from "@/app/plugins/poll/index";
 import Youtube from "@/app/plugins/youtube/index";
 import Courses from "@/app/plugins/courses/index";
 import CTA from "@/app/plugins/call-to-action/index";
+import Hero from "@/app/plugins/hero/index";
 
 interface Content {
   time: number;
@@ -30,10 +31,11 @@ interface Content {
 interface EditorProps {
   savedContent: Content | null;
   siteId?: string;
+  siteThemeName?: string;
   onChange: (content: Content) => void;
 }
 
-const Editor = ({ savedContent, siteId, onChange }: EditorProps) => {
+const Editor = ({ savedContent, siteId, siteThemeName, onChange }: EditorProps) => {
   const editorRef = useRef<EditorJS | null>(null);
   const editorHolderRef = useRef<HTMLDivElement | null>(null);
 
@@ -82,7 +84,15 @@ const Editor = ({ savedContent, siteId, onChange }: EditorProps) => {
             siteId: siteId || "",
           },
         },
-        cta: CTA,
+        cta: {
+          class: CTA,
+        },
+        hero: {
+          class: Hero,
+          config: {
+            siteThemeName: siteThemeName || "",
+          },
+        },
       },
       onReady: () => {
         editorRef.current = editor;
