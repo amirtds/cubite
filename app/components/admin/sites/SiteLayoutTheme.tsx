@@ -70,6 +70,9 @@ function SiteLayoutTheme({ site }: { site: Site }) {
                 <option value="autumn">Autumn</option>
                 <option value="rmu">Rmu</option>
                 <option value="ocean">Ocean</option>
+                <option value="dim">Dim</option>
+                <option value="lemonade">Lemonade</option>
+                <option value="emerald">Emerald</option>
               </select>
             </label>
           </div>

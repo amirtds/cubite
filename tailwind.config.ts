@@ -68,6 +68,7 @@ const config: Config = {
       "dim",
       "nord",
       "sunset",
+      "emerald",
     ],
   },
 };
